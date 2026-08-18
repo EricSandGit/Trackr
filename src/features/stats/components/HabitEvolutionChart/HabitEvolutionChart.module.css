@@ -1,0 +1,206 @@
+.container {
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--tk-space-2);
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
+.rangeSelector {
+  display: flex;
+  gap: 4px;
+  background-color: var(--tk-bg-surface-elevated);
+  padding: 2px;
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+}
+
+.rangeBtn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--tk-radius-sm);
+  color: var(--tk-text-secondary);
+  transition: all var(--tk-transition-fast);
+}
+
+.rangeBtn:hover {
+  color: var(--tk-text-primary);
+}
+
+.rangeBtnActive {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.chartArea {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.svgChart {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: var(--tk-border-muted);
+  stroke-dasharray: 4 4;
+}
+
+.goalLine {
+  stroke: var(--tk-text-muted);
+  stroke-dasharray: 3 3;
+  stroke-width: 1.5;
+}
+
+.axisText {
+  font-size: 10px;
+  font-family: var(--tk-font-mono);
+  fill: var(--tk-text-muted);
+}
+
+.chartLine {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dataPoint {
+  cursor: pointer;
+  transition: r var(--tk-transition-fast), stroke-width var(--tk-transition-fast);
+}
+
+.dataPoint:hover {
+  r: 7;
+}
+
+.recordPoint {
+  stroke: var(--tk-record-gold) !important;
+  stroke-width: 2.5 !important;
+  filter: drop-shadow(0 0 4px var(--tk-record-gold));
+}
+
+.activePointIndicator {
+  stroke: #ffffff;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+}
+
+/* Vertical Stem Line going up to the floating Cartelito */
+.stemLine {
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  animation: fadeIn 0.12s ease-out;
+}
+
+/* Bottom subtle guide line */
+.hoverGuideLine {
+  stroke: var(--tk-border-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Floating Tooltip Cartelito */
+.floatingTooltipGroup {
+  pointer-events: none;
+  animation: tooltipPop 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tooltipBackground {
+  fill: #161b22;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+  rx: 6px;
+}
+
+.tooltipArrow {
+  fill: #161b22;
+  stroke-width: 1.5;
+}
+
+.tooltipDateText {
+  fill: #f0f6fc;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.tooltipValueText {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--tk-font-mono);
+  text-anchor: middle;
+}
+
+.selectedPointInfo {
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  padding: var(--tk-space-2) var(--tk-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.selectedPointDate {
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.selectedPointValue {
+  font-size: 14px;
+  font-weight: 800;
+  font-family: var(--tk-font-mono);
+  color: var(--tk-text-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tooltipPop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

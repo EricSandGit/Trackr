@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--tk-space-2);
+}
+
+.emojiBtn {
+  font-size: 20px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1.5px solid transparent;
+  transition: all var(--tk-transition-fast);
+}
+
+.emojiBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  transform: scale(1.1);
+}
+
+.selected {
+  border-color: var(--tk-border-focus);
+  background-color: var(--tk-bg-surface-hover);
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+  transform: scale(1.08);
+}

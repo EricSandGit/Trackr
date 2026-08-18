@@ -1,0 +1,151 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-4);
+}
+
+.habitHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-3);
+  padding: var(--tk-space-3);
+  background-color: var(--tk-bg-surface-elevated);
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+}
+
+.habitIcon {
+  font-size: 28px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-app);
+}
+
+.habitInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.habitName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
+.habitDate {
+  font-size: 12px;
+  color: var(--tk-text-secondary);
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.progressNumbers {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--tk-font-mono);
+  color: var(--tk-text-primary);
+}
+
+.progressGoal {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tk-text-secondary);
+}
+
+.progressBarBg {
+  width: 100%;
+  height: 8px;
+  background-color: var(--tk-bg-surface-elevated);
+  border-radius: var(--tk-radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: var(--tk-radius-full);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quickPresets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--tk-space-2);
+}
+
+.presetBtn {
+  height: 38px;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-primary);
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--tk-transition-fast);
+}
+
+.presetBtn:active {
+  transform: scale(0.95);
+  background-color: var(--tk-bg-surface-hover);
+}
+
+.manualInputSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+}
+
+.inputRow {
+  display: flex;
+  gap: var(--tk-space-2);
+  align-items: center;
+}
+
+.numberInput {
+  flex: 1;
+  height: 48px;
+  background-color: var(--tk-bg-input);
+  border: 1.5px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  padding: 0 var(--tk-space-4);
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--tk-font-mono);
+  color: var(--tk-text-primary);
+  text-align: center;
+  outline: none;
+}
+
+.numberInput:focus {
+  border-color: var(--tk-border-focus);
+}
+
+.unitLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+  min-width: 40px;
+}
+
+.actionsRow {
+  display: flex;
+  gap: var(--tk-space-3);
+  margin-top: var(--tk-space-2);
+}

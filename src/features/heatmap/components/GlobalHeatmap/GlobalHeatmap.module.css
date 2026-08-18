@@ -1,0 +1,293 @@
+.container {
+  background-color: var(--tk-bg-surface);
+  border-radius: var(--tk-radius-lg);
+  border: 1px solid var(--tk-border-default);
+  padding: var(--tk-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+  box-shadow: var(--tk-shadow-sm);
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--tk-text-secondary);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.colorPickerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-radius: var(--tk-radius-sm);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.colorPickerBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
+}
+
+.colorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.popoverOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+}
+
+.colorPopover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 60;
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  box-shadow: var(--tk-shadow-lg);
+  padding: var(--tk-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+  width: 190px;
+  animation: popoverFadeIn 0.15s ease-out;
+}
+
+.popoverTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tk-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.paletteItem {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--tk-transition-fast);
+}
+
+.paletteItem:hover {
+  transform: scale(1.1);
+}
+
+.paletteItemSelected {
+  border-color: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+  transform: scale(1.08);
+}
+
+.customColorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--tk-border-muted);
+}
+
+.customColorLabel {
+  font-size: 11px;
+  color: var(--tk-text-secondary);
+}
+
+.customInput {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--tk-radius-sm);
+}
+
+.scrollArea {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: var(--tk-space-2);
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matrixWrapper {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: max-content;
+  gap: 3px;
+}
+
+.monthLabelsRow {
+  display: flex;
+  height: 16px;
+  margin-left: 26px;
+  position: relative;
+}
+
+.monthLabel {
+  font-size: 11px;
+  color: var(--tk-text-muted);
+  font-weight: 500;
+  position: absolute;
+}
+
+.gridBody {
+  display: flex;
+  gap: 3px;
+}
+
+.dayLabelsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 23px;
+  padding-right: 3px;
+}
+
+.dayLabel {
+  font-size: 10px;
+  color: var(--tk-text-muted);
+  height: 12px;
+  line-height: 12px;
+  text-align: right;
+}
+
+.weekCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background-color: var(--tk-cell-empty);
+  border: 1px solid var(--tk-cell-border);
+  cursor: pointer;
+  transition: transform var(--tk-transition-fast), border-color var(--tk-transition-fast);
+  position: relative;
+}
+
+.cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  border-color: #ffffff;
+}
+
+.cell:active {
+  transform: scale(1.1);
+}
+
+.futureCell {
+  opacity: 0.15;
+  cursor: default;
+  pointer-events: none;
+}
+
+.selectedCell {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.4);
+  transform: scale(1.2);
+  z-index: 5;
+}
+
+.recordCell {
+  border: 1px solid var(--tk-record-border) !important;
+  box-shadow: var(--tk-record-glow);
+  position: relative;
+}
+
+.recordCell::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--tk-record-gold);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--tk-space-1);
+  font-size: 11px;
+  color: var(--tk-text-secondary);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legendCell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

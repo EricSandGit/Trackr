@@ -1,0 +1,63 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tk-space-2);
+  align-items: center;
+}
+
+.colorSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+}
+
+.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  transform: scale(1.08);
+}
+
+.customPickerWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+  margin-top: var(--tk-space-2);
+}
+
+.customInput {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--tk-radius-sm);
+}
+
+.hexText {
+  font-family: var(--tk-font-mono);
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+}

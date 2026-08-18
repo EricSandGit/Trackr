@@ -1,0 +1,120 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+  background-color: var(--tk-bg-surface);
+  border-radius: var(--tk-radius-lg);
+  border: 1px solid var(--tk-border-default);
+  padding: var(--tk-space-4);
+}
+
+.navHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monthTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  text-transform: capitalize;
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-1);
+}
+
+.arrowBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-secondary);
+  transition: all var(--tk-transition-fast);
+}
+
+.arrowBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+.weekdaysRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.weekdayLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tk-text-muted);
+  padding-bottom: 2px;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dayCell {
+  aspect-ratio: 1;
+  border-radius: var(--tk-radius-sm);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--tk-transition-fast), box-shadow var(--tk-transition-fast);
+  color: var(--tk-text-primary);
+}
+
+.dayCell:hover {
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.dayCell:active {
+  transform: scale(0.95);
+}
+
+.otherMonth {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.todayBorder {
+  box-shadow: 0 0 0 2px var(--tk-border-focus);
+}
+
+.recordDay {
+  border-color: var(--tk-record-border) !important;
+  box-shadow: var(--tk-record-glow) !important;
+}
+
+.recordStar {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 8px;
+  color: var(--tk-record-gold);
+}
+
+.cellValue {
+  font-size: 9px;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-top: 1px;
+}

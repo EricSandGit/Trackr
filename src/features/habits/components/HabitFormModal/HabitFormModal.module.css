@@ -1,0 +1,134 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-1);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.input {
+  height: 42px;
+  background-color: var(--tk-bg-input);
+  border: 1.5px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  padding: 0 var(--tk-space-3);
+  font-size: 14px;
+  color: var(--tk-text-primary);
+  outline: none;
+  transition: border-color var(--tk-transition-fast);
+}
+
+.input:focus {
+  border-color: var(--tk-border-focus);
+}
+
+.textarea {
+  min-height: 70px;
+  background-color: var(--tk-bg-input);
+  border: 1.5px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  padding: var(--tk-space-2) var(--tk-space-3);
+  font-size: 14px;
+  color: var(--tk-text-primary);
+  outline: none;
+  resize: vertical;
+}
+
+.textarea:focus {
+  border-color: var(--tk-border-focus);
+}
+
+.typeSelector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-2);
+}
+
+.typeBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tk-space-3);
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1.5px solid var(--tk-border-default);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+  gap: 4px;
+}
+
+.typeBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+}
+
+.typeBtnSelected {
+  border-color: var(--tk-accent);
+  background-color: rgba(35, 134, 54, 0.15);
+  box-shadow: 0 0 0 1px var(--tk-accent);
+}
+
+.typeTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
+.typeDesc {
+  font-size: 11px;
+  color: var(--tk-text-secondary);
+}
+
+.quantitativeFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-3);
+  background-color: var(--tk-bg-surface-elevated);
+  padding: var(--tk-space-3);
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+}
+
+.frequencyDays {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.dayBtn {
+  flex: 1;
+  height: 36px;
+  border-radius: var(--tk-radius-sm);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tk-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--tk-transition-fast);
+}
+
+.dayBtnSelected {
+  background-color: var(--tk-border-focus);
+  color: #ffffff;
+  border-color: var(--tk-border-focus);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tk-space-2);
+  margin-top: var(--tk-space-2);
+}

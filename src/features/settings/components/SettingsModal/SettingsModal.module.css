@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-4);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-2);
+  background-color: var(--tk-bg-surface-elevated);
+  padding: var(--tk-space-3);
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tk-space-2);
+}
+
+.description {
+  font-size: 12px;
+  color: var(--tk-text-secondary);
+  line-height: 1.4;
+}
+
+.buttonGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-2);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.dangerSection {
+  border-color: rgba(248, 81, 73, 0.2);
+  background-color: rgba(248, 81, 73, 0.05);
+}
+
+.appInfo {
+  text-align: center;
+  font-size: 11px;
+  color: var(--tk-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--tk-space-2);
+}

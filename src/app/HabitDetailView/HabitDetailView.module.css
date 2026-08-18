@@ -1,0 +1,126 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: calc(var(--tk-space-4) + var(--tk-safe-top)) var(--tk-space-4) calc(var(--tk-space-8) + var(--tk-safe-bottom));
+  gap: var(--tk-space-4);
+}
+
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-1);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+  padding: var(--tk-space-1) var(--tk-space-2);
+  border-radius: var(--tk-radius-md);
+  transition: all var(--tk-transition-fast);
+}
+
+.backBtn:hover {
+  color: var(--tk-text-primary);
+  background-color: var(--tk-bg-surface-elevated);
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-1);
+}
+
+.headerCard {
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.headerColorStrip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-3);
+}
+
+.icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  flex-shrink: 0;
+}
+
+.titleInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.habitName {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--tk-text-primary);
+}
+
+.habitMeta {
+  font-size: 12px;
+  color: var(--tk-text-secondary);
+  font-weight: 500;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+  line-height: 1.4;
+}
+
+.expandToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tk-space-2);
+  padding: var(--tk-space-3);
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  color: var(--tk-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--tk-transition-fast);
+}
+
+.expandToggleBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  border-color: var(--tk-border-focus);
+}
+
+.dangerZone {
+  display: flex;
+  gap: var(--tk-space-2);
+  margin-top: var(--tk-space-4);
+  padding-top: var(--tk-space-4);
+  border-top: 1px solid var(--tk-border-muted);
+}

@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-2) var(--tk-space-3);
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.centerInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.dateTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dateSub {
+  font-size: 11px;
+  color: var(--tk-text-secondary);
+}
+
+.navArrows {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-1);
+}
+
+.arrowBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-secondary);
+  transition: all var(--tk-transition-fast);
+}
+
+.arrowBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+.todayQuickBtn {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-primary);
+  border: 1px solid var(--tk-border-default);
+  transition: all var(--tk-transition-fast);
+}
+
+.todayQuickBtn:hover {
+  border-color: var(--tk-accent);
+  color: var(--tk-accent);
+}
+
+.hiddenDatePicker {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}

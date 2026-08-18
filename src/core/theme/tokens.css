@@ -1,0 +1,112 @@
+:root {
+  /* Fonts */
+  --tk-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --tk-font-mono: 'JetBrains Mono', monospace;
+
+  /* GitHub Dark Theme (Default) */
+  --tk-bg-app: #0d1117;
+  --tk-bg-surface: #161b22;
+  --tk-bg-surface-elevated: #21262d;
+  --tk-bg-surface-hover: #30363d;
+  --tk-bg-input: #0d1117;
+  --tk-bg-overlay: rgba(1, 4, 9, 0.75);
+
+  --tk-border-default: #30363d;
+  --tk-border-muted: #21262d;
+  --tk-border-focus: #58a6ff;
+
+  --tk-text-primary: #f0f6fc;
+  --tk-text-secondary: #8b949e;
+  --tk-text-muted: #6e7681;
+  --tk-text-inverse: #0d1117;
+
+  /* Global GitHub-style Heatmap Palette */
+  --tk-cell-empty: #161b22;
+  --tk-cell-border: rgba(240, 246, 252, 0.06);
+  --tk-cell-level-1: #0e4429;
+  --tk-cell-level-2: #006d32;
+  --tk-cell-level-3: #26a641;
+  --tk-cell-level-4: #39d353;
+
+  /* Personal Record Highlight */
+  --tk-record-gold: #fbbf24;
+  --tk-record-glow: 0 0 10px rgba(251, 191, 36, 0.5), inset 0 0 4px rgba(251, 191, 36, 0.4);
+  --tk-record-border: #fbbf24;
+
+  /* Interactive & Accents */
+  --tk-accent: #238636;
+  --tk-accent-hover: #2ea043;
+  --tk-accent-active: #29903b;
+  --tk-accent-text: #ffffff;
+
+  --tk-info: #58a6ff;
+  --tk-warning: #d29922;
+  --tk-danger: #f85149;
+  --tk-danger-surface: rgba(248, 81, 73, 0.15);
+
+  /* Spacing */
+  --tk-space-1: 4px;
+  --tk-space-2: 8px;
+  --tk-space-3: 12px;
+  --tk-space-4: 16px;
+  --tk-space-5: 20px;
+  --tk-space-6: 24px;
+  --tk-space-8: 32px;
+  --tk-space-10: 40px;
+
+  /* Border Radii */
+  --tk-radius-xs: 3px;
+  --tk-radius-sm: 6px;
+  --tk-radius-md: 10px;
+  --tk-radius-lg: 16px;
+  --tk-radius-xl: 22px;
+  --tk-radius-full: 9999px;
+
+  /* Transitions & Shadows */
+  --tk-transition-fast: 0.12s ease;
+  --tk-transition-normal: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --tk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --tk-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --tk-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+
+  /* Safe Areas (for Mobile Notch & Home Bar) */
+  --tk-safe-top: env(safe-area-inset-top, 0px);
+  --tk-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+[data-theme='light'] {
+  --tk-bg-app: #f6f8fa;
+  --tk-bg-surface: #ffffff;
+  --tk-bg-surface-elevated: #ffffff;
+  --tk-bg-surface-hover: #f3f4f6;
+  --tk-bg-input: #ffffff;
+  --tk-bg-overlay: rgba(31, 35, 40, 0.4);
+
+  --tk-border-default: #d0d7de;
+  --tk-border-muted: #e1e4e8;
+  --tk-border-focus: #0969da;
+
+  --tk-text-primary: #1f2328;
+  --tk-text-secondary: #656d76;
+  --tk-text-muted: #8c959f;
+  --tk-text-inverse: #ffffff;
+
+  --tk-cell-empty: #ebedf0;
+  --tk-cell-border: rgba(31, 35, 40, 0.08);
+  --tk-cell-level-1: #9be9a8;
+  --tk-cell-level-2: #40c463;
+  --tk-cell-level-3: #30a14e;
+  --tk-cell-level-4: #216e39;
+
+  --tk-record-gold: #b45309;
+  --tk-record-glow: 0 0 8px rgba(245, 158, 11, 0.4);
+  --tk-record-border: #f59e0b;
+
+  --tk-accent: #1f883d;
+  --tk-accent-hover: #1a7f37;
+  --tk-accent-active: #157130;
+
+  --tk-shadow-sm: 0 1px 3px rgba(31, 35, 40, 0.1);
+  --tk-shadow-md: 0 4px 12px rgba(31, 35, 40, 0.12);
+  --tk-shadow-lg: 0 12px 32px rgba(31, 35, 40, 0.18);
+}

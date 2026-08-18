@@ -1,0 +1,76 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--tk-bg-overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 110;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--tk-space-4);
+  animation: fadeIn 0.18s ease-out;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--tk-bg-surface);
+  border-radius: var(--tk-radius-lg);
+  border: 1px solid var(--tk-border-default);
+  box-shadow: var(--tk-shadow-lg);
+  padding: var(--tk-space-5);
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--tk-space-4);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tk-radius-full);
+  color: var(--tk-text-secondary);
+  background-color: var(--tk-bg-surface-elevated);
+}
+
+.closeButton:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

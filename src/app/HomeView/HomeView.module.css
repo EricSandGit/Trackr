@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: calc(var(--tk-space-4) + var(--tk-safe-top)) var(--tk-space-4) calc(var(--tk-space-8) + var(--tk-safe-bottom));
+  gap: var(--tk-space-4);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+}
+
+.brandIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-sm);
+  background-color: #0d1117;
+  border: 1px solid var(--tk-border-default);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  gap: 2px;
+}
+
+.brandIconDot {
+  border-radius: 1px;
+}
+
+.brandTitle {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--tk-text-primary);
+}
+
+.brandBadge {
+  font-size: 10px;
+  font-weight: 700;
+  background-color: rgba(35, 134, 54, 0.2);
+  color: var(--tk-accent);
+  border: 1px solid rgba(35, 134, 54, 0.4);
+  padding: 1px 6px;
+  border-radius: var(--tk-radius-full);
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-1);
+}
+
+.actionBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--tk-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  transition: all var(--tk-transition-fast);
+}
+
+.actionBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+.createBtn {
+  background-color: var(--tk-accent);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.createBtn:hover {
+  background-color: var(--tk-accent-hover);
+}
