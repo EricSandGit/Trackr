@@ -79,8 +79,66 @@
 
 .goalLine {
   stroke: var(--tk-text-muted);
+  stroke-dasharray: 4 4;
+  stroke-width: 1.5;
+  opacity: 0.8;
+}
+
+.averageLine {
+  stroke: var(--tk-accent, #38bdf8);
   stroke-dasharray: 3 3;
   stroke-width: 1.5;
+  opacity: 0.9;
+}
+
+.sideGoalText {
+  fill: var(--tk-text-muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.sideAvgText {
+  fill: var(--tk-accent, #38bdf8);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.histogramBar {
+  transition: opacity var(--tk-transition-fast), fill var(--tk-transition-fast);
+  cursor: pointer;
+}
+
+.histogramBar:hover {
+  opacity: 0.85;
+}
+
+.statsLegend {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-3);
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--tk-text-secondary);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legendLineGoal {
+  width: 12px;
+  height: 2px;
+  border-top: 2px dashed var(--tk-text-muted);
+}
+
+.legendLineAvg {
+  width: 12px;
+  height: 2px;
+  border-top: 2px dashed var(--tk-accent, #38bdf8);
 }
 
 .axisText {

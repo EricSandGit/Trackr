@@ -9,7 +9,7 @@ import {
 } from '@/core/utils/dateUtils';
 import styles from './HabitEvolutionChart.module.css';
 
-type TimeRange = '14d' | '30d' | '90d' | 'all';
+export type TimeRange = 'month' | 'year' | 'all';
 
 export interface HabitEvolutionChartProps {
   habit: Habit;
@@ -33,7 +33,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
   logs,
   onSelectDate,
 }) => {
-  const [range, setRange] = useState<TimeRange>('30d');
+  const [range, setRange] = useState<TimeRange>('month');
   const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -41,23 +41,44 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
   const goal = habit.dailyGoal || 0;
   const habitLogs = useMemo(() => logs.filter((l) => l.habitId === habit.id), [logs, habit.id]);
 
-  // Determine days count based on range
+  const todayStr = useMemo(() => formatDateToISO(new Date()), []);
+
+  // Determine days count based on range (Mensual = 30d, Anual = 365d, Histórico = Todo)
   const daysCount = useMemo(() => {
     switch (range) {
-      case '14d':
-        return 14;
-      case '30d':
+      case 'month':
         return 30;
-      case '90d':
-        return 90;
-      case 'all':
-        return 180;
-    }
-  }, [range]);
+      case 'year':
+        return 365;
+      case 'all': {
+        const habitCreationDate = habit.createdAt
+          ? formatDateToISO(new Date(habit.createdAt))
+          : todayStr;
 
-  // Generate series
-  const { points, yTicks, goalY } = useMemo(() => {
-    const todayStr = formatDateToISO(new Date());
+        let earliestDate = habitCreationDate;
+        habitLogs.forEach((l) => {
+          if (l.date && l.date < earliestDate) {
+            earliestDate = l.date;
+          }
+        });
+
+        const d1 = parseISODate(earliestDate).getTime();
+        const d2 = parseISODate(todayStr).getTime();
+        const diffDays = Math.max(30, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+        return diffDays;
+      }
+    }
+  }, [range, habit.createdAt, habitLogs, todayStr]);
+
+  // Generate series and calculations
+  const {
+    points,
+    yTicks,
+    goalY,
+    avgY,
+    periodAverage,
+    highestVal,
+  } = useMemo(() => {
     const rawPoints: Array<{
       date: string;
       label: string;
@@ -67,7 +88,8 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
       isCompleted: boolean;
     }> = [];
 
-    let highestVal = 0;
+    let highest = 0;
+    let totalVolume = 0;
 
     for (let i = daysCount - 1; i >= 0; i--) {
       const d = shiftDate(todayStr, -i);
@@ -76,10 +98,13 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
       const isRecord = !!log?.isPersonalRecord;
       const isCompleted = !!log?.isCompleted;
 
-      if (val > highestVal) highestVal = val;
+      if (val > highest) highest = val;
+      totalVolume += val;
 
       const dateObj = parseISODate(d);
-      const label = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+      const label = range === 'year' || (range === 'all' && daysCount > 90)
+        ? dateObj.toLocaleDateString('es-ES', { month: 'short' })
+        : dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
       const fullDateLabel = getRelativeDateLabel(d, 'short');
 
       rawPoints.push({
@@ -92,19 +117,21 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
       });
     }
 
-    // Chart dimensions with ample headroom for the elevated cartelito
-    const width = 520;
+    const calculatedAvg = rawPoints.length > 0 ? totalVolume / rawPoints.length : 0;
+
+    // Chart dimensions with dedicated right-side space for labels
+    const width = 560;
     const height = 230;
-    const paddingLeft = 42;
-    const paddingRight = 18;
+    const paddingLeft = 38;
+    const paddingRight = 86;
     const paddingTop = 50; // Headroom for cartelito + stem line
     const paddingBottom = 32;
 
     const plotWidth = width - paddingLeft - paddingRight;
     const plotHeight = height - paddingTop - paddingBottom;
 
-    const maxScaleValue = Math.max(highestVal, goal, 5);
-    const calculatedMaxY = Math.ceil(maxScaleValue * 1.15);
+    const maxScaleValue = Math.max(highest, goal, calculatedAvg, 5);
+    const calculatedMaxY = Math.ceil(maxScaleValue * 1.18);
 
     // Compute coordinates for each point
     const calculatedPoints: ChartDataPoint[] = rawPoints.map((p, idx) => {
@@ -130,12 +157,19 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
       ? paddingTop + plotHeight - (goal / calculatedMaxY) * plotHeight
       : null;
 
+    const calculatedAvgY = calculatedAvg > 0
+      ? paddingTop + plotHeight - (calculatedAvg / calculatedMaxY) * plotHeight
+      : null;
+
     return {
       points: calculatedPoints,
       yTicks: ticks,
       goalY: calculatedGoalY,
+      avgY: calculatedAvgY,
+      periodAverage: calculatedAvg,
+      highestVal: highest,
     };
-  }, [daysCount, habitLogs, goal]);
+  }, [daysCount, habitLogs, goal, range, todayStr]);
 
   // Construct SVG Path (D line) and Area Path
   const { linePath, areaPath } = useMemo(() => {
@@ -161,50 +195,67 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
   const habitColor = habit.color || '#38bdf8';
 
   // Step for showing X-axis labels to avoid text overlapping
-  const xLabelStep = Math.ceil(points.length / 6);
+  const xLabelStep = useMemo(() => {
+    if (range === 'month') return 5;
+    if (range === 'year') return Math.max(1, Math.round(points.length / 12));
+    return Math.max(1, Math.round(points.length / 8));
+  }, [range, points.length]);
+
+  // Determine bar width for histogram
+  const barWidth = useMemo(() => {
+    if (points.length <= 30) return 7;
+    if (points.length <= 90) return 4;
+    if (points.length <= 180) return 2.5;
+    return 1.5;
+  }, [points.length]);
+
+  // Avoid vertical collision for side labels if goal and average are at similar height
+  const { displayGoalY, displayAvgY } = useMemo(() => {
+    let gY = goalY;
+    let aY = avgY;
+    if (goalY !== null && avgY !== null && Math.abs(goalY - avgY) < 14) {
+      if (goalY < avgY) {
+        gY = goalY - 6;
+        aY = avgY + 6;
+      } else {
+        gY = goalY + 6;
+        aY = avgY - 6;
+      }
+    }
+    return { displayGoalY: gY, displayAvgY: aY };
+  }, [goalY, avgY]);
 
   return (
     <div className={styles.container}>
-      {/* Header with Title & Range Switcher */}
+      {/* Header with Title & Range Switcher (Mensual / Anual / Histórico) */}
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
           <TrendingUp size={16} color={habitColor} />
-          <h4 className={styles.title}>Evolución Diaria de Cantidad</h4>
+          <h4 className={styles.title}>Evolución e Histograma</h4>
         </div>
 
         <div className={styles.rangeSelector}>
           <button
             type="button"
-            className={`${styles.rangeBtn} ${range === '14d' ? styles.rangeBtnActive : ''}`}
+            className={`${styles.rangeBtn} ${range === 'month' ? styles.rangeBtnActive : ''}`}
             onClick={() => {
-              setRange('14d');
+              setRange('month');
               setSelectedPointIndex(null);
               setHoveredIndex(null);
             }}
           >
-            14d
+            Mensual
           </button>
           <button
             type="button"
-            className={`${styles.rangeBtn} ${range === '30d' ? styles.rangeBtnActive : ''}`}
+            className={`${styles.rangeBtn} ${range === 'year' ? styles.rangeBtnActive : ''}`}
             onClick={() => {
-              setRange('30d');
+              setRange('year');
               setSelectedPointIndex(null);
               setHoveredIndex(null);
             }}
           >
-            30d
-          </button>
-          <button
-            type="button"
-            className={`${styles.rangeBtn} ${range === '90d' ? styles.rangeBtnActive : ''}`}
-            onClick={() => {
-              setRange('90d');
-              setSelectedPointIndex(null);
-              setHoveredIndex(null);
-            }}
-          >
-            90d
+            Anual
           </button>
           <button
             type="button"
@@ -215,17 +266,39 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
               setHoveredIndex(null);
             }}
           >
-            Todo
+            Histórico
           </button>
         </div>
       </div>
 
+      {/* Legend with Metrics Summary */}
+      <div className={styles.statsLegend}>
+        {goal > 0 && (
+          <div className={styles.legendItem}>
+            <div className={styles.legendLineGoal} />
+            <span>Meta: <strong>{goal} {unit}</strong></span>
+          </div>
+        )}
+        {periodAverage > 0 && (
+          <div className={styles.legendItem}>
+            <div className={styles.legendLineAvg} />
+            <span>Promedio: <strong>{periodAverage.toFixed(1)} {unit}/día</strong></span>
+          </div>
+        )}
+        {highestVal > 0 && (
+          <div className={styles.legendItem} style={{ marginLeft: 'auto' }}>
+            <Sparkles size={12} color="var(--tk-record-gold)" />
+            <span>Máx: <strong style={{ color: 'var(--tk-record-gold)' }}>{highestVal} {unit}</strong></span>
+          </div>
+        )}
+      </div>
+
       {/* SVG Chart */}
       <div className={styles.chartArea}>
-        <svg viewBox="0 0 520 230" className={styles.svgChart}>
+        <svg viewBox="0 0 560 230" className={styles.svgChart}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={habitColor} stopOpacity="0.35" />
+              <stop offset="0%" stopColor={habitColor} stopOpacity="0.30" />
               <stop offset="100%" stopColor={habitColor} stopOpacity="0.0" />
             </linearGradient>
           </defs>
@@ -234,38 +307,88 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
           {yTicks.map((tick, i) => (
             <g key={i}>
               <line
-                x1="42"
+                x1="38"
                 y1={tick.y}
-                x2="502"
+                x2="474"
                 y2={tick.y}
                 className={styles.gridLine}
               />
-              <text x="36" y={tick.y + 3} textAnchor="end" className={styles.axisText}>
+              <text x="32" y={tick.y + 3} textAnchor="end" className={styles.axisText}>
                 {tick.value}
               </text>
             </g>
           ))}
 
-          {/* Goal reference dashed line */}
-          {goalY !== null && (
+          {/* Goal reference line with side label */}
+          {goalY !== null && displayGoalY !== null && (
             <g>
               <line
-                x1="42"
+                x1="38"
                 y1={goalY}
-                x2="502"
+                x2="478"
                 y2={goalY}
                 className={styles.goalLine}
               />
               <text
-                x="500"
-                y={goalY - 4}
-                textAnchor="end"
-                style={{ fill: 'var(--tk-text-muted)', fontSize: '9px', fontWeight: 600 }}
+                x="484"
+                y={displayGoalY + 3.5}
+                textAnchor="start"
+                className={styles.sideGoalText}
               >
                 Meta: {goal} {unit}
               </text>
             </g>
           )}
+
+          {/* Average reference line with side label */}
+          {avgY !== null && displayAvgY !== null && periodAverage > 0 && (
+            <g>
+              <line
+                x1="38"
+                y1={avgY}
+                x2="478"
+                y2={avgY}
+                className={styles.averageLine}
+              />
+              <text
+                x="484"
+                y={displayAvgY + 3.5}
+                textAnchor="start"
+                className={styles.sideAvgText}
+              >
+                Prom: {periodAverage.toFixed(1)} {unit}
+              </text>
+            </g>
+          )}
+
+          {/* Histogram Bars */}
+          {points.map((p, idx) => {
+            if (p.value <= 0) return null;
+            const barHeight = Math.max(2, 198 - p.y);
+            const isHovered = hoveredIndex === idx;
+            const isSelected = selectedPointIndex === idx;
+            const isHighlighted = isHovered || isSelected;
+
+            return (
+              <rect
+                key={`bar-${p.date}`}
+                x={p.x - barWidth / 2}
+                y={p.y}
+                width={barWidth}
+                height={barHeight}
+                rx={barWidth > 3 ? 1.5 : 0.5}
+                fill={habitColor}
+                opacity={isHighlighted ? 0.85 : 0.28}
+                className={styles.histogramBar}
+                onMouseEnter={() => setHoveredIndex(idx)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => {
+                  setSelectedPointIndex(idx);
+                  onSelectDate?.(p.date);
+                }}
+              />
+            );
+          })}
 
           {/* Area Fill */}
           <path d={areaPath} fill={`url(#${gradientId})`} />
@@ -305,7 +428,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
             const isHovered = hoveredIndex === idx;
             const isSelected = selectedPointIndex === idx;
             const isHighlighted = isHovered || isSelected;
-            const pointRadius = isHighlighted ? 6.5 : p.isRecord ? 5 : (daysCount > 30 ? 3 : 4);
+            const pointRadius = isHighlighted ? 6.5 : p.isRecord ? 5 : (points.length > 45 ? 2 : 3.5);
 
             return (
               <g key={p.date}>
@@ -313,7 +436,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
                 <circle
                   cx={p.x}
                   cy={p.y}
-                  r="14"
+                  r={points.length > 45 ? 8 : 14}
                   fill="transparent"
                   style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHoveredIndex(idx)}
@@ -362,7 +485,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
           {activePoint && (
             <g
               className={styles.floatingTooltipGroup}
-              transform={`translate(${Math.max(48, Math.min(472, activePoint.x))}, ${Math.max(34, activePoint.y - 20)})`}
+              transform={`translate(${Math.max(48, Math.min(436, activePoint.x))}, ${Math.max(34, activePoint.y - 20)})`}
             >
               {/* Tooltip Background Box */}
               <rect
@@ -441,7 +564,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
         </div>
       ) : (
         <div style={{ fontSize: '11px', color: 'var(--tk-text-muted)', textAlign: 'center' }}>
-          Pasa el cursor o toca cualquier punto del gráfico para ver el cartelito con la fecha exacta.
+          Toca o pasa el cursor por cualquier barra o punto para ver el cartelito flotante y el valor exacto.
         </div>
       )}
     </div>
