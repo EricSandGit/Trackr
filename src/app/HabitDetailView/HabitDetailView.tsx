@@ -12,7 +12,7 @@ import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { Button } from '@/core/ui/Button';
 import { MonthlyGrid, AnnualHeatmap } from '@/features/heatmap';
-import { HabitStatBadges, HabitEvolutionChart } from '@/features/stats';
+import { HabitStatBadges, HabitEvolutionChart, PeriodicGoalCards } from '@/features/stats';
 import { HabitFormModal } from '@/features/habits';
 import { QuickLogBottomSheet } from '@/features/logging';
 import styles from './HabitDetailView.module.css';
@@ -43,7 +43,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     return (
       <div className={styles.container}>
         <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <p>Hábito no encontrado o eliminado.</p>
+          <h2>Hábito no encontrado</h2>
           <Button variant="secondary" onClick={onBack} style={{ marginTop: '16px' }}>
             Volver al Inicio
           </Button>
@@ -52,8 +52,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     );
   }
 
-  const habitLogs = logs.filter((l) => l.habitId === habit.id);
-  const currentLog = habitLogs.find((l) => l.date === selectedDate);
+  const currentLog = logs.find((l) => l.habitId === habit.id && l.date === selectedDate);
 
   const handleDelete = async () => {
     if (window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el hábito "${habit.name}" y todo su historial?`)) {
@@ -109,9 +108,12 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
           <div className={styles.icon}>{habit.icon || '🎯'}</div>
           <div className={styles.titleInfo}>
             <h2 className={styles.habitName}>{habit.name}</h2>
+            {habit.category && (
+              <span className={styles.categoryTag}>🏷️ {habit.category}</span>
+            )}
             <span className={styles.habitMeta}>
               {habit.type === 'quantitative'
-                ? `Meta: ${habit.dailyGoal || 0} ${habit.unit || 'uds'} • ${frequencyLabel}`
+                ? `Meta diaria: ${habit.dailyGoal || 0} ${habit.unit || 'uds'} • ${frequencyLabel}`
                 : `Simple Sí/No • ${frequencyLabel}`}
             </span>
           </div>
@@ -139,6 +141,9 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
           </Button>
         </div>
       </div>
+
+      {/* Periodic Goal Cards (Weekly and Monthly progress) */}
+      <PeriodicGoalCards habit={habit} logs={logs} referenceDate={selectedDate} />
 
       {/* Metric Badges */}
       <HabitStatBadges habit={habit} logs={logs} />

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Check, CheckSquare, Hash } from 'lucide-react';
-import { Habit, HabitType, CreateHabitInput, UpdateHabitInput } from '@/core/types';
+import { Check, CheckSquare, Hash, Target, Sparkles } from 'lucide-react';
+import {
+  Habit,
+  HabitType,
+  CreateHabitInput,
+  UpdateHabitInput,
+  CURATED_HABIT_CATEGORIES,
+} from '@/core/types';
 import { Modal } from '@/core/ui/Modal';
 import { Button } from '@/core/ui/Button';
 import { ColorPicker, CURATED_HABIT_COLORS } from '@/core/ui/ColorPicker';
@@ -24,9 +30,13 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState('🎯');
   const [color, setColor] = useState(CURATED_HABIT_COLORS[0]);
+  const [category, setCategory] = useState<string>('Salud & Deporte');
+  const [customCategory, setCustomCategory] = useState<string>('');
   const [type, setType] = useState<HabitType>('boolean');
   const [unit, setUnit] = useState('min');
   const [dailyGoal, setDailyGoal] = useState<string>('30');
+  const [weeklyGoal, setWeeklyGoal] = useState<string>('');
+  const [monthlyGoal, setMonthlyGoal] = useState<string>('');
   const [frequencyType, setFrequencyType] = useState<'everyday' | 'specific_days'>('everyday');
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]); // Mon-Fri
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,9 +47,19 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
       setDescription(habitToEdit.description || '');
       setIcon(habitToEdit.icon || '🎯');
       setColor(habitToEdit.color);
+      const isCurated = CURATED_HABIT_CATEGORIES.some((c) => c.id === habitToEdit.category);
+      if (habitToEdit.category && !isCurated) {
+        setCategory('__custom__');
+        setCustomCategory(habitToEdit.category);
+      } else {
+        setCategory(habitToEdit.category || 'Salud & Deporte');
+        setCustomCategory('');
+      }
       setType(habitToEdit.type);
       setUnit(habitToEdit.unit || 'min');
       setDailyGoal(habitToEdit.dailyGoal ? String(habitToEdit.dailyGoal) : '');
+      setWeeklyGoal(habitToEdit.weeklyGoal ? String(habitToEdit.weeklyGoal) : '');
+      setMonthlyGoal(habitToEdit.monthlyGoal ? String(habitToEdit.monthlyGoal) : '');
       setFrequencyType(habitToEdit.frequency.type);
       setSelectedDays(habitToEdit.frequency.daysOfWeek || [1, 2, 3, 4, 5]);
     } else {
@@ -47,9 +67,13 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
       setDescription('');
       setIcon('🎯');
       setColor(CURATED_HABIT_COLORS[Math.floor(Math.random() * CURATED_HABIT_COLORS.length)]);
+      setCategory('Salud & Deporte');
+      setCustomCategory('');
       setType('boolean');
       setUnit('min');
       setDailyGoal('30');
+      setWeeklyGoal('');
+      setMonthlyGoal('');
       setFrequencyType('everyday');
       setSelectedDays([1, 2, 3, 4, 5]);
     }
@@ -75,20 +99,37 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     }
   };
 
+  const handleAutoSuggestPeriodicGoals = () => {
+    if (type === 'boolean') {
+      const scheduledDaysPerWeek = frequencyType === 'everyday' ? 7 : selectedDays.length;
+      setWeeklyGoal(String(Math.max(1, scheduledDaysPerWeek - 1)));
+      setMonthlyGoal(String(Math.max(4, scheduledDaysPerWeek * 4 - 2)));
+    } else {
+      const dGoal = parseFloat(dailyGoal) || 20;
+      setWeeklyGoal(String(Math.round(dGoal * 6)));
+      setMonthlyGoal(String(Math.round(dGoal * 25)));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     setIsSubmitting(true);
     try {
+      const selectedCategory = category === '__custom__' ? customCategory.trim() : category;
+
       const data: CreateHabitInput = {
         name: name.trim(),
         description: description.trim() || undefined,
         icon,
         color,
+        category: selectedCategory || undefined,
         type,
         unit: type === 'quantitative' ? unit.trim() || 'uds' : undefined,
         dailyGoal: type === 'quantitative' && dailyGoal ? parseFloat(dailyGoal) : undefined,
+        weeklyGoal: weeklyGoal ? parseFloat(weeklyGoal) : undefined,
+        monthlyGoal: monthlyGoal ? parseFloat(monthlyGoal) : undefined,
         frequency: {
           type: frequencyType,
           daysOfWeek: frequencyType === 'specific_days' ? selectedDays : undefined,
@@ -120,6 +161,46 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+        </div>
+
+        {/* Category Picker */}
+        <div className={styles.field}>
+          <label className={styles.label}>Categoría / Etiqueta</label>
+          <div className={styles.categoryChips}>
+            {CURATED_HABIT_CATEGORIES.map((cat) => {
+              const isSelected = category === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`${styles.categoryChip} ${isSelected ? styles.categoryChipActive : ''}`}
+                  onClick={() => setCategory(cat.id)}
+                >
+                  <span>{cat.icon}</span>
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+            <button
+              type="button"
+              className={`${styles.categoryChip} ${category === '__custom__' ? styles.categoryChipActive : ''}`}
+              onClick={() => setCategory('__custom__')}
+            >
+              <span>✏️</span>
+              <span>Personalizada</span>
+            </button>
+          </div>
+
+          {category === '__custom__' && (
+            <input
+              type="text"
+              placeholder="Escribe el nombre de tu categoría..."
+              className={styles.input}
+              style={{ marginTop: '6px' }}
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+            />
+          )}
         </div>
 
         {/* Description */}
@@ -177,7 +258,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Meta Diaria (Opcional)</label>
+              <label className={styles.label}>Meta Diaria</label>
               <input
                 type="number"
                 step="any"
@@ -190,6 +271,65 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
             </div>
           </div>
         )}
+
+        {/* Periodic Goals (Weekly & Monthly Targets) */}
+        <div className={styles.periodicGoalsSection}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className={styles.periodicSectionTitle}>
+              <Target size={15} color="var(--tk-accent)" />
+              <span>Metas Periódicas (Opcional)</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleAutoSuggestPeriodicGoals}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--tk-accent)',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+              }}
+            >
+              <Sparkles size={11} /> Sugerir metas
+            </button>
+          </div>
+
+          <div className={styles.periodicInputsGrid}>
+            <div className={styles.field}>
+              <label className={styles.label}>
+                Meta Semanal {type === 'boolean' ? '(días/semana)' : `(${unit || 'uds'}/sem)`}
+              </label>
+              <input
+                type="number"
+                step="any"
+                min="1"
+                placeholder={type === 'boolean' ? 'ej. 4' : 'ej. 150'}
+                className={styles.input}
+                value={weeklyGoal}
+                onChange={(e) => setWeeklyGoal(e.target.value)}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>
+                Meta Mensual {type === 'boolean' ? '(días/mes)' : `(${unit || 'uds'}/mes)`}
+              </label>
+              <input
+                type="number"
+                step="any"
+                min="1"
+                placeholder={type === 'boolean' ? 'ej. 18' : 'ej. 600'}
+                className={styles.input}
+                value={monthlyGoal}
+                onChange={(e) => setMonthlyGoal(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Frequency */}
         <div className={styles.field}>
@@ -248,3 +388,4 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     </Modal>
   );
 };
+

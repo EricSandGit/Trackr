@@ -126,9 +126,68 @@
   border-color: var(--tk-border-focus);
 }
 
+.categoryChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.categoryChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.categoryChip:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+.categoryChipActive {
+  background-color: var(--tk-bg-surface-hover);
+  border-color: var(--tk-accent);
+  color: var(--tk-accent);
+  box-shadow: 0 0 0 1px var(--tk-accent);
+}
+
+.periodicGoalsSection {
+  background-color: var(--tk-bg-surface-elevated);
+  padding: var(--tk-space-3);
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+}
+
+.periodicSectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.periodicInputsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-3);
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--tk-space-2);
   margin-top: var(--tk-space-2);
 }
+

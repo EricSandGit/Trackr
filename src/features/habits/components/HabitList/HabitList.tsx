@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Plus, Layers } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { HabitCard } from '../HabitCard';
 import { Button } from '@/core/ui/Button';
@@ -25,17 +25,39 @@ export const HabitList: React.FC<HabitListProps> = ({
   onOpenDetail,
   onOpenCreateModal,
 }) => {
-  // Filter active and scheduled habits for selectedDate
-  const activeScheduledHabits = habits.filter(
-    (h) => !h.isArchived && isHabitScheduledOnDate(h, selectedDate)
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const logsMap = new Map<string, DailyActivityLog>();
-  logs.forEach((l) => {
-    if (l.date === selectedDate) {
-      logsMap.set(l.habitId, l);
-    }
-  });
+  // Filter active and scheduled habits for selectedDate
+  const activeScheduledHabits = useMemo(() => {
+    return habits.filter(
+      (h) => !h.isArchived && isHabitScheduledOnDate(h, selectedDate)
+    );
+  }, [habits, selectedDate]);
+
+  // Extract unique categories present among active scheduled habits
+  const categories = useMemo(() => {
+    const catsSet = new Set<string>();
+    activeScheduledHabits.forEach((h) => {
+      if (h.category) catsSet.add(h.category);
+    });
+    return Array.from(catsSet);
+  }, [activeScheduledHabits]);
+
+  // Filter habits according to selectedCategory
+  const displayedHabits = useMemo(() => {
+    if (selectedCategory === 'all') return activeScheduledHabits;
+    return activeScheduledHabits.filter((h) => h.category === selectedCategory);
+  }, [activeScheduledHabits, selectedCategory]);
+
+  const logsMap = useMemo(() => {
+    const map = new Map<string, DailyActivityLog>();
+    logs.forEach((l) => {
+      if (l.date === selectedDate) {
+        map.set(l.habitId, l);
+      }
+    });
+    return map;
+  }, [logs, selectedDate]);
 
   const completedCount = activeScheduledHabits.filter(
     (h) => logsMap.get(h.id)?.isCompleted
@@ -51,6 +73,37 @@ export const HabitList: React.FC<HabitListProps> = ({
           </span>
         )}
       </div>
+
+      {/* Category Filter Chips Bar */}
+      {categories.length > 0 && activeScheduledHabits.length > 0 && (
+        <div className={styles.filterBar}>
+          <button
+            type="button"
+            className={`${styles.filterChip} ${selectedCategory === 'all' ? styles.filterChipActive : ''}`}
+            onClick={() => setSelectedCategory('all')}
+          >
+            <Layers size={13} />
+            <span>Todos</span>
+            <span className={styles.filterBadge}>{activeScheduledHabits.length}</span>
+          </button>
+
+          {categories.map((cat) => {
+            const count = activeScheduledHabits.filter((h) => h.category === cat).length;
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                className={`${styles.filterChip} ${isSelected ? styles.filterChipActive : ''}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                <span>{cat}</span>
+                <span className={styles.filterBadge}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {activeScheduledHabits.length === 0 ? (
         <div className={styles.emptyState}>
@@ -68,9 +121,24 @@ export const HabitList: React.FC<HabitListProps> = ({
             Crear Hábito
           </Button>
         </div>
+      ) : displayedHabits.length === 0 ? (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>🔍</div>
+          <div className={styles.emptyTitle}>Sin hábitos en esta categoría</div>
+          <p className={styles.emptyText}>
+            No hay actividades programadas hoy para la categoría &quot;{selectedCategory}&quot;.
+          </p>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setSelectedCategory('all')}
+          >
+            Ver todos los hábitos
+          </Button>
+        </div>
       ) : (
         <div className={styles.list}>
-          {activeScheduledHabits.map((habit) => (
+          {displayedHabits.map((habit) => (
             <HabitCard
               key={habit.id}
               habit={habit}

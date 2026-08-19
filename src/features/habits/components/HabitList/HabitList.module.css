@@ -23,6 +23,60 @@
   color: var(--tk-text-secondary);
 }
 
+.filterBar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.filterBar::-webkit-scrollbar {
+  display: none;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all var(--tk-transition-fast);
+}
+
+.filterChip:hover {
+  background-color: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-primary);
+}
+
+.filterChipActive {
+  background-color: var(--tk-bg-surface-hover);
+  border-color: var(--tk-accent);
+  color: var(--tk-accent);
+  box-shadow: 0 0 0 1px var(--tk-accent);
+}
+
+.filterBadge {
+  font-size: 10px;
+  font-family: var(--tk-font-mono);
+  background-color: var(--tk-bg-surface-elevated);
+  padding: 1px 5px;
+  border-radius: var(--tk-radius-full);
+}
+
+.filterChipActive .filterBadge {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
 .list {
   display: flex;
   flex-direction: column;

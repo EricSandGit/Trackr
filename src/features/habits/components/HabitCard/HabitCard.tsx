@@ -57,17 +57,27 @@ export const HabitCard: React.FC<HabitCardProps> = ({
       <div className={styles.content}>
         <div className={styles.nameRow}>
           <span className={styles.name}>{habit.name}</span>
+          {habit.category && (
+            <span className={styles.categoryTag}>{habit.category}</span>
+          )}
           {isRecord && (
             <span className={styles.recordBadge}>
               <Sparkles size={10} /> Récord
             </span>
           )}
         </div>
-        <span
-          className={`${styles.progressText} ${isCompleted ? styles.completedText : ''}`}
-        >
-          {progressLabel}
-        </span>
+        <div className={styles.metaRow}>
+          <span
+            className={`${styles.progressText} ${isCompleted ? styles.completedText : ''}`}
+          >
+            {progressLabel}
+          </span>
+          {habit.weeklyGoal && (
+            <span className={styles.periodicGoalBadge}>
+              • Meta sem: {habit.weeklyGoal} {habit.type === 'boolean' ? 'días' : habit.unit || ''}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className={styles.checkAction} onClick={(e) => e.stopPropagation()}>

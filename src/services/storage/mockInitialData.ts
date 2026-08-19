@@ -10,9 +10,12 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     description: 'Aprender y adquirir nuevos conocimientos cada día',
     icon: '📚',
     color: '#38bdf8', // Cyan
+    category: 'Estudio & Aprendizaje',
     type: 'quantitative',
     unit: 'págs',
     dailyGoal: 20,
+    weeklyGoal: 120,
+    monthlyGoal: 500,
     frequency: { type: 'everyday' },
     isArchived: false,
     createdAt: shiftDate(today, -30),
@@ -25,7 +28,10 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     description: 'Fuerza, movilidad y salud cardiovascular',
     icon: '🏋️',
     color: '#39d353', // Emerald Green
+    category: 'Salud & Deporte',
     type: 'boolean',
+    weeklyGoal: 3,
+    monthlyGoal: 12,
     frequency: {
       type: 'specific_days',
       daysOfWeek: [1, 3, 5], // Mon, Wed, Fri
@@ -41,9 +47,12 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     description: 'Construir proyectos y avanzar en código',
     icon: '💻',
     color: '#a855f7', // Purple
+    category: 'Productividad',
     type: 'quantitative',
     unit: 'min',
     dailyGoal: 60,
+    weeklyGoal: 300,
+    monthlyGoal: 1200,
     frequency: { type: 'everyday' },
     isArchived: false,
     createdAt: shiftDate(today, -30),

@@ -78,6 +78,27 @@
   gap: 3px;
 }
 
+.categoryTag {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--tk-text-muted);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-muted);
+  padding: 1px 6px;
+  border-radius: var(--tk-radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+  flex-wrap: wrap;
+}
+
 .progressText {
   font-size: 12px;
   color: var(--tk-text-secondary);
@@ -88,8 +109,15 @@
   color: var(--tk-accent);
 }
 
+.periodicGoalBadge {
+  font-size: 11px;
+  color: var(--tk-text-muted);
+  font-family: var(--tk-font-mono);
+}
+
 .checkAction {
   display: flex;
   align-items: center;
   padding-left: var(--tk-space-2);
 }
+

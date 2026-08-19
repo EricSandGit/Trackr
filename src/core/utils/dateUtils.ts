@@ -192,3 +192,69 @@ export function generateHeatmapWeeks(weeksCount: number = 24, referenceDate: Dat
 
   return result;
 }
+
+/**
+ * Returns the Monday-to-Sunday days of the week containing the given dateStr
+ */
+export function getCurrentWeekRange(dateStr: string = formatDateToISO(new Date())): {
+  startOfWeek: string;
+  endOfWeek: string;
+  days: string[];
+  daysRemaining: number;
+} {
+  const refDate = parseISODate(dateStr);
+  const dayOfWeek = refDate.getDay(); // 0 is Sun, 1 is Mon
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+  const monday = new Date(refDate);
+  monday.setDate(monday.getDate() + diffToMonday);
+
+  const days: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(d.getDate() + i);
+    days.push(formatDateToISO(d));
+  }
+
+  const todayStr = formatDateToISO(new Date());
+  const daysRemaining = days.filter((d) => d >= todayStr).length;
+
+  return {
+    startOfWeek: days[0],
+    endOfWeek: days[6],
+    days,
+    daysRemaining,
+  };
+}
+
+/**
+ * Returns the 1st-to-last days of the month containing the given dateStr
+ */
+export function getCurrentMonthRange(dateStr: string = formatDateToISO(new Date())): {
+  startOfMonth: string;
+  endOfMonth: string;
+  days: string[];
+  daysRemaining: number;
+} {
+  const refDate = parseISODate(dateStr);
+  const year = refDate.getFullYear();
+  const month = refDate.getMonth();
+
+  const lastDay = new Date(year, month + 1, 0);
+
+  const days: string[] = [];
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const current = new Date(year, month, d);
+    days.push(formatDateToISO(current));
+  }
+
+  const todayStr = formatDateToISO(new Date());
+  const daysRemaining = days.filter((d) => d >= todayStr).length;
+
+  return {
+    startOfMonth: days[0],
+    endOfMonth: days[days.length - 1],
+    days,
+    daysRemaining,
+  };
+}
