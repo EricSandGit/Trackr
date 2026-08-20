@@ -1,5 +1,6 @@
 import { Habit, DailyActivityLog } from '@/core/types';
 import { getCurrentWeekRange, getCurrentMonthRange } from '@/core/utils/dateUtils';
+import { isHabitSuccessfulOnDate } from '@/features/heatmap/logic/heatmapCalculator';
 
 export interface PeriodicProgress {
   period: 'weekly' | 'monthly';
@@ -24,18 +25,25 @@ export function calculateWeeklyGoalProgress(
   if (!target || target <= 0) return null;
 
   const { days, daysRemaining } = getCurrentWeekRange(referenceDate);
-  const habitLogs = logs.filter((l) => l.habitId === habit.id && days.includes(l.date));
+  const habitLogs = logs.filter((l) => l.habitId === habit.id);
 
   let current = 0;
-  if (habit.type === 'boolean') {
-    current = habitLogs.filter((l) => l.isCompleted).length;
+  if (habit.type === 'avoidance') {
+    current = days.filter((d) => {
+      const log = habitLogs.find((l) => l.date === d);
+      return isHabitSuccessfulOnDate(habit, d, log);
+    }).length;
+  } else if (habit.type === 'boolean') {
+    current = habitLogs.filter((l) => days.includes(l.date) && l.isCompleted).length;
   } else {
-    current = habitLogs.reduce((sum, l) => sum + (l.totalValue || 0), 0);
+    current = habitLogs
+      .filter((l) => days.includes(l.date))
+      .reduce((sum, l) => sum + (l.totalValue || 0), 0);
   }
 
   const percentage = Math.min(100, Math.round((current / target) * 100));
   const isMet = current >= target;
-  const unit = habit.type === 'boolean' ? 'días' : habit.unit || 'uds';
+  const unit = habit.type === 'boolean' || habit.type === 'avoidance' ? 'días' : habit.unit || 'uds';
 
   return {
     period: 'weekly',
@@ -61,18 +69,25 @@ export function calculateMonthlyGoalProgress(
   if (!target || target <= 0) return null;
 
   const { days, daysRemaining } = getCurrentMonthRange(referenceDate);
-  const habitLogs = logs.filter((l) => l.habitId === habit.id && days.includes(l.date));
+  const habitLogs = logs.filter((l) => l.habitId === habit.id);
 
   let current = 0;
-  if (habit.type === 'boolean') {
-    current = habitLogs.filter((l) => l.isCompleted).length;
+  if (habit.type === 'avoidance') {
+    current = days.filter((d) => {
+      const log = habitLogs.find((l) => l.date === d);
+      return isHabitSuccessfulOnDate(habit, d, log);
+    }).length;
+  } else if (habit.type === 'boolean') {
+    current = habitLogs.filter((l) => days.includes(l.date) && l.isCompleted).length;
   } else {
-    current = habitLogs.reduce((sum, l) => sum + (l.totalValue || 0), 0);
+    current = habitLogs
+      .filter((l) => days.includes(l.date))
+      .reduce((sum, l) => sum + (l.totalValue || 0), 0);
   }
 
   const percentage = Math.min(100, Math.round((current / target) * 100));
   const isMet = current >= target;
-  const unit = habit.type === 'boolean' ? 'días' : habit.unit || 'uds';
+  const unit = habit.type === 'boolean' || habit.type === 'avoidance' ? 'días' : habit.unit || 'uds';
 
   return {
     period: 'monthly',

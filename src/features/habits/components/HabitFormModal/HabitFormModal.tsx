@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, CheckSquare, Hash, Target, Sparkles, PenLine } from 'lucide-react';
+import { Check, CheckSquare, Hash, Target, Sparkles, PenLine, ShieldAlert } from 'lucide-react';
 import {
   Habit,
   HabitType,
@@ -116,7 +116,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   };
 
   const handleAutoSuggestPeriodicGoals = () => {
-    if (type === 'boolean') {
+    if (type === 'boolean' || type === 'avoidance') {
       const scheduledDaysPerWeek = frequencyType === 'everyday' ? 7 : selectedDays.length;
       setWeeklyGoal(String(Math.max(1, scheduledDaysPerWeek - 1)));
       setMonthlyGoal(String(Math.max(4, scheduledDaysPerWeek * 4 - 2)));
@@ -257,6 +257,16 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               <span className={styles.typeTitle}>{t('habitForm.quantitativeTypeTitle')}</span>
               <span className={styles.typeDesc}>{t('habitForm.quantitativeTypeDesc')}</span>
             </button>
+
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${type === 'avoidance' ? styles.typeBtnSelected : ''}`}
+              onClick={() => setType('avoidance')}
+            >
+              <ShieldAlert size={20} color={type === 'avoidance' ? 'var(--tk-warning)' : undefined} />
+              <span className={styles.typeTitle}>{t('habitForm.avoidanceTypeTitle')}</span>
+              <span className={styles.typeDesc}>{t('habitForm.avoidanceTypeDesc')}</span>
+            </button>
           </div>
         </div>
 
@@ -317,15 +327,15 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
           <div className={styles.periodicInputsGrid}>
             <div className={styles.field}>
               <label className={styles.label}>
-                {type === 'boolean'
-                  ? t('habitForm.weeklyGoalLabelBoolean')
-                  : t('habitForm.weeklyGoalLabelQuantitative', { unit: unit || 'uds' })}
+                {type === 'quantitative'
+                  ? t('habitForm.weeklyGoalLabelQuantitative', { unit: unit || 'uds' })
+                  : t('habitForm.weeklyGoalLabelBoolean')}
               </label>
               <input
                 type="number"
                 step="any"
                 min="1"
-                placeholder={type === 'boolean' ? '4' : '150'}
+                placeholder={type === 'quantitative' ? '150' : '4'}
                 className={styles.input}
                 value={weeklyGoal}
                 onChange={(e) => setWeeklyGoal(e.target.value)}
@@ -334,15 +344,15 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
             <div className={styles.field}>
               <label className={styles.label}>
-                {type === 'boolean'
-                  ? t('habitForm.monthlyGoalLabelBoolean')
-                  : t('habitForm.monthlyGoalLabelQuantitative', { unit: unit || 'uds' })}
+                {type === 'quantitative'
+                  ? t('habitForm.monthlyGoalLabelQuantitative', { unit: unit || 'uds' })
+                  : t('habitForm.monthlyGoalLabelBoolean')}
               </label>
               <input
                 type="number"
                 step="any"
                 min="1"
-                placeholder={type === 'boolean' ? '18' : '600'}
+                placeholder={type === 'quantitative' ? '600' : '18'}
                 className={styles.input}
                 value={monthlyGoal}
                 onChange={(e) => setMonthlyGoal(e.target.value)}

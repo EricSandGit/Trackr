@@ -18,6 +18,36 @@ export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
 }
 
 /**
+ * Checks whether a habit was completed/clean on a specific date.
+ * - For boolean/quantitative habits: requires an explicit completed log.
+ * - For avoidance habits: scheduled days between creation date and today are clean by default,
+ *   unless a relapse log (isCompleted === false) is recorded.
+ */
+export function isHabitSuccessfulOnDate(
+  habit: Habit,
+  dateStr: string,
+  log?: DailyActivityLog
+): boolean {
+  if (!isHabitScheduledOnDate(habit, dateStr)) return false;
+
+  if (habit.type === 'avoidance') {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    // Future dates cannot be completed yet
+    if (dateStr > todayStr) return false;
+
+    const creationDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : todayStr;
+    if (dateStr < creationDateStr) return false;
+
+    if (log) {
+      return log.isCompleted !== false;
+    }
+    return true;
+  }
+
+  return !!log?.isCompleted;
+}
+
+/**
  * Calculates intensity level 0..4 for the Global Heatmap combining all habits on a given date
  */
 export function calculateGlobalDaySummary(
@@ -33,7 +63,7 @@ export function calculateGlobalDaySummary(
 
   const habitLogsSummary = scheduledHabits.map((habit) => {
     const log = logs.find((l) => l.habitId === habit.id && l.date === date);
-    const isCompleted = !!log?.isCompleted;
+    const isCompleted = isHabitSuccessfulOnDate(habit, date, log);
     const isRecord = !!log?.isPersonalRecord;
 
     if (isCompleted) {
@@ -48,7 +78,7 @@ export function calculateGlobalDaySummary(
       habitName: habit.name,
       habitColor: habit.color,
       habitIcon: habit.icon,
-      totalValue: log?.totalValue || 0,
+      totalValue: log?.totalValue || (habit.type === 'avoidance' && isCompleted ? 1 : 0),
       unit: habit.unit,
       dailyGoal: habit.dailyGoal,
       isCompleted,
@@ -85,10 +115,20 @@ export function calculateGlobalDaySummary(
  * Calculates intensity level 0..4 for an individual habit on a specific date
  */
 export function calculateHabitDayIntensity(
-  _date: string,
+  date: string,
   habit: Habit,
   log?: DailyActivityLog
 ): { level: 0 | 1 | 2 | 3 | 4; isRecord: boolean; isCompleted: boolean; value: number } {
+  if (habit.type === 'avoidance') {
+    const isCompleted = isHabitSuccessfulOnDate(habit, date, log);
+    return {
+      level: isCompleted ? 4 : 0,
+      isRecord: false,
+      isCompleted,
+      value: isCompleted ? 1 : 0,
+    };
+  }
+
   if (!log || log.totalValue <= 0) {
     return { level: 0, isRecord: false, isCompleted: false, value: 0 };
   }

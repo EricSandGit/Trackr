@@ -16,7 +16,7 @@ export const HabitStatBadges: React.FC<HabitStatBadgesProps> = ({ habit, logs })
     return calculateHabitIndividualStats(habit, logs);
   }, [habit, logs]);
 
-  const unit = habit.unit || (habit.type === 'boolean' ? t('common.days') : 'uds');
+  const unit = habit.unit || (habit.type === 'avoidance' || habit.type === 'boolean' ? t('common.days') : 'uds');
 
   return (
     <div className={styles.grid}>
@@ -27,7 +27,9 @@ export const HabitStatBadges: React.FC<HabitStatBadgesProps> = ({ habit, logs })
           <span>{t('badges.currentStreak')}</span>
         </div>
         <span className={styles.value} style={{ color: '#f97316' }}>
-          {t('badges.daysCount', { count: stats.currentStreak })}
+          {habit.type === 'avoidance'
+            ? t('badges.cleanDaysCount', { count: stats.currentStreak })
+            : t('badges.daysCount', { count: stats.currentStreak })}
         </span>
         <span className={styles.sublabel}>
           {t('badges.bestStreakDesc', { count: stats.bestStreak })}
