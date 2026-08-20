@@ -5,8 +5,13 @@
 [![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react&logoColor=black)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Built with AI Agents](https://img.shields.io/badge/Developed%20with-AI%20Agents-blueviolet?logo=openai&logoColor=white)](https://github.com/EricSandGit/Trackr)
 [![PWA](https://img.shields.io/badge/PWA-Ready-f05032?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+> [!NOTE]
+> **🤖 Desarrollo Asistido por Agentes de IA:**  
+> Este proyecto fue desarrollado íntegramente mediante la orquestación y dirección de **agentes de Inteligencia Artificial**. El objetivo principal de este desarrollo no fue escribir el código de forma manual, sino organizar, dirigir y estructurar el trabajo con el fin de aprender, experimentar y potenciar habilidades en **ingeniería de prompts, flujos de trabajo autónomos con agentes y uso de skills especializadas**.
 
 ---
 
@@ -113,6 +118,16 @@ src/
    npm run build
    npm run preview
    ```
+
+---
+
+## 🤖 Metodología: Desarrollo y Dirección de Agentes de IA
+
+Este proyecto funciona como un caso de estudio y laboratorio práctico para el aprendizaje del nuevo paradigma de **Agentic Coding**:
+
+- **Rol Humano (Product Owner / Arquitecto):** Definición de requerimientos, diseño de experiencia de usuario (UX/UI), priorización de funcionalidades, revisión de código y toma de decisiones técnicas estratégicas.
+- **Rol de los Agentes de IA (Implementación y Refactorización):** Escritura de código TypeScript/React, cálculo matemático de rachas y heatmaps SVG, modularización con CSS Modules, resolución de conflictos y pruebas de compilación.
+- **Objetivo:** Adquirir dominio práctico en la dirección, coordinación y aprovechamiento óptimo de agentes de IA y skills especializadas para el desarrollo acelerado de software robusto.
 
 ---
 
