@@ -12,13 +12,13 @@ export interface CuratedCategory {
 }
 
 export const CURATED_HABIT_CATEGORIES: CuratedCategory[] = [
-  { id: 'Salud & Deporte', label: 'Salud & Deporte', icon: '🏃' },
-  { id: 'Productividad', label: 'Productividad', icon: '⚡' },
-  { id: 'Estudio & Aprendizaje', label: 'Estudio & Aprendizaje', icon: '📚' },
-  { id: 'Bienestar & Mente', label: 'Bienestar & Mente', icon: '🧘' },
-  { id: 'Finanzas', label: 'Finanzas', icon: '💰' },
-  { id: 'Creatividad', label: 'Creatividad', icon: '🎨' },
-  { id: 'Personal', label: 'Personal', icon: '🌟' },
+  { id: 'Salud & Deporte', label: 'Salud & Deporte', icon: 'Activity' },
+  { id: 'Productividad', label: 'Productividad', icon: 'Zap' },
+  { id: 'Estudio & Aprendizaje', label: 'Estudio & Aprendizaje', icon: 'BookOpen' },
+  { id: 'Bienestar & Mente', label: 'Bienestar & Mente', icon: 'Heart' },
+  { id: 'Finanzas', label: 'Finanzas', icon: 'Trophy' },
+  { id: 'Creatividad', label: 'Creatividad', icon: 'Sparkles' },
+  { id: 'Personal', label: 'Personal', icon: 'Smile' },
 ];
 
 export interface Habit {

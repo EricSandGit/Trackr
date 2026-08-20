@@ -12,30 +12,33 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: var(--tk-space-2);
 }
 
-.emojiBtn {
-  font-size: 20px;
+.iconBtn {
   height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--tk-radius-md);
   background-color: var(--tk-bg-surface-elevated);
-  border: 1.5px solid transparent;
+  border: 1.5px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
   transition: all var(--tk-transition-fast);
+  cursor: pointer;
 }
 
-.emojiBtn:hover {
+.iconBtn:hover {
   background-color: var(--tk-bg-surface-hover);
-  transform: scale(1.1);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
 }
 
 .selected {
   border-color: var(--tk-border-focus);
   background-color: var(--tk-bg-surface-hover);
-  box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
-  transform: scale(1.08);
+  color: var(--tk-border-focus);
+  box-shadow: 0 0 10px rgba(139, 124, 246, 0.25);
+  transform: scale(1.05);
 }

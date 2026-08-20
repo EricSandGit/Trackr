@@ -8,7 +8,7 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     id: 'habit_reading',
     name: 'Lectura diaria',
     description: 'Aprender y adquirir nuevos conocimientos cada día',
-    icon: '📚',
+    icon: 'BookOpen',
     color: '#38bdf8', // Cyan
     category: 'Estudio & Aprendizaje',
     type: 'quantitative',
@@ -26,7 +26,7 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     id: 'habit_workout',
     name: 'Entrenamiento & Fitness',
     description: 'Fuerza, movilidad y salud cardiovascular',
-    icon: '🏋️',
+    icon: 'Dumbbell',
     color: '#39d353', // Emerald Green
     category: 'Salud & Deporte',
     type: 'boolean',
@@ -45,7 +45,7 @@ export function getMockInitialData(): { habits: Habit[]; logs: DailyActivityLog[
     id: 'habit_code',
     name: 'Desarrollo de Software',
     description: 'Construir proyectos y avanzar en código',
-    icon: '💻',
+    icon: 'Code',
     color: '#a855f7', // Purple
     category: 'Productividad',
     type: 'quantitative',

@@ -7,10 +7,12 @@ import {
   Maximize2,
   Minimize2,
   Plus,
+  Tag,
 } from 'lucide-react';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { Button } from '@/core/ui/Button';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import { MonthlyGrid, AnnualHeatmap } from '@/features/heatmap';
 import { HabitStatBadges, HabitEvolutionChart, PeriodicGoalCards } from '@/features/stats';
 import { HabitFormModal } from '@/features/habits';
@@ -105,11 +107,15 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
         <div className={styles.headerColorStrip} style={{ backgroundColor: habit.color }} />
 
         <div className={styles.titleRow}>
-          <div className={styles.icon}>{habit.icon || '🎯'}</div>
+          <div className={styles.icon}>
+            <HabitIcon name={habit.icon} size={28} color={habit.color} />
+          </div>
           <div className={styles.titleInfo}>
             <h2 className={styles.habitName}>{habit.name}</h2>
             {habit.category && (
-              <span className={styles.categoryTag}>🏷️ {habit.category}</span>
+              <span className={styles.categoryTag}>
+                <Tag size={11} /> {habit.category}
+              </span>
             )}
             <span className={styles.habitMeta}>
               {habit.type === 'quantitative'

@@ -2,6 +2,7 @@ import React from 'react';
 import { Sparkles, Plus } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { Checkbox } from '@/core/ui/Checkbox';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import styles from './HabitCard.module.css';
 
 export interface HabitCardProps {
@@ -52,7 +53,9 @@ export const HabitCard: React.FC<HabitCardProps> = ({
     <div className={styles.card} onClick={handleCardClick}>
       <div className={styles.colorStrip} style={{ backgroundColor: habit.color }} />
 
-      <div className={styles.iconWrapper}>{habit.icon || '🎯'}</div>
+      <div className={styles.iconWrapper}>
+        <HabitIcon name={habit.icon} size={20} color={habit.color} />
+      </div>
 
       <div className={styles.content}>
         <div className={styles.nameRow}>

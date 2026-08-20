@@ -1,36 +1,36 @@
 import React from 'react';
+import { CURATED_HABIT_ICONS, HABIT_ICON_MAP } from '../HabitIcon';
 import styles from './IconPicker.module.css';
-
-export const COMMON_EMOJIS = [
-  '📚', '🏋️', '💻', '🏃', '🧘', '💧', '🥗', '✍️',
-  '🎨', '🎸', '🎯', '🛌', '🚶', '🌱', '🍎', '🔥',
-];
 
 export interface IconPickerProps {
   value?: string;
-  onChange: (icon: string) => void;
+  onChange: (iconName: string) => void;
   label?: string;
 }
 
 export const IconPicker: React.FC<IconPickerProps> = ({
-  value = '🎯',
+  value = 'Target',
   onChange,
-  label = 'Icono o Emoji',
+  label = 'Icono del Hábito',
 }) => {
   return (
     <div className={styles.container}>
       {label && <span className={styles.label}>{label}</span>}
       <div className={styles.grid}>
-        {COMMON_EMOJIS.map((emoji) => {
-          const isSelected = value === emoji;
+        {CURATED_HABIT_ICONS.map((item) => {
+          const isSelected = value === item.name;
+          const IconComp = HABIT_ICON_MAP[item.name];
+          if (!IconComp) return null;
+
           return (
             <button
-              key={emoji}
+              key={item.name}
               type="button"
-              className={`${styles.emojiBtn} ${isSelected ? styles.selected : ''}`}
-              onClick={() => onChange(emoji)}
+              title={item.label}
+              className={`${styles.iconBtn} ${isSelected ? styles.selected : ''}`}
+              onClick={() => onChange(item.name)}
             >
-              {emoji}
+              <IconComp size={18} />
             </button>
           );
         })}

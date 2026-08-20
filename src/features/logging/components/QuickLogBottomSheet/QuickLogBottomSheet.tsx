@@ -3,6 +3,7 @@ import { Plus, Check, RotateCcw } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { BottomSheet } from '@/core/ui/BottomSheet';
 import { Button } from '@/core/ui/Button';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import { getRelativeDateLabel } from '@/core/utils/dateUtils';
 import styles from './QuickLogBottomSheet.module.css';
 
@@ -82,7 +83,9 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
       <div className={styles.container}>
         {/* Habit & Date Header */}
         <div className={styles.habitHeader}>
-          <div className={styles.habitIcon}>{habit.icon || '🎯'}</div>
+          <div className={styles.habitIcon}>
+            <HabitIcon name={habit.icon} size={22} color={habit.color} />
+          </div>
           <div className={styles.habitInfo}>
             <span className={styles.habitName}>{habit.name}</span>
             <span className={styles.habitDate}>

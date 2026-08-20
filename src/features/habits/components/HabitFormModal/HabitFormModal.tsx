@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, CheckSquare, Hash, Target, Sparkles } from 'lucide-react';
+import { Check, CheckSquare, Hash, Target, Sparkles, PenLine } from 'lucide-react';
 import {
   Habit,
   HabitType,
@@ -11,6 +11,7 @@ import { Modal } from '@/core/ui/Modal';
 import { Button } from '@/core/ui/Button';
 import { ColorPicker, CURATED_HABIT_COLORS } from '@/core/ui/ColorPicker';
 import { IconPicker } from '@/core/ui/IconPicker';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import styles from './HabitFormModal.module.css';
 
 export interface HabitFormModalProps {
@@ -28,7 +29,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [icon, setIcon] = useState('🎯');
+  const [icon, setIcon] = useState('Target');
   const [color, setColor] = useState(CURATED_HABIT_COLORS[0]);
   const [category, setCategory] = useState<string>('Salud & Deporte');
   const [customCategory, setCustomCategory] = useState<string>('');
@@ -45,7 +46,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     if (habitToEdit) {
       setName(habitToEdit.name);
       setDescription(habitToEdit.description || '');
-      setIcon(habitToEdit.icon || '🎯');
+      setIcon(habitToEdit.icon || 'Target');
       setColor(habitToEdit.color);
       const isCurated = CURATED_HABIT_CATEGORIES.some((c) => c.id === habitToEdit.category);
       if (habitToEdit.category && !isCurated) {
@@ -65,7 +66,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     } else {
       setName('');
       setDescription('');
-      setIcon('🎯');
+      setIcon('Target');
       setColor(CURATED_HABIT_COLORS[Math.floor(Math.random() * CURATED_HABIT_COLORS.length)]);
       setCategory('Salud & Deporte');
       setCustomCategory('');
@@ -176,7 +177,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
                   className={`${styles.categoryChip} ${isSelected ? styles.categoryChipActive : ''}`}
                   onClick={() => setCategory(cat.id)}
                 >
-                  <span>{cat.icon}</span>
+                  <HabitIcon name={cat.icon} size={13} />
                   <span>{cat.label}</span>
                 </button>
               );
@@ -186,7 +187,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               className={`${styles.categoryChip} ${category === '__custom__' ? styles.categoryChipActive : ''}`}
               onClick={() => setCategory('__custom__')}
             >
-              <span>✏️</span>
+              <PenLine size={13} />
               <span>Personalizada</span>
             </button>
           </div>
