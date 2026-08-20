@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Flame, TrendingUp, CheckCircle2, Award, Zap } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import { calculateGlobalConsistencyStats } from '@/features/stats/logic/streakCalculator';
 import styles from './ConsistencyOverview.module.css';
 
@@ -61,12 +62,16 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
           {stats.mostConsistentHabit && (
             <div className={styles.highlightCard}>
               <div className={styles.highlightIcon}>
-                {stats.mostConsistentHabit.icon || '🏆'}
+                <HabitIcon
+                  name={stats.mostConsistentHabit.icon}
+                  color={stats.mostConsistentHabit.color}
+                  size={18}
+                />
               </div>
               <div className={styles.highlightInfo}>
                 <span className={styles.highlightLabel} style={{ color: 'var(--tk-accent)' }}>
-                  <Award size={10} style={{ display: 'inline', marginRight: '2px' }} />
-                  Más Constante
+                  <Award size={11} />
+                  <span>Más Constante</span>
                 </span>
                 <span className={styles.highlightName}>
                   {stats.mostConsistentHabit.name} ({stats.mostConsistentHabit.percentage}%)
@@ -78,12 +83,16 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
           {stats.habitToReinforce && (
             <div className={styles.highlightCard}>
               <div className={styles.highlightIcon}>
-                {stats.habitToReinforce.icon || '⚡'}
+                <HabitIcon
+                  name={stats.habitToReinforce.icon}
+                  color={stats.habitToReinforce.color}
+                  size={18}
+                />
               </div>
               <div className={styles.highlightInfo}>
                 <span className={styles.highlightLabel} style={{ color: 'var(--tk-warning)' }}>
-                  <Zap size={10} style={{ display: 'inline', marginRight: '2px' }} />
-                  A Reforzar
+                  <Zap size={11} />
+                  <span>A Reforzar</span>
                 </span>
                 <span className={styles.highlightName}>
                   {stats.habitToReinforce.name} ({stats.habitToReinforce.percentage}%)
