@@ -32,7 +32,7 @@
 
 .metric {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   font-family: var(--tk-font-mono);
   color: var(--tk-text-primary);
   line-height: 1.1;
