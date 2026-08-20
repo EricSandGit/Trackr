@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Flame, TrendingUp, CheckCircle2, Award, Zap } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { HabitIcon } from '@/core/ui/HabitIcon';
+import { useI18nStore } from '@/core/i18n';
 import { calculateGlobalConsistencyStats } from '@/features/stats/logic/streakCalculator';
 import styles from './ConsistencyOverview.module.css';
 
@@ -11,6 +12,7 @@ export interface ConsistencyOverviewProps {
 }
 
 export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits, logs }) => {
+  const { t } = useI18nStore();
   const stats = useMemo(() => {
     return calculateGlobalConsistencyStats(habits, logs);
   }, [habits, logs]);
@@ -23,36 +25,38 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <TrendingUp size={14} color="var(--tk-info)" />
-            <span>Mes</span>
+            <span>{t('stats.month')}</span>
           </div>
           <span className={styles.metric} style={{ color: 'var(--tk-info)' }}>
             {stats.monthlyConsistencyPercentage}%
           </span>
-          <span className={styles.subtext}>Constancia últimos 30d</span>
+          <span className={styles.subtext}>{t('stats.monthConsistency')}</span>
         </div>
 
         {/* Global Streak */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <Flame size={14} color="#f97316" />
-            <span>Racha</span>
+            <span>{t('stats.streak')}</span>
           </div>
           <span className={styles.metric} style={{ color: '#f97316' }}>
             {stats.currentGlobalStreak}d
           </span>
-          <span className={styles.subtext}>Récord: {stats.bestGlobalStreak}d</span>
+          <span className={styles.subtext}>
+            {t('stats.recordStreak', { days: stats.bestGlobalStreak })}
+          </span>
         </div>
 
         {/* This Week */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <CheckCircle2 size={14} color="var(--tk-accent)" />
-            <span>Semana</span>
+            <span>{t('stats.week')}</span>
           </div>
           <span className={styles.metric} style={{ color: 'var(--tk-accent)' }}>
             {stats.totalActivitiesThisWeek}
           </span>
-          <span className={styles.subtext}>Actividades completas</span>
+          <span className={styles.subtext}>{t('stats.completedActivities')}</span>
         </div>
       </div>
 
@@ -71,7 +75,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
               <div className={styles.highlightInfo}>
                 <span className={styles.highlightLabel} style={{ color: 'var(--tk-accent)' }}>
                   <Award size={11} />
-                  <span>Más Constante</span>
+                  <span>{t('stats.mostConsistent')}</span>
                 </span>
                 <span className={styles.highlightName}>
                   {stats.mostConsistentHabit.name} ({stats.mostConsistentHabit.percentage}%)
@@ -92,7 +96,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
               <div className={styles.highlightInfo}>
                 <span className={styles.highlightLabel} style={{ color: 'var(--tk-warning)' }}>
                   <Zap size={11} />
-                  <span>A Reforzar</span>
+                  <span>{t('stats.toReinforce')}</span>
                 </span>
                 <span className={styles.highlightName}>
                   {stats.habitToReinforce.name} ({stats.habitToReinforce.percentage}%)

@@ -4,6 +4,7 @@ import { Habit, DailyActivityLog, CURATED_HABIT_CATEGORIES } from '@/core/types'
 import { HabitCard } from '../HabitCard';
 import { Button } from '@/core/ui/Button';
 import { HabitIcon } from '@/core/ui/HabitIcon';
+import { useI18nStore } from '@/core/i18n';
 import { isHabitScheduledOnDate } from '@/features/heatmap/logic/heatmapCalculator';
 import styles from './HabitList.module.css';
 
@@ -26,6 +27,7 @@ export const HabitList: React.FC<HabitListProps> = ({
   onOpenDetail,
   onOpenCreateModal,
 }) => {
+  const { t } = useI18nStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   // Filter active and scheduled habits for selectedDate
@@ -67,10 +69,13 @@ export const HabitList: React.FC<HabitListProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Hábitos del Día</h3>
+        <h3 className={styles.title}>{t('home.dailyHabitsTitle')}</h3>
         {activeScheduledHabits.length > 0 && (
           <span className={styles.counter}>
-            {completedCount} de {activeScheduledHabits.length} completados
+            {t('home.completedCount', {
+              completed: completedCount,
+              total: activeScheduledHabits.length,
+            })}
           </span>
         )}
       </div>
@@ -84,7 +89,7 @@ export const HabitList: React.FC<HabitListProps> = ({
             onClick={() => setSelectedCategory('all')}
           >
             <Layers size={13} />
-            <span>Todos</span>
+            <span>{t('home.allCategories')}</span>
             <span className={styles.filterBadge}>{activeScheduledHabits.length}</span>
           </button>
 
@@ -115,17 +120,15 @@ export const HabitList: React.FC<HabitListProps> = ({
           <div className={styles.emptyIcon}>
             <Sparkles size={32} color="var(--tk-accent)" />
           </div>
-          <div className={styles.emptyTitle}>No hay hábitos programados</div>
-          <p className={styles.emptyText}>
-            No tienes actividades activas para este día. ¡Crea un nuevo hábito para empezar a trackear!
-          </p>
+          <div className={styles.emptyTitle}>{t('home.noHabitsScheduled')}</div>
+          <p className={styles.emptyText}>{t('home.noHabitsDesc')}</p>
           <Button
             variant="primary"
             size="md"
             leftIcon={<Plus size={16} />}
             onClick={onOpenCreateModal}
           >
-            Crear Hábito
+            {t('home.createHabit')}
           </Button>
         </div>
       ) : displayedHabits.length === 0 ? (
@@ -133,16 +136,16 @@ export const HabitList: React.FC<HabitListProps> = ({
           <div className={styles.emptyIcon}>
             <Search size={32} color="var(--tk-text-muted)" />
           </div>
-          <div className={styles.emptyTitle}>Sin hábitos en esta categoría</div>
+          <div className={styles.emptyTitle}>{t('home.noHabitsCategory')}</div>
           <p className={styles.emptyText}>
-            No hay actividades programadas hoy para la categoría &quot;{selectedCategory}&quot;.
+            {t('home.noHabitsCategoryDesc', { category: selectedCategory })}
           </p>
           <Button
             variant="secondary"
             size="sm"
             onClick={() => setSelectedCategory('all')}
           >
-            Ver todos los hábitos
+            {t('home.viewAllHabits')}
           </Button>
         </div>
       ) : (

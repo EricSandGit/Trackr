@@ -3,10 +3,9 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-reac
 import {
   formatDateToISO,
   shiftDate,
-  getRelativeDateLabel,
   isToday,
-  parseISODate,
 } from '@/core/utils/dateUtils';
+import { useI18nStore } from '@/core/i18n';
 import styles from './DateNavigator.module.css';
 
 export interface DateNavigatorProps {
@@ -19,6 +18,7 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
   onSelectDate,
 }) => {
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const { t, formatRelativeDate, formatFullDate } = useI18nStore();
 
   const handlePrevDay = () => {
     onSelectDate(shiftDate(selectedDate, -1));
@@ -38,18 +38,12 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
 
   const isCurrentDayToday = isToday(selectedDate);
   const todayStr = formatDateToISO(new Date());
-
-  const dateObj = parseISODate(selectedDate);
-  const formattedFull = dateObj.toLocaleDateString('es-ES', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  });
+  const formattedFull = formatFullDate(selectedDate);
 
   return (
     <div className={styles.container}>
       <div className={styles.navArrows}>
-        <button className={styles.arrowBtn} onClick={handlePrevDay} aria-label="Día anterior">
+        <button className={styles.arrowBtn} onClick={handlePrevDay} aria-label={t('nav.prevDay')}>
           <ChevronLeft size={16} />
         </button>
       </div>
@@ -60,7 +54,7 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
       >
         <div className={styles.dateTitle}>
           <CalendarIcon size={14} color="var(--tk-info)" />
-          <span>{getRelativeDateLabel(selectedDate, 'short')}</span>
+          <span>{formatRelativeDate(selectedDate, 'short')}</span>
           {!isCurrentDayToday && (
             <span
               style={{
@@ -69,7 +63,7 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
                 fontWeight: 600,
               }}
             >
-              (Retroactivo)
+              {t('common.retroactive')}
             </span>
           )}
         </div>
@@ -88,14 +82,14 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
       <div className={styles.navArrows}>
         {!isCurrentDayToday && (
           <button className={styles.todayQuickBtn} onClick={handleGoToday}>
-            Ir a Hoy
+            {t('nav.goToday')}
           </button>
         )}
         <button
           className={styles.arrowBtn}
           onClick={handleNextDay}
           disabled={isCurrentDayToday}
-          aria-label="Día siguiente"
+          aria-label={t('nav.nextDay')}
           style={{ opacity: isCurrentDayToday ? 0.3 : 1 }}
         >
           <ChevronRight size={16} />

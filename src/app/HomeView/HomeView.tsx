@@ -9,6 +9,7 @@ import { HabitList, HabitFormModal } from '@/features/habits';
 import { QuickLogBottomSheet } from '@/features/logging';
 import { DateNavigator } from '@/core/ui/DateNavigator';
 import { SettingsModal } from '@/features/settings';
+import { useI18nStore } from '@/core/i18n';
 import styles from './HomeView.module.css';
 
 export interface HomeViewProps {
@@ -26,6 +27,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
+  const { t } = useI18nStore();
 
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -68,8 +70,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
           <button
             className={styles.actionBtn}
             onClick={() => setIsSettingsModalOpen(true)}
-            aria-label="Ajustes"
-            title="Ajustes y Respaldo"
+            aria-label={t('nav.settings')}
+            title={t('nav.settings')}
           >
             <Settings size={18} />
           </button>
@@ -77,8 +79,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
           <button
             className={`${styles.actionBtn} ${styles.createBtn}`}
             onClick={() => setIsCreateModalOpen(true)}
-            aria-label="Nuevo Hábito"
-            title="Crear nuevo hábito"
+            aria-label={t('nav.newHabit')}
+            title={t('nav.newHabit')}
           >
             <Plus size={20} strokeWidth={2.5} />
           </button>
