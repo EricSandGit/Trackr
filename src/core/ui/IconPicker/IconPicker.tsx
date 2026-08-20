@@ -1,5 +1,5 @@
 import React from 'react';
-import { CURATED_HABIT_ICONS, HABIT_ICON_MAP } from '../HabitIcon';
+import { CURATED_HABIT_ICONS, HabitIcon } from '../HabitIcon';
 import styles from './IconPicker.module.css';
 
 export interface IconPickerProps {
@@ -13,14 +13,15 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   onChange,
   label = 'Icono del Hábito',
 }) => {
+  const normalizedValue = (value || '').toLowerCase().replace(/[-_\s]/g, '');
+
   return (
     <div className={styles.container}>
       {label && <span className={styles.label}>{label}</span>}
       <div className={styles.grid}>
         {CURATED_HABIT_ICONS.map((item) => {
-          const isSelected = value === item.name;
-          const IconComp = HABIT_ICON_MAP[item.name];
-          if (!IconComp) return null;
+          const itemNormalized = item.name.toLowerCase().replace(/[-_\s]/g, '');
+          const isSelected = normalizedValue === itemNormalized;
 
           return (
             <button
@@ -30,7 +31,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
               className={`${styles.iconBtn} ${isSelected ? styles.selected : ''}`}
               onClick={() => onChange(item.name)}
             >
-              <IconComp size={18} />
+              <HabitIcon name={item.name} size={18} />
             </button>
           );
         })}

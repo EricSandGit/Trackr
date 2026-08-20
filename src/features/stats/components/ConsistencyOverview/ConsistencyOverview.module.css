@@ -28,6 +28,11 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--tk-text-secondary);
+  line-height: 1.2;
+}
+
+.cardHeader svg {
+  transform: translateY(-1px);
 }
 
 .metric {
@@ -57,10 +62,18 @@
   display: flex;
   align-items: center;
   gap: var(--tk-space-2);
+  min-width: 0;
 }
 
 .highlightIcon {
-  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .highlightInfo {
@@ -70,11 +83,15 @@
 }
 
 .highlightLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--tk-text-secondary);
+  line-height: 1.2;
 }
 
 .highlightName {
