@@ -1,8 +1,21 @@
-import React, { useRef, useState } from 'react';
-import { Download, Upload, Moon, Sun, Flame, RotateCcw, Shield, Smartphone } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import {
+  Download,
+  Upload,
+  Moon,
+  Sun,
+  Flame,
+  RotateCcw,
+  Shield,
+  Smartphone,
+  Globe,
+  ChevronDown,
+  Check,
+} from 'lucide-react';
 import { Modal } from '@/core/ui/Modal';
 import { Button } from '@/core/ui/Button';
 import { useThemeStore, ThemeMode } from '@/core/theme/useThemeStore';
+import { useI18nStore, LanguageCode } from '@/core/i18n';
 import { jsonBackupService, storageAdapter } from '@/services/storage';
 import styles from './SettingsModal.module.css';
 
@@ -18,22 +31,53 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onDataResetOrImported,
 }) => {
   const { theme, setTheme } = useThemeStore();
+  const { language, setLanguage, supportedLanguages, t } = useI18nStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+
+  // Close language dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        langDropdownRef.current &&
+        !langDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsLangDropdownOpen(false);
+      }
+    };
+    if (isLangDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isLangDropdownOpen]);
+
+  // Reset dropdown state when modal is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setIsLangDropdownOpen(false);
+    }
+  }, [isOpen]);
+
+  const selectedLangObj =
+    supportedLanguages.find((l) => l.code === language) || supportedLanguages[0];
 
   const THEMES: Array<{ id: ThemeMode; label: string; icon: React.ReactNode }> = [
-    { id: 'dark', label: 'Oscuro', icon: <Moon size={16} /> },
-    { id: 'light', label: 'Claro', icon: <Sun size={16} /> },
-    { id: 'warm', label: 'Cálido', icon: <Flame size={16} /> },
+    { id: 'dark', label: t('settings.themes.dark'), icon: <Moon size={16} /> },
+    { id: 'light', label: t('settings.themes.light'), icon: <Sun size={16} /> },
+    { id: 'warm', label: t('settings.themes.warm'), icon: <Flame size={16} /> },
   ];
 
   const handleExportBackup = async () => {
     try {
       await jsonBackupService.downloadBackupFile();
-      setFeedbackMsg('✅ Copia de seguridad descargada.');
+      setFeedbackMsg(t('settings.feedbackBackupDownloaded'));
       setTimeout(() => setFeedbackMsg(null), 3000);
     } catch {
-      setFeedbackMsg('❌ Error al exportar respaldo.');
+      setFeedbackMsg(t('settings.feedbackBackupError'));
     }
   };
 
@@ -42,11 +86,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     if (file) {
       const success = await jsonBackupService.restoreFromFile(file);
       if (success) {
-        setFeedbackMsg('✅ Datos restaurados exitosamente.');
+        setFeedbackMsg(t('settings.feedbackDataRestored'));
         await onDataResetOrImported();
         setTimeout(() => setFeedbackMsg(null), 3000);
       } else {
-        setFeedbackMsg('❌ Archivo de respaldo no válido.');
+        setFeedbackMsg(t('settings.feedbackInvalidFile'));
       }
     }
     if (fileInputRef.current) {
@@ -55,20 +99,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const handleResetData = async () => {
-    if (
-      window.confirm(
-        '¿Restablecer Trackr a los datos de ejemplo iniciales? Se borrarán los hábitos y registros actuales.'
-      )
-    ) {
+    if (window.confirm(t('settings.resetConfirm'))) {
       await storageAdapter.resetAllData();
       await onDataResetOrImported();
-      setFeedbackMsg('✅ Datos restablecidos.');
+      setFeedbackMsg(t('settings.feedbackDataReset'));
       setTimeout(() => setFeedbackMsg(null), 3000);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Ajustes y Respaldo">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('settings.title')}>
       <div className={styles.container}>
         {feedbackMsg && (
           <div
@@ -85,13 +125,77 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
         )}
 
+        {/* Language Selection Setting (Combobox / Dropdown) */}
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>
+            <Globe size={16} color="var(--tk-info)" />
+            <span>{t('settings.languageSectionTitle')}</span>
+          </div>
+          <p className={styles.description}>
+            {t('settings.languageDesc')}
+          </p>
+
+          <div className={styles.comboboxWrapper} ref={langDropdownRef}>
+            <button
+              type="button"
+              className={`${styles.comboboxTrigger} ${isLangDropdownOpen ? styles.comboboxTriggerActive : ''}`}
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+              aria-haspopup="listbox"
+              aria-expanded={isLangDropdownOpen}
+            >
+              <div className={styles.comboboxValue}>
+                <span className={styles.comboboxFlag}>{selectedLangObj.flag}</span>
+                <span className={styles.comboboxLabel}>{selectedLangObj.nativeName}</span>
+              </div>
+              <ChevronDown
+                size={16}
+                className={`${styles.comboboxChevron} ${isLangDropdownOpen ? styles.comboboxChevronOpen : ''}`}
+              />
+            </button>
+
+            {isLangDropdownOpen && (
+              <div className={styles.comboboxDropdown} role="listbox">
+                {supportedLanguages.map((lang) => {
+                  const isSelected = language === lang.code;
+                  const translatedName = !isSelected ? t(`languages.${lang.code}` as any) || lang.label : null;
+
+                  return (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      className={`${styles.comboboxItem} ${isSelected ? styles.comboboxItemActive : ''}`}
+                      onClick={() => {
+                        setLanguage(lang.code as LanguageCode);
+                        setIsLangDropdownOpen(false);
+                      }}
+                    >
+                      <div className={styles.comboboxItemLeft}>
+                        <span className={styles.comboboxFlag}>{lang.flag}</span>
+                        <div className={styles.comboboxItemText}>
+                          <span className={styles.comboboxLabel}>{lang.nativeName}</span>
+                          {translatedName && (
+                            <span className={styles.comboboxSublabel}>({translatedName})</span>
+                          )}
+                        </div>
+                      </div>
+                      {isSelected && <Check size={16} color="var(--tk-accent)" strokeWidth={2.5} />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Theme Setting */}
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
-            <span>Tema Visual</span>
+            <span>{t('settings.themeSectionTitle')}</span>
           </div>
           <p className={styles.description}>
-            Selecciona la apariencia y paleta de colores de la aplicación:
+            {t('settings.themeDesc')}
           </p>
 
           <div className={styles.themeGrid}>
@@ -116,10 +220,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
             <Shield size={16} color="var(--tk-accent)" />
-            <span>Respaldo de Datos (JSON)</span>
+            <span>{t('settings.backupSectionTitle')}</span>
           </div>
           <p className={styles.description}>
-            Tus datos se guardan de forma privada en tu dispositivo (*Local-First*). Puedes exportar una copia de seguridad o restaurarla en cualquier momento.
+            {t('settings.backupDesc')}
           </p>
 
           <div className={styles.buttonGrid}>
@@ -129,7 +233,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               onClick={handleExportBackup}
               leftIcon={<Download size={14} />}
             >
-              Descargar JSON
+              {t('settings.downloadJson')}
             </Button>
 
             <Button
@@ -138,7 +242,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               onClick={() => fileInputRef.current?.click()}
               leftIcon={<Upload size={14} />}
             >
-              Restaurar JSON
+              {t('settings.restoreJson')}
             </Button>
           </div>
 
@@ -155,10 +259,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
             <Smartphone size={16} color="var(--tk-info)" />
-            <span>Instalar como App Móvil</span>
+            <span>{t('settings.pwaSectionTitle')}</span>
           </div>
           <p className={styles.description}>
-            En Safari (iOS) toca <strong>Compartir → Añadir a pantalla de inicio</strong>. En Chrome/Android toca <strong>Menú (⋮) → Instalar aplicación</strong>.
+            {t('settings.pwaDesc')}
           </p>
         </div>
 
@@ -166,25 +270,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className={`${styles.section} ${styles.dangerSection}`}>
           <div className={styles.sectionTitle}>
             <RotateCcw size={16} color="var(--tk-danger)" />
-            <span style={{ color: 'var(--tk-danger)' }}>Restablecer Datos</span>
+            <span style={{ color: 'var(--tk-danger)' }}>{t('settings.dangerSectionTitle')}</span>
           </div>
           <div className={styles.row}>
             <p className={styles.description}>
-              Vuelve a cargar los 3 hábitos de ejemplo iniciales.
+              {t('settings.resetDesc')}
             </p>
             <Button
               variant="danger"
               size="sm"
               onClick={handleResetData}
             >
-              Restablecer
+              {t('settings.resetButton')}
             </Button>
           </div>
         </div>
 
         <div className={styles.appInfo}>
           <strong>Trackr v1.0.0</strong>
-          <span>Inspirado en la constancia de GitHub</span>
+          <span>{t('settings.appTagline')}</span>
         </div>
       </div>
     </Modal>
