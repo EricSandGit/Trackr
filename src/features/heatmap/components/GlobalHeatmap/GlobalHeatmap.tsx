@@ -7,6 +7,7 @@ import {
   getHabitCustomColorShade,
 } from '@/features/heatmap/logic/heatmapCalculator';
 import { useThemeStore } from '@/core/theme/useThemeStore';
+import { useI18nStore } from '@/core/i18n';
 import styles from './GlobalHeatmap.module.css';
 
 export const GLOBAL_HEATMAP_PRESET_COLORS = [
@@ -39,6 +40,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { theme } = useThemeStore();
+  const { t, language } = useI18nStore();
   const isDark = theme === 'dark';
 
   const [globalColor, setGlobalColor] = useState<string>(() => {
@@ -59,8 +61,9 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
 
   // Generate week columns (Monday to Sunday)
   const weeks = useMemo(() => {
-    return generateHeatmapWeeks(weeksCount, new Date());
-  }, [weeksCount]);
+    const locale = language === 'en' ? 'en-US' : 'es-ES';
+    return generateHeatmapWeeks(weeksCount, new Date(), locale);
+  }, [weeksCount, language]);
 
   // Precompute day summaries
   const daySummaries = useMemo(() => {
@@ -82,14 +85,14 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
     }
   }, []);
 
-  const dayNames = ['L', '', 'M', '', 'V', '', 'D'];
+  const dayNames = language === 'en' ? ['M', '', 'W', '', 'F', '', 'S'] : ['L', '', 'M', '', 'V', '', 'D'];
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
-          <h3 className={styles.title}>Actividad General</h3>
-          <span className={styles.subtitle}>(Últimas {weeksCount} sem)</span>
+          <h3 className={styles.title}>{t('stats.generalActivity')}</h3>
+          <span className={styles.subtitle}>{t('stats.lastWeeks', { weeks: weeksCount })}</span>
         </div>
 
         {/* Small Color Selector Button on the Top-Right */}
@@ -112,7 +115,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
                 onClick={() => setShowColorPopover(false)}
               />
               <div className={styles.colorPopover}>
-                <span className={styles.popoverTitle}>Color del Cuadro</span>
+                <span className={styles.popoverTitle}>{t('stats.matrixColor')}</span>
                 <div className={styles.paletteGrid}>
                   {GLOBAL_HEATMAP_PRESET_COLORS.map((item) => {
                     const isSelected = globalColor.toLowerCase() === item.hex.toLowerCase();
@@ -135,7 +138,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
                 </div>
 
                 <div className={styles.customColorRow}>
-                  <span className={styles.customColorLabel}>Personalizado:</span>
+                  <span className={styles.customColorLabel}>{t('stats.custom')}</span>
                   <input
                     type="color"
                     className={styles.customInput}
@@ -204,7 +207,11 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
 
                   const tooltipText = day.isFuture
                     ? ''
-                    : `${day.date}: ${summary?.completedCount || 0}/${summary?.totalPlannedCount || 0} hábitos`;
+                    : t('stats.tooltip', {
+                        date: day.date,
+                        completed: summary?.completedCount || 0,
+                        total: summary?.totalPlannedCount || 0,
+                      });
 
                   return (
                     <div
@@ -224,10 +231,10 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
 
       <div className={styles.footer}>
         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <Sparkles size={12} color="var(--tk-record-gold)" /> Récord personal
+          <Sparkles size={12} color="var(--tk-record-gold)" /> {t('common.personalRecord')}
         </span>
         <div className={styles.legend}>
-          <span>Menos</span>
+          <span>{t('stats.less')}</span>
           <span
             className={styles.legendCell}
             style={{ backgroundColor: 'var(--tk-cell-empty)' }}
@@ -248,7 +255,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
             className={styles.legendCell}
             style={{ backgroundColor: getHabitCustomColorShade(globalColor, 4, isDark) }}
           />
-          <span>Más</span>
+          <span>{t('stats.more')}</span>
         </div>
       </div>
     </div>

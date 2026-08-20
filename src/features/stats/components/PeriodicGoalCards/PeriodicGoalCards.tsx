@@ -5,6 +5,7 @@ import {
   calculateWeeklyGoalProgress,
   calculateMonthlyGoalProgress,
 } from '@/features/stats/logic/periodicGoalCalculator';
+import { useI18nStore } from '@/core/i18n';
 import styles from './PeriodicGoalCards.module.css';
 
 export interface PeriodicGoalCardsProps {
@@ -18,6 +19,7 @@ export const PeriodicGoalCards: React.FC<PeriodicGoalCardsProps> = ({
   logs,
   referenceDate,
 }) => {
+  const { t } = useI18nStore();
   const weeklyProgress = useMemo(
     () => calculateWeeklyGoalProgress(habit, logs, referenceDate),
     [habit, logs, referenceDate]
@@ -39,7 +41,7 @@ export const PeriodicGoalCards: React.FC<PeriodicGoalCardsProps> = ({
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
           <Target size={16} color={habitColor} />
-          <h4 className={styles.title}>Metas Semanales & Mensuales</h4>
+          <h4 className={styles.title}>{t('periodicGoals.title')}</h4>
         </div>
       </div>
 
@@ -52,18 +54,18 @@ export const PeriodicGoalCards: React.FC<PeriodicGoalCardsProps> = ({
             <div className={styles.topRow}>
               <div className={styles.labelWrapper}>
                 <Calendar size={14} color={habitColor} />
-                <span>Meta Semanal</span>
+                <span>{t('periodicGoals.weeklyGoal')}</span>
               </div>
 
               {weeklyProgress.isMet ? (
                 <span className={styles.badgeMet}>
-                  <CheckCircle2 size={12} /> ¡Alcanzada!
+                  <CheckCircle2 size={12} /> {t('periodicGoals.achieved')}
                 </span>
               ) : (
                 <span className={styles.badgeRemaining}>
                   {weeklyProgress.daysRemaining === 1
-                    ? 'Último día'
-                    : `${weeklyProgress.daysRemaining} días restantes`}
+                    ? t('periodicGoals.lastDay')
+                    : t('periodicGoals.daysRemaining', { count: weeklyProgress.daysRemaining })}
                 </span>
               )}
             </div>
@@ -107,18 +109,18 @@ export const PeriodicGoalCards: React.FC<PeriodicGoalCardsProps> = ({
             <div className={styles.topRow}>
               <div className={styles.labelWrapper}>
                 <Award size={14} color={habitColor} />
-                <span>Meta Mensual</span>
+                <span>{t('periodicGoals.monthlyGoal')}</span>
               </div>
 
               {monthlyProgress.isMet ? (
                 <span className={styles.badgeMet}>
-                  <CheckCircle2 size={12} /> ¡Alcanzada!
+                  <CheckCircle2 size={12} /> {t('periodicGoals.achieved')}
                 </span>
               ) : (
                 <span className={styles.badgeRemaining}>
                   {monthlyProgress.daysRemaining === 1
-                    ? 'Último día'
-                    : `${monthlyProgress.daysRemaining} días restantes`}
+                    ? t('periodicGoals.lastDay')
+                    : t('periodicGoals.daysRemaining', { count: monthlyProgress.daysRemaining })}
                 </span>
               )}
             </div>

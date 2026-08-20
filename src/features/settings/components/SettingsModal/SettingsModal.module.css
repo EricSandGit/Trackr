@@ -36,6 +36,141 @@
   line-height: 1.4;
 }
 
+.comboboxWrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.comboboxTrigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface);
+  border: 1.5px solid var(--tk-border-default);
+  color: var(--tk-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+  user-select: none;
+}
+
+.comboboxTrigger:hover {
+  background-color: var(--tk-bg-surface-hover);
+  border-color: var(--tk-border-focus);
+}
+
+.comboboxTriggerActive {
+  background-color: var(--tk-bg-surface-hover);
+  border-color: var(--tk-border-focus);
+  box-shadow: 0 0 0 1px var(--tk-border-focus);
+}
+
+.comboboxValue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comboboxFlag {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+}
+
+.comboboxLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tk-text-primary);
+}
+
+.comboboxSublabel {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--tk-text-muted);
+  margin-left: 2px;
+}
+
+.comboboxChevron {
+  color: var(--tk-text-secondary);
+  transition: transform var(--tk-transition-fast);
+}
+
+.comboboxChevronOpen {
+  transform: rotate(180deg);
+  color: var(--tk-text-primary);
+}
+
+.comboboxDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background-color: var(--tk-bg-surface);
+  border: 1.5px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  z-index: 60;
+  overflow: hidden;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 2px;
+  animation: dropdownFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comboboxItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--tk-radius-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--tk-transition-fast);
+  color: var(--tk-text-primary);
+}
+
+.comboboxItem:hover {
+  background-color: var(--tk-bg-surface-hover);
+}
+
+.comboboxItemActive {
+  background-color: var(--tk-bg-surface-elevated);
+}
+
+.comboboxItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comboboxItemText {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
 .themeGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

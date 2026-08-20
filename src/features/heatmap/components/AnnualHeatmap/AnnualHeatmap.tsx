@@ -6,6 +6,7 @@ import {
   getHabitCustomColorShade,
 } from '@/features/heatmap/logic/heatmapCalculator';
 import { useThemeStore } from '@/core/theme/useThemeStore';
+import { useI18nStore } from '@/core/i18n';
 import styles from './AnnualHeatmap.module.css';
 
 export interface AnnualHeatmapProps {
@@ -21,12 +22,14 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { theme } = useThemeStore();
+  const { language } = useI18nStore();
   const isDark = theme === 'dark';
 
   // 52 weeks = 1 full year
   const weeks = useMemo(() => {
-    return generateHeatmapWeeks(52, new Date());
-  }, []);
+    const locale = language === 'en' ? 'en-US' : 'es-ES';
+    return generateHeatmapWeeks(52, new Date(), locale);
+  }, [language]);
 
   const logsMap = useMemo(() => {
     const map = new Map<string, DailyActivityLog>();
@@ -44,12 +47,14 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
     }
   }, []);
 
-  const dayNames = ['L', '', 'M', '', 'V', '', 'D'];
+  const dayNames = language === 'en' ? ['M', '', 'W', '', 'F', '', 'S'] : ['L', '', 'M', '', 'V', '', 'D'];
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h4 className={styles.title}>Historial Anual (52 Semanas)</h4>
+        <h4 className={styles.title}>
+          {language === 'en' ? 'Annual History (52 Weeks)' : 'Historial Anual (52 Semanas)'}
+        </h4>
       </div>
 
       <div className={styles.scrollArea} ref={scrollRef}>

@@ -3,6 +3,7 @@ import { Sparkles, Plus } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { Checkbox } from '@/core/ui/Checkbox';
 import { HabitIcon } from '@/core/ui/HabitIcon';
+import { useI18nStore } from '@/core/i18n';
 import styles from './HabitCard.module.css';
 
 export interface HabitCardProps {
@@ -20,6 +21,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
   onOpenQuickLog,
   onOpenDetail,
 }) => {
+  const { t } = useI18nStore();
   const isCompleted = !!log?.isCompleted;
   const isRecord = !!log?.isPersonalRecord;
   const currentTotal = log?.totalValue || 0;
@@ -46,7 +48,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
       progressLabel = `${currentTotal} ${unit}`;
     }
   } else {
-    progressLabel = isCompleted ? 'Completado' : 'Pendiente';
+    progressLabel = isCompleted ? t('habitCard.completed') : t('habitCard.pending');
   }
 
   return (
@@ -65,7 +67,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           )}
           {isRecord && (
             <span className={styles.recordBadge}>
-              <Sparkles size={10} /> Récord
+              <Sparkles size={10} /> {t('habitCard.record')}
             </span>
           )}
         </div>
@@ -77,7 +79,10 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           </span>
           {habit.weeklyGoal && (
             <span className={styles.periodicGoalBadge}>
-              • Meta sem: {habit.weeklyGoal} {habit.type === 'boolean' ? 'días' : habit.unit || ''}
+              {t('habitCard.weeklyGoal', {
+                goal: habit.weeklyGoal,
+                unit: habit.type === 'boolean' ? t('common.days') : habit.unit || '',
+              })}
             </span>
           )}
         </div>
@@ -110,7 +115,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             onClick={handleCheckAction}
           >
             <Plus size={14} />
-            <span>{currentTotal > 0 ? `${currentTotal}` : 'Sumar'}</span>
+            <span>{currentTotal > 0 ? `${currentTotal}` : t('habitCard.addVolume')}</span>
           </button>
         )}
       </div>

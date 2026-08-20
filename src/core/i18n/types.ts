@@ -1,0 +1,204 @@
+export type LanguageCode = 'es' | 'en';
+
+export interface LanguageOption {
+  code: LanguageCode;
+  label: string;
+  nativeName: string;
+  flag: string;
+}
+
+export interface TranslationSchema {
+  common: {
+    today: string;
+    yesterday: string;
+    save: string;
+    cancel: string;
+    delete: string;
+    edit: string;
+    back: string;
+    ready: string;
+    close: string;
+    confirm: string;
+    loading: string;
+    all: string;
+    days: string;
+    retroactive: string;
+    personalRecord: string;
+  };
+  nav: {
+    prevDay: string;
+    nextDay: string;
+    goToday: string;
+    settings: string;
+    newHabit: string;
+  };
+  home: {
+    dailyHabitsTitle: string;
+    completedCount: string;
+    allCategories: string;
+    noHabitsScheduled: string;
+    noHabitsDesc: string;
+    createHabit: string;
+    noHabitsCategory: string;
+    noHabitsCategoryDesc: string;
+    viewAllHabits: string;
+  };
+  stats: {
+    month: string;
+    streak: string;
+    week: string;
+    monthConsistency: string;
+    recordStreak: string;
+    completedActivities: string;
+    mostConsistent: string;
+    toReinforce: string;
+    generalActivity: string;
+    lastWeeks: string;
+    matrixColor: string;
+    custom: string;
+    less: string;
+    more: string;
+    tooltip: string;
+  };
+  habitCard: {
+    completed: string;
+    pending: string;
+    record: string;
+    weeklyGoal: string;
+    addVolume: string;
+  };
+  habitDetail: {
+    notFound: string;
+    returnHome: string;
+    archive: string;
+    unarchive: string;
+    deleteHabit: string;
+    deleteConfirm: string;
+    hideAnnual: string;
+    expandAnnual: string;
+    markCompletedToday: string;
+    markedToday: string;
+    logVolumeToday: string;
+    dailyGoalLabel: string;
+    simpleLabel: string;
+    everyday: string;
+    selectedDaysFreq: string;
+  };
+  badges: {
+    currentStreak: string;
+    daysCount: string;
+    bestStreakDesc: string;
+    recordInOneDay: string;
+    noRecordYet: string;
+    beatRecordToday: string;
+    reachedOnDate: string;
+    totalLifetime: string;
+    daysLogged: string;
+    completionRate30d: string;
+    ofScheduledDays: string;
+  };
+  periodicGoals: {
+    title: string;
+    weeklyGoal: string;
+    monthlyGoal: string;
+    achieved: string;
+    lastDay: string;
+    daysRemaining: string;
+  };
+  quickLog: {
+    title: string;
+    logFor: string;
+    percentCompleted: string;
+    quickAdd: string;
+    exactAdd: string;
+    resetToZero: string;
+    resetConfirm: string;
+  };
+  habitForm: {
+    createTitle: string;
+    editTitle: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    categoryLabel: string;
+    customCategoryLabel: string;
+    customCategoryPlaceholder: string;
+    descriptionLabel: string;
+    descriptionPlaceholder: string;
+    typeLabel: string;
+    booleanTypeTitle: string;
+    booleanTypeDesc: string;
+    quantitativeTypeTitle: string;
+    quantitativeTypeDesc: string;
+    unitLabel: string;
+    unitPlaceholder: string;
+    dailyGoalLabel: string;
+    dailyGoalPlaceholder: string;
+    periodicGoalsTitle: string;
+    suggestGoals: string;
+    weeklyGoalLabelBoolean: string;
+    weeklyGoalLabelQuantitative: string;
+    monthlyGoalLabelBoolean: string;
+    monthlyGoalLabelQuantitative: string;
+    frequencyLabel: string;
+    frequencyEveryday: string;
+    frequencySpecificDays: string;
+    daysAbbrev: {
+      sun: string;
+      mon: string;
+      tue: string;
+      wed: string;
+      thu: string;
+      fri: string;
+      sat: string;
+    };
+    saveChanges: string;
+    createHabit: string;
+  };
+  settings: {
+    title: string;
+    languageSectionTitle: string;
+    languageDesc: string;
+    themeSectionTitle: string;
+    themeDesc: string;
+    themes: {
+      dark: string;
+      light: string;
+      warm: string;
+    };
+    backupSectionTitle: string;
+    backupDesc: string;
+    downloadJson: string;
+    restoreJson: string;
+    pwaSectionTitle: string;
+    pwaDesc: string;
+    dangerSectionTitle: string;
+    resetDesc: string;
+    resetButton: string;
+    resetConfirm: string;
+    feedbackBackupDownloaded: string;
+    feedbackBackupError: string;
+    feedbackDataRestored: string;
+    feedbackInvalidFile: string;
+    feedbackDataReset: string;
+    appTagline: string;
+  };
+  categories: {
+    healthSport: string;
+    productivity: string;
+    studyLearning: string;
+    wellnessMind: string;
+    finance: string;
+    creativity: string;
+    personal: string;
+  };
+  languages: {
+    es: string;
+    en: string;
+    [code: string]: string;
+  };
+}
+
+export const SUPPORTED_LANGUAGES: LanguageOption[] = [
+  { code: 'es', label: 'Español', nativeName: 'Español', flag: '🇪🇸' },
+  { code: 'en', label: 'Inglés', nativeName: 'English', flag: '🇺🇸' },
+];

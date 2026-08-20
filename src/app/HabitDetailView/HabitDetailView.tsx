@@ -13,6 +13,7 @@ import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { Button } from '@/core/ui/Button';
 import { HabitIcon } from '@/core/ui/HabitIcon';
+import { useI18nStore } from '@/core/i18n';
 import { MonthlyGrid, AnnualHeatmap } from '@/features/heatmap';
 import { HabitStatBadges, HabitEvolutionChart, PeriodicGoalCards } from '@/features/stats';
 import { HabitFormModal } from '@/features/habits';
@@ -34,6 +35,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
+  const { t } = useI18nStore();
 
   const [showAnnualHeatmap, setShowAnnualHeatmap] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -45,9 +47,9 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     return (
       <div className={styles.container}>
         <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <h2>Hábito no encontrado</h2>
+          <h2>{t('habitDetail.notFound')}</h2>
           <Button variant="secondary" onClick={onBack} style={{ marginTop: '16px' }}>
-            Volver al Inicio
+            {t('habitDetail.returnHome')}
           </Button>
         </div>
       </div>
@@ -57,7 +59,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
   const currentLog = logs.find((l) => l.habitId === habit.id && l.date === selectedDate);
 
   const handleDelete = async () => {
-    if (window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el hábito "${habit.name}" y todo su historial?`)) {
+    if (window.confirm(t('habitDetail.deleteConfirm', { name: habit.name }))) {
       await deleteHabit(habit.id);
       onBack();
     }
@@ -78,8 +80,10 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
 
   const frequencyLabel =
     habit.frequency.type === 'everyday'
-      ? 'Todos los días'
-      : `Días seleccionados (${habit.frequency.daysOfWeek?.length || 0}/7)`;
+      ? t('habitDetail.everyday')
+      : t('habitDetail.selectedDaysFreq', {
+          count: habit.frequency.daysOfWeek?.length || 0,
+        });
 
   return (
     <div className={styles.container}>
@@ -87,7 +91,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
       <div className={styles.topNav}>
         <button className={styles.backBtn} onClick={onBack}>
           <ArrowLeft size={18} />
-          <span>Volver</span>
+          <span>{t('common.back')}</span>
         </button>
 
         <div className={styles.topActions}>
@@ -97,7 +101,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
             onClick={() => setIsEditModalOpen(true)}
             leftIcon={<Edit2 size={14} />}
           >
-            Editar
+            {t('common.edit')}
           </Button>
         </div>
       </div>
@@ -119,8 +123,12 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
             )}
             <span className={styles.habitMeta}>
               {habit.type === 'quantitative'
-                ? `Meta diaria: ${habit.dailyGoal || 0} ${habit.unit || 'uds'} • ${frequencyLabel}`
-                : `Simple Sí/No • ${frequencyLabel}`}
+                ? t('habitDetail.dailyGoalLabel', {
+                    goal: habit.dailyGoal || 0,
+                    unit: habit.unit || 'uds',
+                    freq: frequencyLabel,
+                  })
+                : t('habitDetail.simpleLabel', { freq: frequencyLabel })}
             </span>
           </div>
         </div>
@@ -142,8 +150,11 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
             leftIcon={<Plus size={16} />}
           >
             {habit.type === 'boolean'
-              ? (currentLog?.isCompleted ? '✓ Marcado Hoy' : 'Marcar Completado Hoy')
-              : `Registrar Volumen Hoy (${currentLog?.totalValue || 0} ${habit.unit || ''})`}
+              ? (currentLog?.isCompleted ? t('habitDetail.markedToday') : t('habitDetail.markCompletedToday'))
+              : t('habitDetail.logVolumeToday', {
+                  current: currentLog?.totalValue || 0,
+                  unit: habit.unit || '',
+                })}
           </Button>
         </div>
       </div>
@@ -178,12 +189,12 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
         {showAnnualHeatmap ? (
           <>
             <Minimize2 size={16} />
-            <span>Ocultar Historial Anual</span>
+            <span>{t('habitDetail.hideAnnual')}</span>
           </>
         ) : (
           <>
             <Maximize2 size={16} />
-            <span>Expandir Historial Anual Completo (52 semanas)</span>
+            <span>{t('habitDetail.expandAnnual')}</span>
           </>
         )}
       </button>
@@ -205,7 +216,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
           onClick={handleToggleArchive}
           leftIcon={<Archive size={14} />}
         >
-          {habit.isArchived ? 'Desarchivar Hábito' : 'Archivar Hábito'}
+          {habit.isArchived ? t('habitDetail.unarchive') : t('habitDetail.archive')}
         </Button>
 
         <div style={{ flex: 1 }} />
@@ -216,7 +227,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
           onClick={handleDelete}
           leftIcon={<Trash2 size={14} />}
         >
-          Eliminar Hábito
+          {t('habitDetail.deleteHabit')}
         </Button>
       </div>
 

@@ -12,6 +12,7 @@ import { Button } from '@/core/ui/Button';
 import { ColorPicker, CURATED_HABIT_COLORS } from '@/core/ui/ColorPicker';
 import { IconPicker } from '@/core/ui/IconPicker';
 import { HabitIcon } from '@/core/ui/HabitIcon';
+import { useI18nStore } from '@/core/i18n';
 import styles from './HabitFormModal.module.css';
 
 export interface HabitFormModalProps {
@@ -27,6 +28,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   habitToEdit,
   onSubmit,
 }) => {
+  const { t } = useI18nStore();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState('Target');
@@ -81,14 +83,27 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   }, [isOpen, habitToEdit]);
 
   const daysLabels = [
-    { label: 'D', value: 0 },
-    { label: 'L', value: 1 },
-    { label: 'M', value: 2 },
-    { label: 'X', value: 3 },
-    { label: 'J', value: 4 },
-    { label: 'V', value: 5 },
-    { label: 'S', value: 6 },
+    { label: t('habitForm.daysAbbrev.sun'), value: 0 },
+    { label: t('habitForm.daysAbbrev.mon'), value: 1 },
+    { label: t('habitForm.daysAbbrev.tue'), value: 2 },
+    { label: t('habitForm.daysAbbrev.wed'), value: 3 },
+    { label: t('habitForm.daysAbbrev.thu'), value: 4 },
+    { label: t('habitForm.daysAbbrev.fri'), value: 5 },
+    { label: t('habitForm.daysAbbrev.sat'), value: 6 },
   ];
+
+  const getCategoryLabel = (catId: string, defaultLabel: string) => {
+    switch (catId) {
+      case 'Salud & Deporte': return t('categories.healthSport');
+      case 'Productividad': return t('categories.productivity');
+      case 'Estudio & Aprendizaje': return t('categories.studyLearning');
+      case 'Bienestar & Mente': return t('categories.wellnessMind');
+      case 'Finanzas': return t('categories.finance');
+      case 'Creatividad': return t('categories.creativity');
+      case 'Personal': return t('categories.personal');
+      default: return defaultLabel;
+    }
+  };
 
   const toggleDay = (dayValue: number) => {
     if (selectedDays.includes(dayValue)) {
@@ -148,16 +163,16 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={habitToEdit ? 'Editar Hábito' : 'Crear Nuevo Hábito'}
+      title={habitToEdit ? t('habitForm.editTitle') : t('habitForm.createTitle')}
     >
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Name */}
         <div className={styles.field}>
-          <label className={styles.label}>Nombre de la Actividad *</label>
+          <label className={styles.label}>{t('habitForm.nameLabel')}</label>
           <input
             type="text"
             required
-            placeholder="ej. Leer libros, Gimnasio, Estudiar..."
+            placeholder={t('habitForm.namePlaceholder')}
             className={styles.input}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -166,7 +181,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
         {/* Category Picker */}
         <div className={styles.field}>
-          <label className={styles.label}>Categoría / Etiqueta</label>
+          <label className={styles.label}>{t('habitForm.categoryLabel')}</label>
           <div className={styles.categoryChips}>
             {CURATED_HABIT_CATEGORIES.map((cat) => {
               const isSelected = category === cat.id;
@@ -178,7 +193,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
                   onClick={() => setCategory(cat.id)}
                 >
                   <HabitIcon name={cat.icon} size={13} />
-                  <span>{cat.label}</span>
+                  <span>{getCategoryLabel(cat.id, cat.label)}</span>
                 </button>
               );
             })}
@@ -188,14 +203,14 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               onClick={() => setCategory('__custom__')}
             >
               <PenLine size={13} />
-              <span>Personalizada</span>
+              <span>{t('habitForm.customCategoryLabel')}</span>
             </button>
           </div>
 
           {category === '__custom__' && (
             <input
               type="text"
-              placeholder="Escribe el nombre de tu categoría..."
+              placeholder={t('habitForm.customCategoryPlaceholder')}
               className={styles.input}
               style={{ marginTop: '6px' }}
               value={customCategory}
@@ -206,9 +221,9 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
         {/* Description */}
         <div className={styles.field}>
-          <label className={styles.label}>Descripción o Notas (Opcional)</label>
+          <label className={styles.label}>{t('habitForm.descriptionLabel')}</label>
           <textarea
-            placeholder="¿Por qué es importante este hábito para ti?"
+            placeholder={t('habitForm.descriptionPlaceholder')}
             className={styles.textarea}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -221,7 +236,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
         {/* Measurement Type */}
         <div className={styles.field}>
-          <label className={styles.label}>Tipo de Medición</label>
+          <label className={styles.label}>{t('habitForm.typeLabel')}</label>
           <div className={styles.typeSelector}>
             <button
               type="button"
@@ -229,8 +244,8 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               onClick={() => setType('boolean')}
             >
               <CheckSquare size={20} color={type === 'boolean' ? 'var(--tk-accent)' : undefined} />
-              <span className={styles.typeTitle}>Sí / No (Simple)</span>
-              <span className={styles.typeDesc}>Completar con 1 check</span>
+              <span className={styles.typeTitle}>{t('habitForm.booleanTypeTitle')}</span>
+              <span className={styles.typeDesc}>{t('habitForm.booleanTypeDesc')}</span>
             </button>
 
             <button
@@ -239,8 +254,8 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               onClick={() => setType('quantitative')}
             >
               <Hash size={20} color={type === 'quantitative' ? 'var(--tk-accent)' : undefined} />
-              <span className={styles.typeTitle}>Por Cantidad / Volumen</span>
-              <span className={styles.typeDesc}>Páginas, minutos, km...</span>
+              <span className={styles.typeTitle}>{t('habitForm.quantitativeTypeTitle')}</span>
+              <span className={styles.typeDesc}>{t('habitForm.quantitativeTypeDesc')}</span>
             </button>
           </div>
         </div>
@@ -249,22 +264,22 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
         {type === 'quantitative' && (
           <div className={styles.quantitativeFields}>
             <div className={styles.field}>
-              <label className={styles.label}>Unidad de Medida</label>
+              <label className={styles.label}>{t('habitForm.unitLabel')}</label>
               <input
                 type="text"
-                placeholder="ej: min, págs, km"
+                placeholder={t('habitForm.unitPlaceholder')}
                 className={styles.input}
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Meta Diaria</label>
+              <label className={styles.label}>{t('habitForm.dailyGoalLabel')}</label>
               <input
                 type="number"
                 step="any"
                 min="1"
-                placeholder="ej: 30"
+                placeholder={t('habitForm.dailyGoalPlaceholder')}
                 className={styles.input}
                 value={dailyGoal}
                 onChange={(e) => setDailyGoal(e.target.value)}
@@ -278,7 +293,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div className={styles.periodicSectionTitle}>
               <Target size={15} color="var(--tk-accent)" />
-              <span>Metas Periódicas (Opcional)</span>
+              <span>{t('habitForm.periodicGoalsTitle')}</span>
             </div>
             <button
               type="button"
@@ -295,20 +310,22 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
                 gap: '3px',
               }}
             >
-              <Sparkles size={11} /> Sugerir metas
+              <Sparkles size={11} /> {t('habitForm.suggestGoals')}
             </button>
           </div>
 
           <div className={styles.periodicInputsGrid}>
             <div className={styles.field}>
               <label className={styles.label}>
-                Meta Semanal {type === 'boolean' ? '(días/semana)' : `(${unit || 'uds'}/sem)`}
+                {type === 'boolean'
+                  ? t('habitForm.weeklyGoalLabelBoolean')
+                  : t('habitForm.weeklyGoalLabelQuantitative', { unit: unit || 'uds' })}
               </label>
               <input
                 type="number"
                 step="any"
                 min="1"
-                placeholder={type === 'boolean' ? 'ej. 4' : 'ej. 150'}
+                placeholder={type === 'boolean' ? '4' : '150'}
                 className={styles.input}
                 value={weeklyGoal}
                 onChange={(e) => setWeeklyGoal(e.target.value)}
@@ -317,13 +334,15 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
             <div className={styles.field}>
               <label className={styles.label}>
-                Meta Mensual {type === 'boolean' ? '(días/mes)' : `(${unit || 'uds'}/mes)`}
+                {type === 'boolean'
+                  ? t('habitForm.monthlyGoalLabelBoolean')
+                  : t('habitForm.monthlyGoalLabelQuantitative', { unit: unit || 'uds' })}
               </label>
               <input
                 type="number"
                 step="any"
                 min="1"
-                placeholder={type === 'boolean' ? 'ej. 18' : 'ej. 600'}
+                placeholder={type === 'boolean' ? '18' : '600'}
                 className={styles.input}
                 value={monthlyGoal}
                 onChange={(e) => setMonthlyGoal(e.target.value)}
@@ -334,21 +353,21 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
 
         {/* Frequency */}
         <div className={styles.field}>
-          <label className={styles.label}>Frecuencia Programada</label>
+          <label className={styles.label}>{t('habitForm.frequencyLabel')}</label>
           <div className={styles.typeSelector} style={{ marginBottom: '8px' }}>
             <button
               type="button"
               className={`${styles.typeBtn} ${frequencyType === 'everyday' ? styles.typeBtnSelected : ''}`}
               onClick={() => setFrequencyType('everyday')}
             >
-              <span className={styles.typeTitle}>Todos los días</span>
+              <span className={styles.typeTitle}>{t('habitForm.frequencyEveryday')}</span>
             </button>
             <button
               type="button"
               className={`${styles.typeBtn} ${frequencyType === 'specific_days' ? styles.typeBtnSelected : ''}`}
               onClick={() => setFrequencyType('specific_days')}
             >
-              <span className={styles.typeTitle}>Días específicos</span>
+              <span className={styles.typeTitle}>{t('habitForm.frequencySpecificDays')}</span>
             </button>
           </div>
 
@@ -374,7 +393,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
         {/* Actions */}
         <div className={styles.actions}>
           <Button type="button" variant="ghost" onClick={onClose}>
-            Cancelar
+            {t('common.cancel')}
           </Button>
           <Button
             type="submit"
@@ -382,7 +401,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
             disabled={!name.trim() || isSubmitting}
             leftIcon={<Check size={16} />}
           >
-            {habitToEdit ? 'Guardar Cambios' : 'Crear Hábito'}
+            {habitToEdit ? t('habitForm.saveChanges') : t('habitForm.createHabit')}
           </Button>
         </div>
       </form>
