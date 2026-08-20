@@ -4,7 +4,7 @@ import { Habit, DailyActivityLog } from '@/core/types';
 import { BottomSheet } from '@/core/ui/BottomSheet';
 import { Button } from '@/core/ui/Button';
 import { HabitIcon } from '@/core/ui/HabitIcon';
-import { getRelativeDateLabel } from '@/core/utils/dateUtils';
+import { useI18nStore } from '@/core/i18n';
 import styles from './QuickLogBottomSheet.module.css';
 
 export interface QuickLogBottomSheetProps {
@@ -26,6 +26,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
   onAddVolume,
   onSetDirectValue,
 }) => {
+  const { t, formatRelativeDate } = useI18nStore();
   const [inputValue, setInputValue] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,7 +42,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
   const progressPercent = goal > 0 ? Math.min(100, Math.round((currentTotal / goal) * 100)) : 100;
 
   // Tailored presets based on unit
-  const isTime = unit.toLowerCase().includes('min') || unit.toLowerCase().includes('hora');
+  const isTime = unit.toLowerCase().includes('min') || unit.toLowerCase().includes('hora') || unit.toLowerCase().includes('hour');
   const presets = isTime ? [15, 30, 45, 60] : [1, 5, 10, 20];
 
   const handleAddPreset = async (amount: number) => {
@@ -68,7 +69,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
   };
 
   const handleResetDay = async () => {
-    if (window.confirm('¿Reiniciar el registro de este hábito a 0 para esta fecha?')) {
+    if (window.confirm(t('quickLog.resetConfirm'))) {
       setIsSubmitting(true);
       try {
         await onSetDirectValue(habit, 0, targetDate);
@@ -79,7 +80,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
   };
 
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose} title="Registrar Volumen">
+    <BottomSheet isOpen={isOpen} onClose={onClose} title={t('quickLog.title')}>
       <div className={styles.container}>
         {/* Habit & Date Header */}
         <div className={styles.habitHeader}>
@@ -89,7 +90,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
           <div className={styles.habitInfo}>
             <span className={styles.habitName}>{habit.name}</span>
             <span className={styles.habitDate}>
-              Registro para: <strong>{getRelativeDateLabel(targetDate, 'long')}</strong>
+              {t('quickLog.logFor')} <strong>{formatRelativeDate(targetDate, 'long')}</strong>
             </span>
           </div>
         </div>
@@ -103,7 +104,9 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
                 {goal > 0 ? ` / ${goal} ${unit}` : ` ${unit}`}
               </span>
             </div>
-            <span className={styles.habitDate}>{progressPercent}% cumplido</span>
+            <span className={styles.habitDate}>
+              {t('quickLog.percentCompleted', { percent: progressPercent })}
+            </span>
           </div>
 
           <div className={styles.progressBarBg}>
@@ -120,7 +123,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
         {/* Quick Add Presets */}
         <div>
           <span className={styles.habitDate} style={{ marginBottom: '6px', display: 'block' }}>
-            Sumar rápido:
+            {t('quickLog.quickAdd')}
           </span>
           <div className={styles.quickPresets}>
             {presets.map((amount) => (
@@ -139,7 +142,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
 
         {/* Custom Input */}
         <form onSubmit={handleCustomSubmit} className={styles.manualInputSection}>
-          <span className={styles.habitDate}>O ingresa cantidad exacta a sumar:</span>
+          <span className={styles.habitDate}>{t('quickLog.exactAdd')}</span>
           <div className={styles.inputRow}>
             <input
               type="number"
@@ -157,7 +160,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
               disabled={!inputValue || isSubmitting}
               leftIcon={<Plus size={16} />}
             >
-              Sumar
+              {t('habitCard.addVolume')}
             </Button>
           </div>
         </form>
@@ -172,7 +175,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
               disabled={isSubmitting}
               leftIcon={<RotateCcw size={14} />}
             >
-              Reiniciar a 0
+              {t('quickLog.resetToZero')}
             </Button>
           )}
           <div style={{ flex: 1 }} />
@@ -182,7 +185,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
             onClick={onClose}
             leftIcon={<Check size={16} />}
           >
-            Listo
+            {t('common.ready')}
           </Button>
         </div>
       </div>

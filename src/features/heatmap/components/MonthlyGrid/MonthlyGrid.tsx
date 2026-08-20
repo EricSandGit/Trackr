@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import {
   generateMonthCalendar,
-  getMonthName,
   isToday,
 } from '@/core/utils/dateUtils';
 import {
@@ -11,6 +10,7 @@ import {
   getHabitCustomColorShade,
 } from '@/features/heatmap/logic/heatmapCalculator';
 import { useThemeStore } from '@/core/theme/useThemeStore';
+import { useI18nStore } from '@/core/i18n';
 import styles from './MonthlyGrid.module.css';
 
 export interface MonthlyGridProps {
@@ -26,6 +26,7 @@ export const MonthlyGrid: React.FC<MonthlyGridProps> = ({
 }) => {
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const { theme } = useThemeStore();
+  const { formatMonthName, language, t } = useI18nStore();
   const isDark = theme === 'dark';
 
   const year = currentDate.getFullYear();
@@ -41,17 +42,28 @@ export const MonthlyGrid: React.FC<MonthlyGridProps> = ({
     setCurrentDate(new Date(year, monthIndex + 1, 1));
   };
 
-  const weekdayHeaders = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const weekdayHeaders =
+    language === 'en'
+      ? [
+          t('habitForm.daysAbbrev.mon'),
+          t('habitForm.daysAbbrev.tue'),
+          t('habitForm.daysAbbrev.wed'),
+          t('habitForm.daysAbbrev.thu'),
+          t('habitForm.daysAbbrev.fri'),
+          t('habitForm.daysAbbrev.sat'),
+          t('habitForm.daysAbbrev.sun'),
+        ]
+      : ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   return (
     <div className={styles.container}>
       <div className={styles.navHeader}>
-        <h4 className={styles.monthTitle}>{getMonthName(year, monthIndex)}</h4>
+        <h4 className={styles.monthTitle}>{formatMonthName(year, monthIndex)}</h4>
         <div className={styles.navButtons}>
-          <button className={styles.arrowBtn} onClick={handlePrevMonth} aria-label="Mes anterior">
+          <button className={styles.arrowBtn} onClick={handlePrevMonth} aria-label={t('nav.prevDay')}>
             <ChevronLeft size={16} />
           </button>
-          <button className={styles.arrowBtn} onClick={handleNextMonth} aria-label="Mes siguiente">
+          <button className={styles.arrowBtn} onClick={handleNextMonth} aria-label={t('nav.nextDay')}>
             <ChevronRight size={16} />
           </button>
         </div>
