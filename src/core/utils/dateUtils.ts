@@ -138,7 +138,11 @@ export interface HeatmapColumn {
   }>;
 }
 
-export function generateHeatmapWeeks(weeksCount: number = 24, referenceDate: Date = new Date()): HeatmapColumn[] {
+export function generateHeatmapWeeks(
+  weeksCount: number = 24,
+  referenceDate: Date = new Date(),
+  locale: string = 'es-ES'
+): HeatmapColumn[] {
   const result: HeatmapColumn[] = [];
   const todayStr = formatDateToISO(referenceDate);
 
@@ -167,7 +171,7 @@ export function generateHeatmapWeeks(weeksCount: number = 24, referenceDate: Dat
       // Check if this day is the 1st-7th of a new month to show a label above the column
       if (dayMonth !== lastMonthSeen && currentDate.getDate() <= 7) {
         lastMonthSeen = dayMonth;
-        weekMonthLabel = currentDate.toLocaleDateString('es-ES', { month: 'short' });
+        weekMonthLabel = currentDate.toLocaleDateString(locale, { month: 'short' });
       }
 
       // Convert day of week so Monday is 0, Sunday is 6
