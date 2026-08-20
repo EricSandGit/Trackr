@@ -198,19 +198,19 @@
 }
 
 .tooltipBackground {
-  fill: #161b22;
+  fill: var(--tk-bg-surface-elevated);
   stroke-width: 1.5;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
   rx: 6px;
 }
 
 .tooltipArrow {
-  fill: #161b22;
+  fill: var(--tk-bg-surface-elevated);
   stroke-width: 1.5;
 }
 
 .tooltipDateText {
-  fill: #f0f6fc;
+  fill: var(--tk-text-primary);
   font-size: 11px;
   font-weight: 700;
   text-anchor: middle;
@@ -218,7 +218,7 @@
 
 .tooltipValueText {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--tk-font-mono);
   text-anchor: middle;
 }
@@ -242,7 +242,7 @@
 
 .selectedPointValue {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   font-family: var(--tk-font-mono);
   color: var(--tk-text-primary);
 }

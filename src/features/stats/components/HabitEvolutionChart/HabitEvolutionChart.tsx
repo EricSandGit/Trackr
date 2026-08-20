@@ -500,7 +500,7 @@ export const HabitEvolutionChart: React.FC<HabitEvolutionChartProps> = ({
               {/* Tooltip Connector Notch */}
               <polygon
                 points="-5,-2 5,-2 0,3"
-                fill="#161b22"
+                fill="var(--tk-bg-surface-elevated)"
                 stroke={habitColor}
                 strokeWidth="1"
               />

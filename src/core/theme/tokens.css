@@ -1,27 +1,27 @@
 :root {
   /* Fonts */
-  --tk-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --tk-font-mono: 'JetBrains Mono', monospace;
+  --tk-font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tk-font-mono: 'Space Mono', monospace;
 
-  /* GitHub Dark Theme (Default) */
-  --tk-bg-app: #0d1117;
-  --tk-bg-surface: #161b22;
-  --tk-bg-surface-elevated: #21262d;
-  --tk-bg-surface-hover: #30363d;
-  --tk-bg-input: #0d1117;
-  --tk-bg-overlay: rgba(1, 4, 9, 0.75);
+  /* Graphite / Purple Dark Theme (Default) */
+  --tk-bg-app: #121317;
+  --tk-bg-surface: #1c1e24;
+  --tk-bg-surface-elevated: #23252c;
+  --tk-bg-surface-hover: #2a2c33;
+  --tk-bg-input: #121317;
+  --tk-bg-overlay: rgba(8, 9, 12, 0.75);
 
-  --tk-border-default: #30363d;
-  --tk-border-muted: #21262d;
-  --tk-border-focus: #58a6ff;
+  --tk-border-default: #2a2c33;
+  --tk-border-muted: #23252c;
+  --tk-border-focus: #8b7cf6;
 
-  --tk-text-primary: #f0f6fc;
-  --tk-text-secondary: #8b949e;
-  --tk-text-muted: #6e7681;
-  --tk-text-inverse: #0d1117;
+  --tk-text-primary: #e9e9ee;
+  --tk-text-secondary: #8b8d97;
+  --tk-text-muted: #6d6f78;
+  --tk-text-inverse: #121317;
 
   /* Global GitHub-style Heatmap Palette */
-  --tk-cell-empty: #161b22;
+  --tk-cell-empty: #1c1e24;
   --tk-cell-border: rgba(240, 246, 252, 0.06);
   --tk-cell-level-1: #0e4429;
   --tk-cell-level-2: #006d32;
@@ -75,20 +75,20 @@
 }
 
 [data-theme='light'] {
-  --tk-bg-app: #f6f8fa;
+  --tk-bg-app: #f8f9fb;
   --tk-bg-surface: #ffffff;
   --tk-bg-surface-elevated: #ffffff;
-  --tk-bg-surface-hover: #f3f4f6;
+  --tk-bg-surface-hover: #f0f1f4;
   --tk-bg-input: #ffffff;
-  --tk-bg-overlay: rgba(31, 35, 40, 0.4);
+  --tk-bg-overlay: rgba(30, 32, 40, 0.4);
 
-  --tk-border-default: #d0d7de;
-  --tk-border-muted: #e1e4e8;
-  --tk-border-focus: #0969da;
+  --tk-border-default: #e2e4e9;
+  --tk-border-muted: #ececef;
+  --tk-border-focus: #4f46e5;
 
-  --tk-text-primary: #1f2328;
-  --tk-text-secondary: #656d76;
-  --tk-text-muted: #8c959f;
+  --tk-text-primary: #1e2028;
+  --tk-text-secondary: #62636c;
+  --tk-text-muted: #8a8b93;
   --tk-text-inverse: #ffffff;
 
   --tk-cell-empty: #ebedf0;
@@ -109,4 +109,41 @@
   --tk-shadow-sm: 0 1px 3px rgba(31, 35, 40, 0.1);
   --tk-shadow-md: 0 4px 12px rgba(31, 35, 40, 0.12);
   --tk-shadow-lg: 0 12px 32px rgba(31, 35, 40, 0.18);
+}
+
+[data-theme='warm'] {
+  --tk-bg-app: #f5efe6;
+  --tk-bg-surface: #fbf7f0;
+  --tk-bg-surface-elevated: #fbf7f0;
+  --tk-bg-surface-hover: #efe6d8;
+  --tk-bg-input: #fbf7f0;
+  --tk-bg-overlay: rgba(61, 51, 42, 0.4);
+
+  --tk-border-default: #e4d9c6;
+  --tk-border-muted: #ece3d4;
+  --tk-border-focus: #c2632f;
+
+  --tk-text-primary: #3d332a;
+  --tk-text-secondary: #7a6d5d;
+  --tk-text-muted: #a29581;
+  --tk-text-inverse: #fbf7f0;
+
+  --tk-cell-empty: #e8ded0;
+  --tk-cell-border: rgba(61, 51, 42, 0.08);
+  --tk-cell-level-1: #9be9a8;
+  --tk-cell-level-2: #40c463;
+  --tk-cell-level-3: #30a14e;
+  --tk-cell-level-4: #216e39;
+
+  --tk-record-gold: #b45309;
+  --tk-record-glow: 0 0 8px rgba(245, 158, 11, 0.4);
+  --tk-record-border: #f59e0b;
+
+  --tk-accent: #1f883d;
+  --tk-accent-hover: #1a7f37;
+  --tk-accent-active: #157130;
+
+  --tk-shadow-sm: 0 1px 3px rgba(61, 51, 42, 0.1);
+  --tk-shadow-md: 0 4px 12px rgba(61, 51, 42, 0.12);
+  --tk-shadow-lg: 0 12px 32px rgba(61, 51, 42, 0.18);
 }

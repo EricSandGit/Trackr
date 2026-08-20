@@ -36,7 +36,7 @@ html, body {
 
 @media (min-width: 541px) {
   body {
-    background-color: #010409;
+    background-color: var(--tk-bg-app);
   }
 }
 

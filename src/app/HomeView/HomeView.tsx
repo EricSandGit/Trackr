@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Settings, Sun, Moon } from 'lucide-react';
+import { Plus, Settings, Sun, Moon, Flame } from 'lucide-react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -72,9 +72,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
             className={styles.actionBtn}
             onClick={toggleTheme}
             aria-label="Cambiar tema"
-            title="Cambiar tema oscuro/claro"
+            title={`Tema: ${theme === 'dark' ? 'Oscuro' : theme === 'light' ? 'Claro' : 'Cálido'} (clic para cambiar)`}
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === 'dark' ? (
+              <Moon size={18} />
+            ) : theme === 'light' ? (
+              <Sun size={18} />
+            ) : (
+              <Flame size={18} color="var(--tk-border-focus)" />
+            )}
           </button>
 
           <button
