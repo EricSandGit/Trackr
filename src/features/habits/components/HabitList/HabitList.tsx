@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Layers } from 'lucide-react';
+import { Plus, Layers, Sparkles, Search } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { HabitCard } from '../HabitCard';
 import { Button } from '@/core/ui/Button';
@@ -107,7 +107,9 @@ export const HabitList: React.FC<HabitListProps> = ({
 
       {activeScheduledHabits.length === 0 ? (
         <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🌱</div>
+          <div className={styles.emptyIcon}>
+            <Sparkles size={32} color="var(--tk-accent)" />
+          </div>
           <div className={styles.emptyTitle}>No hay hábitos programados</div>
           <p className={styles.emptyText}>
             No tienes actividades activas para este día. ¡Crea un nuevo hábito para empezar a trackear!
@@ -123,7 +125,9 @@ export const HabitList: React.FC<HabitListProps> = ({
         </div>
       ) : displayedHabits.length === 0 ? (
         <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🔍</div>
+          <div className={styles.emptyIcon}>
+            <Search size={32} color="var(--tk-text-muted)" />
+          </div>
           <div className={styles.emptyTitle}>Sin hábitos en esta categoría</div>
           <p className={styles.emptyText}>
             No hay actividades programadas hoy para la categoría &quot;{selectedCategory}&quot;.
