@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { Plus, Layers, Sparkles, Search } from 'lucide-react';
-import { Habit, DailyActivityLog } from '@/core/types';
+import { Habit, DailyActivityLog, CURATED_HABIT_CATEGORIES } from '@/core/types';
 import { HabitCard } from '../HabitCard';
 import { Button } from '@/core/ui/Button';
+import { HabitIcon } from '@/core/ui/HabitIcon';
 import { isHabitScheduledOnDate } from '@/features/heatmap/logic/heatmapCalculator';
 import styles from './HabitList.module.css';
 
@@ -90,6 +91,9 @@ export const HabitList: React.FC<HabitListProps> = ({
           {categories.map((cat) => {
             const count = activeScheduledHabits.filter((h) => h.category === cat).length;
             const isSelected = selectedCategory === cat;
+            const catIcon =
+              CURATED_HABIT_CATEGORIES.find((c) => c.id === cat || c.label === cat)?.icon || 'Tag';
+
             return (
               <button
                 key={cat}
@@ -97,6 +101,7 @@ export const HabitList: React.FC<HabitListProps> = ({
                 className={`${styles.filterChip} ${isSelected ? styles.filterChipActive : ''}`}
                 onClick={() => setSelectedCategory(cat)}
               >
+                <HabitIcon name={catIcon} size={12} />
                 <span>{cat}</span>
                 <span className={styles.filterBadge}>{count}</span>
               </button>
