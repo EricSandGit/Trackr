@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Download, Upload, Moon, Sun, RotateCcw, Shield, Smartphone } from 'lucide-react';
+import { Download, Upload, Moon, Sun, Flame, RotateCcw, Shield, Smartphone } from 'lucide-react';
 import { Modal } from '@/core/ui/Modal';
 import { Button } from '@/core/ui/Button';
-import { useThemeStore } from '@/core/theme/useThemeStore';
+import { useThemeStore, ThemeMode } from '@/core/theme/useThemeStore';
 import { jsonBackupService, storageAdapter } from '@/services/storage';
 import styles from './SettingsModal.module.css';
 
@@ -17,9 +17,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   onDataResetOrImported,
 }) => {
-  const { theme, toggleTheme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
+
+  const THEMES: Array<{ id: ThemeMode; label: string; icon: React.ReactNode }> = [
+    { id: 'dark', label: 'Oscuro', icon: <Moon size={16} /> },
+    { id: 'light', label: 'Claro', icon: <Sun size={16} /> },
+    { id: 'warm', label: 'Cálido', icon: <Flame size={16} /> },
+  ];
 
   const handleExportBackup = async () => {
     try {
@@ -82,21 +88,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         {/* Theme Setting */}
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
-            {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
             <span>Tema Visual</span>
           </div>
-          <div className={styles.row}>
-            <p className={styles.description}>
-              Tema actual: <strong>{theme === 'dark' ? 'GitHub Dark' : 'Modo Claro'}</strong>
-            </p>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={toggleTheme}
-              leftIcon={theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-            >
-              Cambiar a {theme === 'dark' ? 'Claro' : 'Oscuro'}
-            </Button>
+          <p className={styles.description}>
+            Selecciona la apariencia y paleta de colores de la aplicación:
+          </p>
+
+          <div className={styles.themeGrid}>
+            {THEMES.map((item) => {
+              const isSelected = theme === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`${styles.themeBtn} ${isSelected ? styles.themeBtnActive : ''}`}
+                  onClick={() => setTheme(item.id)}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

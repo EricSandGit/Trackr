@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, Settings, Sun, Moon, Flame } from 'lucide-react';
+import { Plus, Settings } from 'lucide-react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
-import { useThemeStore } from '@/core/theme/useThemeStore';
 import { GlobalHeatmap } from '@/features/heatmap';
 import { ConsistencyOverview } from '@/features/stats';
 import { HabitList, HabitFormModal } from '@/features/habits';
@@ -27,8 +26,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
-
-  const { theme, toggleTheme } = useThemeStore();
 
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -54,7 +51,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
 
   return (
     <div className={styles.container}>
-      {/* Top App Bar */}
+      {/* Top Header / Branding */}
       <header className={styles.topBar}>
         <div className={styles.brand}>
           <div className={styles.brandIcon}>
@@ -68,21 +65,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
         </div>
 
         <div className={styles.topActions}>
-          <button
-            className={styles.actionBtn}
-            onClick={toggleTheme}
-            aria-label="Cambiar tema"
-            title={`Tema: ${theme === 'dark' ? 'Oscuro' : theme === 'light' ? 'Claro' : 'Cálido'} (clic para cambiar)`}
-          >
-            {theme === 'dark' ? (
-              <Moon size={18} />
-            ) : theme === 'light' ? (
-              <Sun size={18} />
-            ) : (
-              <Flame size={18} color="var(--tk-border-focus)" />
-            )}
-          </button>
-
           <button
             className={styles.actionBtn}
             onClick={() => setIsSettingsModalOpen(true)}
