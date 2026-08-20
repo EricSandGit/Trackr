@@ -1,4 +1,4 @@
-export type HabitType = 'boolean' | 'quantitative';
+export type HabitType = 'boolean' | 'quantitative' | 'avoidance';
 
 export interface HabitFrequency {
   type: 'everyday' | 'specific_days';

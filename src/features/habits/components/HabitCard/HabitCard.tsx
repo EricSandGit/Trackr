@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Plus } from 'lucide-react';
+import { Sparkles, Plus, ShieldAlert, RotateCcw } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { Checkbox } from '@/core/ui/Checkbox';
 import { HabitIcon } from '@/core/ui/HabitIcon';
@@ -22,7 +22,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
   onOpenDetail,
 }) => {
   const { t } = useI18nStore();
-  const isCompleted = !!log?.isCompleted;
+  const isRelapse = habit.type === 'avoidance' && log?.isCompleted === false;
+  const isCompleted = habit.type === 'avoidance' ? !isRelapse : !!log?.isCompleted;
   const isRecord = !!log?.isPersonalRecord;
   const currentTotal = log?.totalValue || 0;
 
@@ -31,10 +32,10 @@ export const HabitCard: React.FC<HabitCardProps> = ({
   };
 
   const handleCheckAction = () => {
-    if (habit.type === 'boolean') {
-      onToggleCheck(habit);
-    } else {
+    if (habit.type === 'quantitative') {
       onOpenQuickLog(habit);
+    } else {
+      onToggleCheck(habit);
     }
   };
 
@@ -47,6 +48,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
     } else {
       progressLabel = `${currentTotal} ${unit}`;
     }
+  } else if (habit.type === 'avoidance') {
+    progressLabel = isRelapse ? t('habitCard.relapse') : t('habitCard.cleanDay');
   } else {
     progressLabel = isCompleted ? t('habitCard.completed') : t('habitCard.pending');
   }
@@ -73,7 +76,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
         </div>
         <div className={styles.metaRow}>
           <span
-            className={`${styles.progressText} ${isCompleted ? styles.completedText : ''}`}
+            className={`${styles.progressText} ${isCompleted ? styles.completedText : ''} ${isRelapse ? styles.relapseText : ''}`}
+            style={{ color: isRelapse ? '#ef4444' : undefined }}
           >
             {progressLabel}
           </span>
@@ -81,7 +85,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             <span className={styles.periodicGoalBadge}>
               {t('habitCard.weeklyGoal', {
                 goal: habit.weeklyGoal,
-                unit: habit.type === 'boolean' ? t('common.days') : habit.unit || '',
+                unit: habit.type === 'quantitative' ? habit.unit || '' : t('common.days'),
               })}
             </span>
           )}
@@ -96,6 +100,38 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             color={habit.color}
             size={30}
           />
+        ) : habit.type === 'avoidance' ? (
+          <button
+            type="button"
+            className={styles.card}
+            style={{
+              padding: '6px 10px',
+              borderRadius: 'var(--tk-radius-md)',
+              backgroundColor: isRelapse ? 'rgba(239, 68, 68, 0.15)' : 'var(--tk-bg-surface-elevated)',
+              color: isRelapse ? '#ef4444' : 'var(--tk-text-secondary)',
+              borderColor: isRelapse ? '#ef4444' : 'var(--tk-border-default)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontWeight: 600,
+              fontSize: '11px',
+              cursor: 'pointer',
+            }}
+            onClick={handleCheckAction}
+            title={isRelapse ? t('habitCard.undoRelapse') : t('habitCard.markRelapse')}
+          >
+            {isRelapse ? (
+              <>
+                <RotateCcw size={12} />
+                <span>{t('habitCard.undoRelapse')}</span>
+              </>
+            ) : (
+              <>
+                <ShieldAlert size={12} color="var(--tk-warning)" />
+                <span>{t('habitCard.markRelapse')}</span>
+              </>
+            )}
+          </button>
         ) : (
           <button
             type="button"

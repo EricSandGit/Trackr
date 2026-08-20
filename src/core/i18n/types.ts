@@ -66,6 +66,10 @@ export interface TranslationSchema {
     record: string;
     weeklyGoal: string;
     addVolume: string;
+    cleanDay: string;
+    relapse: string;
+    markRelapse: string;
+    undoRelapse: string;
   };
   habitDetail: {
     notFound: string;
@@ -81,12 +85,18 @@ export interface TranslationSchema {
     logVolumeToday: string;
     dailyGoalLabel: string;
     simpleLabel: string;
+    avoidanceLabel: string;
+    cleanDayToday: string;
+    relapseToday: string;
+    markRelapseToday: string;
+    undoRelapseToday: string;
     everyday: string;
     selectedDaysFreq: string;
   };
   badges: {
     currentStreak: string;
     daysCount: string;
+    cleanDaysCount: string;
     bestStreakDesc: string;
     recordInOneDay: string;
     noRecordYet: string;
@@ -129,6 +139,8 @@ export interface TranslationSchema {
     booleanTypeDesc: string;
     quantitativeTypeTitle: string;
     quantitativeTypeDesc: string;
+    avoidanceTypeTitle: string;
+    avoidanceTypeDesc: string;
     unitLabel: string;
     unitPlaceholder: string;
     dailyGoalLabel: string;

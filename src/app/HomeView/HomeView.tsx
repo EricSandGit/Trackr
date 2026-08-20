@@ -24,6 +24,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
     setSelectedDate,
     loadLogs,
     toggleBooleanHabit,
+    toggleAvoidanceHabit,
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
@@ -110,7 +111,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
         habits={habits}
         logs={logs}
         selectedDate={selectedDate}
-        onToggleCheck={(h) => toggleBooleanHabit(h, selectedDate)}
+        onToggleCheck={(h) => {
+          if (h.type === 'avoidance') {
+            toggleAvoidanceHabit(h, selectedDate);
+          } else {
+            toggleBooleanHabit(h, selectedDate);
+          }
+        }}
         onOpenQuickLog={handleOpenQuickLog}
         onOpenDetail={onOpenHabitDetail}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}

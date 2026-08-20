@@ -17,6 +17,7 @@ interface LogsStoreState {
   loadLogs: () => Promise<void>;
 
   toggleBooleanHabit: (habit: Habit, date?: string) => Promise<void>;
+  toggleAvoidanceHabit: (habit: Habit, date?: string) => Promise<void>;
   addQuantitativeVolume: (
     habit: Habit,
     amount: number,
@@ -97,6 +98,57 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
         return { logs: newLogs };
       });
       triggerHaptic('success');
+    }
+  },
+
+  toggleAvoidanceHabit: async (habit: Habit, targetDate?: string) => {
+    const date = targetDate || get().selectedDate;
+    const logId = `${habit.id}_${date}`;
+    const existingLog = get().logs.find((l) => l.id === logId);
+
+    // If existingLog exists and is marked as relapse (isCompleted === false):
+    // Toggle back to Clean (isCompleted: true)
+    if (existingLog && existingLog.isCompleted === false) {
+      const updatedLog: DailyActivityLog = {
+        ...existingLog,
+        totalValue: 1,
+        isCompleted: true,
+        isPersonalRecord: false,
+        entries: [],
+      };
+      await storageAdapter.saveLog(updatedLog);
+      set((state) => ({
+        logs: state.logs.map((l) => (l.id === logId ? updatedLog : l)),
+      }));
+      triggerHaptic('success');
+    } else {
+      // Toggle to Relapse (isCompleted: false)
+      const nowIso = new Date().toISOString();
+      const updatedLog: DailyActivityLog = {
+        id: logId,
+        habitId: habit.id,
+        date,
+        totalValue: 0,
+        isCompleted: false,
+        isPersonalRecord: false,
+        entries: [
+          {
+            id: generateId(),
+            timestamp: nowIso,
+            value: 0,
+            notes: 'Recaída',
+          },
+        ],
+      };
+      await storageAdapter.saveLog(updatedLog);
+      set((state) => {
+        const index = state.logs.findIndex((l) => l.id === logId);
+        const newLogs = index >= 0
+          ? state.logs.map((l) => (l.id === logId ? updatedLog : l))
+          : [...state.logs, updatedLog];
+        return { logs: newLogs };
+      });
+      triggerHaptic('error');
     }
   },
 

@@ -8,6 +8,8 @@ import {
   Minimize2,
   Plus,
   Tag,
+  ShieldAlert,
+  RotateCcw,
 } from 'lucide-react';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -32,6 +34,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     selectedDate,
     setSelectedDate,
     toggleBooleanHabit,
+    toggleAvoidanceHabit,
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
@@ -57,6 +60,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
   }
 
   const currentLog = logs.find((l) => l.habitId === habit.id && l.date === selectedDate);
+  const isRelapse = habit.type === 'avoidance' && currentLog?.isCompleted === false;
 
   const handleDelete = async () => {
     if (window.confirm(t('habitDetail.deleteConfirm', { name: habit.name }))) {
@@ -73,6 +77,8 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     setSelectedDate(date);
     if (habit.type === 'quantitative') {
       setIsQuickLogOpen(true);
+    } else if (habit.type === 'avoidance') {
+      toggleAvoidanceHabit(habit, date);
     } else {
       toggleBooleanHabit(habit, date);
     }
@@ -128,6 +134,8 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
                     unit: habit.unit || 'uds',
                     freq: frequencyLabel,
                   })
+                : habit.type === 'avoidance'
+                ? t('habitDetail.avoidanceLabel', { freq: frequencyLabel })
                 : t('habitDetail.simpleLabel', { freq: frequencyLabel })}
             </span>
           </div>
@@ -136,26 +144,38 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
         {habit.description && <p className={styles.description}>{habit.description}</p>}
 
         <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-          <Button
-            variant="primary"
-            size="md"
-            fullWidth
-            onClick={() => {
-              if (habit.type === 'boolean') {
-                toggleBooleanHabit(habit, selectedDate);
-              } else {
-                setIsQuickLogOpen(true);
-              }
-            }}
-            leftIcon={<Plus size={16} />}
-          >
-            {habit.type === 'boolean'
-              ? (currentLog?.isCompleted ? t('habitDetail.markedToday') : t('habitDetail.markCompletedToday'))
-              : t('habitDetail.logVolumeToday', {
-                  current: currentLog?.totalValue || 0,
-                  unit: habit.unit || '',
-                })}
-          </Button>
+          {habit.type === 'avoidance' ? (
+            <Button
+              variant={isRelapse ? 'danger' : 'secondary'}
+              size="md"
+              fullWidth
+              onClick={() => toggleAvoidanceHabit(habit, selectedDate)}
+              leftIcon={isRelapse ? <RotateCcw size={16} /> : <ShieldAlert size={16} color="var(--tk-warning)" />}
+            >
+              {isRelapse ? t('habitDetail.undoRelapseToday') : t('habitDetail.markRelapseToday')}
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="md"
+              fullWidth
+              onClick={() => {
+                if (habit.type === 'boolean') {
+                  toggleBooleanHabit(habit, selectedDate);
+                } else {
+                  setIsQuickLogOpen(true);
+                }
+              }}
+              leftIcon={<Plus size={16} />}
+            >
+              {habit.type === 'boolean'
+                ? (currentLog?.isCompleted ? t('habitDetail.markedToday') : t('habitDetail.markCompletedToday'))
+                : t('habitDetail.logVolumeToday', {
+                    current: currentLog?.totalValue || 0,
+                    unit: habit.unit || '',
+                  })}
+            </Button>
+          )}
         </div>
       </div>
 
