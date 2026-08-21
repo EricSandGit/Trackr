@@ -89,18 +89,21 @@ export const MonthlyGrid: React.FC<MonthlyGridProps> = ({
           const isCurrentDay = isToday(day.date);
           const cellColor = getHabitCustomColorShade(habit.color, level, isDark);
 
+          const isRelapseDay = habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
+
           const cellClasses = [
             styles.dayCell,
             !day.isCurrentMonth ? styles.otherMonth : '',
             isCurrentDay ? styles.todayBorder : '',
             isRecord ? styles.recordDay : '',
+            isRelapseDay ? styles.relapseCell : '',
           ]
             .filter(Boolean)
             .join(' ');
 
           const style: React.CSSProperties = {
             backgroundColor: level > 0 ? cellColor : undefined,
-            color: level >= 3 ? '#ffffff' : undefined,
+            color: level >= 3 ? '#ffffff' : isRelapseDay ? '#ef4444' : undefined,
           };
 
           return (
@@ -115,6 +118,9 @@ export const MonthlyGrid: React.FC<MonthlyGridProps> = ({
                 <span className={styles.recordStar}>
                   <Sparkles size={10} />
                 </span>
+              )}
+              {isRelapseDay && (
+                <span className={styles.relapseDot} title="Recaída" />
               )}
               {habit.type === 'quantitative' && value > 0 && (
                 <span className={styles.cellValue}>

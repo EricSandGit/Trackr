@@ -10,6 +10,7 @@ import {
   Tag,
   ShieldAlert,
   RotateCcw,
+  Calendar,
 } from 'lucide-react';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -20,6 +21,7 @@ import { MonthlyGrid, AnnualHeatmap } from '@/features/heatmap';
 import { HabitStatBadges, HabitEvolutionChart, PeriodicGoalCards } from '@/features/stats';
 import { HabitFormModal } from '@/features/habits';
 import { QuickLogBottomSheet } from '@/features/logging';
+import { isToday, formatDateToISO } from '@/core/utils/dateUtils';
 import styles from './HabitDetailView.module.css';
 
 export interface HabitDetailViewProps {
@@ -38,7 +40,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     addQuantitativeVolume,
     setDirectQuantitativeValue,
   } = useLogsStore();
-  const { t } = useI18nStore();
+  const { t, formatRelativeDate } = useI18nStore();
 
   const [showAnnualHeatmap, setShowAnnualHeatmap] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -61,6 +63,8 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
 
   const currentLog = logs.find((l) => l.habitId === habit.id && l.date === selectedDate);
   const isRelapse = habit.type === 'avoidance' && currentLog?.isCompleted === false;
+  const isCurrentDay = isToday(selectedDate);
+  const relativeDate = formatRelativeDate(selectedDate);
 
   const handleDelete = async () => {
     if (window.confirm(t('habitDetail.deleteConfirm', { name: habit.name }))) {
@@ -90,6 +94,38 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
       : t('habitDetail.selectedDaysFreq', {
           count: habit.frequency.daysOfWeek?.length || 0,
         });
+
+  let actionButtonText = '';
+  if (habit.type === 'avoidance') {
+    if (isCurrentDay) {
+      actionButtonText = isRelapse ? t('habitDetail.undoRelapseToday') : t('habitDetail.markRelapseToday');
+    } else {
+      actionButtonText = isRelapse
+        ? t('habitDetail.undoRelapseForDate', { date: relativeDate })
+        : t('habitDetail.markRelapseForDate', { date: relativeDate });
+    }
+  } else if (habit.type === 'boolean') {
+    if (isCurrentDay) {
+      actionButtonText = currentLog?.isCompleted ? t('habitDetail.markedToday') : t('habitDetail.markCompletedToday');
+    } else {
+      actionButtonText = currentLog?.isCompleted
+        ? t('habitDetail.markedForDate', { date: relativeDate })
+        : t('habitDetail.markCompletedForDate', { date: relativeDate });
+    }
+  } else {
+    if (isCurrentDay) {
+      actionButtonText = t('habitDetail.logVolumeToday', {
+        current: currentLog?.totalValue || 0,
+        unit: habit.unit || '',
+      });
+    } else {
+      actionButtonText = t('habitDetail.logVolumeForDate', {
+        date: relativeDate,
+        current: currentLog?.totalValue || 0,
+        unit: habit.unit || '',
+      });
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -143,6 +179,52 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
 
         {habit.description && <p className={styles.description}>{habit.description}</p>}
 
+        {!isCurrentDay && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              backgroundColor: 'var(--tk-bg-surface-elevated)',
+              borderRadius: 'var(--tk-radius-md)',
+              fontSize: '13px',
+              color: 'var(--tk-text-primary)',
+              marginTop: '6px',
+              border: '1.5px solid var(--tk-border-default)',
+              gap: '8px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
+              <Calendar size={15} color="var(--tk-accent)" />
+              <span>{t('habitDetail.selectedDateLabel', { date: relativeDate })}</span>
+            </div>
+
+            <button
+              type="button"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                backgroundColor: 'var(--tk-accent)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: 'var(--tk-radius-full)',
+                padding: '5px 12px',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all var(--tk-transition-fast)',
+                boxShadow: 'var(--tk-shadow-sm)',
+              }}
+              onClick={() => setSelectedDate(formatDateToISO(new Date()))}
+            >
+              <RotateCcw size={12} />
+              <span>{t('habitDetail.backToToday')}</span>
+            </button>
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
           {habit.type === 'avoidance' ? (
             <Button
@@ -152,7 +234,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
               onClick={() => toggleAvoidanceHabit(habit, selectedDate)}
               leftIcon={isRelapse ? <RotateCcw size={16} /> : <ShieldAlert size={16} color="var(--tk-warning)" />}
             >
-              {isRelapse ? t('habitDetail.undoRelapseToday') : t('habitDetail.markRelapseToday')}
+              {actionButtonText}
             </Button>
           ) : (
             <Button
@@ -168,12 +250,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
               }}
               leftIcon={<Plus size={16} />}
             >
-              {habit.type === 'boolean'
-                ? (currentLog?.isCompleted ? t('habitDetail.markedToday') : t('habitDetail.markCompletedToday'))
-                : t('habitDetail.logVolumeToday', {
-                    current: currentLog?.totalValue || 0,
-                    unit: habit.unit || '',
-                  })}
+              {actionButtonText}
             </Button>
           )}
         </div>

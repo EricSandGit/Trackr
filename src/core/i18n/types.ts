@@ -82,7 +82,10 @@ export interface TranslationSchema {
     expandAnnual: string;
     markCompletedToday: string;
     markedToday: string;
+    markCompletedForDate: string;
+    markedForDate: string;
     logVolumeToday: string;
+    logVolumeForDate: string;
     dailyGoalLabel: string;
     simpleLabel: string;
     avoidanceLabel: string;
@@ -90,6 +93,10 @@ export interface TranslationSchema {
     relapseToday: string;
     markRelapseToday: string;
     undoRelapseToday: string;
+    markRelapseForDate: string;
+    undoRelapseForDate: string;
+    selectedDateLabel: string;
+    backToToday: string;
     everyday: string;
     selectedDaysFreq: string;
   };
