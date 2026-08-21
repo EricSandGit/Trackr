@@ -104,3 +104,8 @@
   border: 1px solid var(--tk-record-border) !important;
   box-shadow: var(--tk-record-glow);
 }
+
+.relapseCell {
+  border-color: rgba(239, 68, 68, 0.7) !important;
+  background-color: rgba(239, 68, 68, 0.25) !important;
+}

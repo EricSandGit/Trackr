@@ -132,7 +132,7 @@ export function calculateHabitIndividualStats(
 
   if (habit.type === 'avoidance') {
     // Count days from creation date to today
-    const creationDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : todayStr;
+    const creationDateStr = habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr;
     let scanOffset = 0;
     while (scanOffset < 730) {
       const checkDate = shiftDate(todayStr, -scanOffset);
@@ -174,7 +174,7 @@ export function calculateHabitIndividualStats(
   while (isStreakActive && offset < 365) {
     const checkDate = shiftDate(todayStr, -offset);
     if (habit.type === 'avoidance') {
-      const creationDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : todayStr;
+      const creationDateStr = habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr;
       if (checkDate < creationDateStr) break;
     }
 

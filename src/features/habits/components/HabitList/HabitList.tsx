@@ -5,7 +5,7 @@ import { HabitCard } from '../HabitCard';
 import { Button } from '@/core/ui/Button';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { useI18nStore } from '@/core/i18n';
-import { isHabitScheduledOnDate } from '@/features/heatmap/logic/heatmapCalculator';
+import { isHabitScheduledOnDate, isHabitSuccessfulOnDate } from '@/features/heatmap/logic/heatmapCalculator';
 import styles from './HabitList.module.css';
 
 export interface HabitListProps {
@@ -62,9 +62,10 @@ export const HabitList: React.FC<HabitListProps> = ({
     return map;
   }, [logs, selectedDate]);
 
-  const completedCount = activeScheduledHabits.filter(
-    (h) => logsMap.get(h.id)?.isCompleted
-  ).length;
+  const completedCount = activeScheduledHabits.filter((h) => {
+    const log = logsMap.get(h.id);
+    return isHabitSuccessfulOnDate(h, selectedDate, log);
+  }).length;
 
   return (
     <div className={styles.container}>

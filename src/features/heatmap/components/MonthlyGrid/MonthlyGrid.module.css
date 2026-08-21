@@ -118,3 +118,19 @@
   opacity: 0.9;
   margin-top: 1px;
 }
+
+.relapseCell {
+  border-color: rgba(239, 68, 68, 0.7) !important;
+  background-color: rgba(239, 68, 68, 0.12) !important;
+  color: #ef4444 !important;
+}
+
+.relapseDot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #ef4444;
+}

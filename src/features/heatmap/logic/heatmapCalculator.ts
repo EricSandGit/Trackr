@@ -1,5 +1,5 @@
 import { Habit, DailyActivityLog, DayActivitySummary } from '@/core/types';
-import { parseISODate } from '@/core/utils/dateUtils';
+import { parseISODate, formatDateToISO } from '@/core/utils/dateUtils';
 
 /**
  * Checks whether a habit was scheduled/planned on a specific date (day of week)
@@ -20,7 +20,7 @@ export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
 /**
  * Checks whether a habit was completed/clean on a specific date.
  * - For boolean/quantitative habits: requires an explicit completed log.
- * - For avoidance habits: scheduled days between creation date and today are clean by default,
+ * - For avoidance habits: scheduled days up to today are clean by default,
  *   unless a relapse log (isCompleted === false) is recorded.
  */
 export function isHabitSuccessfulOnDate(
@@ -31,16 +31,16 @@ export function isHabitSuccessfulOnDate(
   if (!isHabitScheduledOnDate(habit, dateStr)) return false;
 
   if (habit.type === 'avoidance') {
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = formatDateToISO(new Date());
     // Future dates cannot be completed yet
     if (dateStr > todayStr) return false;
 
-    const creationDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : todayStr;
-    if (dateStr < creationDateStr) return false;
-
+    // If an explicit log exists on this date, that log dictates whether it was clean (true) or relapsed (false)
     if (log) {
-      return log.isCompleted !== false;
+      return log.isCompleted === true;
     }
+
+    // If no log exists for a scheduled day up to today: it was maintained clean!
     return true;
   }
 

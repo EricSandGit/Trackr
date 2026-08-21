@@ -98,10 +98,13 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
 
                   const cellColor = getHabitCustomColorShade(habit.color, level, isDark);
 
+                  const isRelapseDay = habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
+
                   const cellClasses = [
                     styles.cell,
                     day.isFuture ? styles.futureCell : '',
                     isRecord ? styles.recordCell : '',
+                    isRelapseDay ? styles.relapseCell : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
