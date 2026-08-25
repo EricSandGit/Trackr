@@ -16,6 +16,7 @@ export interface HabitListProps {
   onOpenQuickLog: (habit: Habit) => void;
   onOpenDetail: (habit: Habit) => void;
   onOpenCreateModal: () => void;
+  onViewAllHabits?: () => void;
 }
 
 export const HabitList: React.FC<HabitListProps> = ({
@@ -26,6 +27,7 @@ export const HabitList: React.FC<HabitListProps> = ({
   onOpenQuickLog,
   onOpenDetail,
   onOpenCreateModal,
+  onViewAllHabits,
 }) => {
   const { t } = useI18nStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -123,14 +125,26 @@ export const HabitList: React.FC<HabitListProps> = ({
           </div>
           <div className={styles.emptyTitle}>{t('home.noHabitsScheduled')}</div>
           <p className={styles.emptyText}>{t('home.noHabitsDesc')}</p>
-          <Button
-            variant="primary"
-            size="md"
-            leftIcon={<Plus size={16} />}
-            onClick={onOpenCreateModal}
-          >
-            {t('home.createHabit')}
-          </Button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<Plus size={16} />}
+              onClick={onOpenCreateModal}
+            >
+              {t('home.createHabit')}
+            </Button>
+            {habits.length > 0 && onViewAllHabits && (
+              <Button
+                variant="secondary"
+                size="md"
+                leftIcon={<Layers size={16} />}
+                onClick={onViewAllHabits}
+              >
+                {t('allHabits.navAllHabitsView')} ({habits.length})
+              </Button>
+            )}
+          </div>
         </div>
       ) : displayedHabits.length === 0 ? (
         <div className={styles.emptyState}>
