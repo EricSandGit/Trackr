@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Settings } from 'lucide-react';
+import { Plus, Settings, CalendarDays, Layers } from 'lucide-react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -14,9 +14,13 @@ import styles from './HomeView.module.css';
 
 export interface HomeViewProps {
   onOpenHabitDetail: (habit: Habit) => void;
+  onSwitchToAllHabits: () => void;
 }
 
-export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
+export const HomeView: React.FC<HomeViewProps> = ({
+  onOpenHabitDetail,
+  onSwitchToAllHabits,
+}) => {
   const { habits, loadHabits, createHabit } = useHabitsStore();
   const {
     logs,
@@ -88,6 +92,27 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
         </div>
       </header>
 
+      {/* Main Tab Switcher between Daily & All Habits */}
+      <div className={styles.viewSwitcher}>
+        <button
+          type="button"
+          className={`${styles.viewTab} ${styles.viewTabActive}`}
+        >
+          <CalendarDays size={16} />
+          <span>{t('allHabits.navDailyView')}</span>
+        </button>
+
+        <button
+          type="button"
+          className={styles.viewTab}
+          onClick={onSwitchToAllHabits}
+        >
+          <Layers size={16} />
+          <span>{t('allHabits.navAllHabitsView')}</span>
+          <span className={styles.viewTabBadge}>{habits.length}</span>
+        </button>
+      </div>
+
       {/* Global Consistency Stats */}
       <ConsistencyOverview habits={habits} logs={logs} />
 
@@ -121,6 +146,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onOpenHabitDetail }) => {
         onOpenQuickLog={handleOpenQuickLog}
         onOpenDetail={onOpenHabitDetail}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onViewAllHabits={onSwitchToAllHabits}
       />
 
       {/* Quick Log Volume Bottom Sheet */}
