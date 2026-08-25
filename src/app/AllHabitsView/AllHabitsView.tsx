@@ -319,33 +319,73 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
 
       {/* Filter and Sorting Control Panel */}
       <div className={styles.filterControls}>
+        {/* Status Filter Row */}
+        <div className={styles.statusPills}>
+          <button
+            type="button"
+            className={`${styles.statusPill} ${statusFilter === 'all' ? styles.statusPillActive : ''}`}
+            onClick={() => setStatusFilter('all')}
+          >
+            {t('allHabits.statusAll')} ({habits.length})
+          </button>
+          <button
+            type="button"
+            className={`${styles.statusPill} ${statusFilter === 'active' ? styles.statusPillActive : ''}`}
+            onClick={() => setStatusFilter('active')}
+          >
+            {t('allHabits.statusActive')} ({activeCount})
+          </button>
+          <button
+            type="button"
+            className={`${styles.statusPill} ${statusFilter === 'archived' ? styles.statusPillActive : ''}`}
+            onClick={() => setStatusFilter('archived')}
+          >
+            {t('allHabits.statusArchived')} ({archivedCount})
+          </button>
+        </div>
+
+        {/* Second Row: Measurement Type on the left, Sort/Filter on the right */}
         <div className={styles.filterRow}>
-          {/* Status Pills */}
-          <div className={styles.statusPills}>
+          {/* Measurement Type Pills (Tipo de actividad) */}
+          <div className={styles.typePills}>
             <button
               type="button"
-              className={`${styles.statusPill} ${statusFilter === 'all' ? styles.statusPillActive : ''}`}
-              onClick={() => setStatusFilter('all')}
+              className={`${styles.typePill} ${typeFilter === 'all' ? styles.typePillActive : ''}`}
+              onClick={() => setTypeFilter('all')}
+              title={t('allHabits.typeAll')}
             >
-              {t('allHabits.statusAll')} ({habits.length})
+              <span>{t('allHabits.typeAll')}</span>
             </button>
             <button
               type="button"
-              className={`${styles.statusPill} ${statusFilter === 'active' ? styles.statusPillActive : ''}`}
-              onClick={() => setStatusFilter('active')}
+              className={`${styles.typePill} ${typeFilter === 'boolean' ? styles.typePillActive : ''}`}
+              onClick={() => setTypeFilter('boolean')}
+              title={t('allHabits.typeBoolean')}
             >
-              {t('allHabits.statusActive')} ({activeCount})
+              <CheckCircle2 size={12} />
+              <span>{t('allHabits.typeBoolean')}</span>
             </button>
             <button
               type="button"
-              className={`${styles.statusPill} ${statusFilter === 'archived' ? styles.statusPillActive : ''}`}
-              onClick={() => setStatusFilter('archived')}
+              className={`${styles.typePill} ${typeFilter === 'quantitative' ? styles.typePillActive : ''}`}
+              onClick={() => setTypeFilter('quantitative')}
+              title={t('allHabits.typeQuantitative')}
             >
-              {t('allHabits.statusArchived')} ({archivedCount})
+              <Activity size={12} />
+              <span>{t('allHabits.typeQuantitative')}</span>
+            </button>
+            <button
+              type="button"
+              className={`${styles.typePill} ${typeFilter === 'avoidance' ? styles.typePillActive : ''}`}
+              onClick={() => setTypeFilter('avoidance')}
+              title={t('allHabits.typeAvoidance')}
+            >
+              <ShieldAlert size={12} color="var(--tk-warning)" />
+              <span>{t('allHabits.typeAvoidance')}</span>
             </button>
           </div>
 
-          {/* Sort Selector Dropdown */}
+          {/* Sort Selector Dropdown (Botón del filtro / orden a la derecha) */}
           <div className={styles.sortSelector}>
             <ArrowUpDown size={14} color="var(--tk-text-muted)" />
             <select
@@ -362,41 +402,6 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
               <option value="name_asc">🔤 {t('allHabits.sortAlphabetical')}</option>
             </select>
           </div>
-        </div>
-
-        {/* Measurement Type Pills */}
-        <div className={styles.categoryBar}>
-          <button
-            type="button"
-            className={`${styles.chip} ${typeFilter === 'all' ? styles.chipActive : ''}`}
-            onClick={() => setTypeFilter('all')}
-          >
-            <span>{t('allHabits.typeAll')}</span>
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${typeFilter === 'boolean' ? styles.chipActive : ''}`}
-            onClick={() => setTypeFilter('boolean')}
-          >
-            <CheckCircle2 size={12} />
-            <span>{t('allHabits.typeBoolean')}</span>
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${typeFilter === 'quantitative' ? styles.chipActive : ''}`}
-            onClick={() => setTypeFilter('quantitative')}
-          >
-            <Activity size={12} />
-            <span>{t('allHabits.typeQuantitative')}</span>
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${typeFilter === 'avoidance' ? styles.chipActive : ''}`}
-            onClick={() => setTypeFilter('avoidance')}
-          >
-            <ShieldAlert size={12} color="var(--tk-warning)" />
-            <span>{t('allHabits.typeAvoidance')}</span>
-          </button>
         </div>
 
         {/* Categories / Tags Chips */}

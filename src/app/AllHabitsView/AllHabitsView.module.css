@@ -203,19 +203,26 @@
 
 .statusPills {
   display: flex;
+  width: 100%;
   background-color: var(--tk-bg-surface-elevated);
-  padding: 2px;
+  padding: 3px;
   border-radius: var(--tk-radius-md);
   gap: 2px;
 }
 
 .statusPill {
-  padding: 4px 10px;
+  flex: 1;
+  text-align: center;
+  padding: 5px 8px;
   font-size: 12px;
   font-weight: 600;
   border-radius: var(--tk-radius-sm);
   color: var(--tk-text-secondary);
   transition: all var(--tk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .statusPill:hover {
@@ -223,6 +230,42 @@
 }
 
 .statusPillActive {
+  background-color: var(--tk-bg-surface);
+  color: var(--tk-text-primary);
+  box-shadow: var(--tk-shadow-sm);
+  font-weight: 700;
+}
+
+/* Measurement Type Pills (Tipo de actividad) */
+.typePills {
+  display: flex;
+  align-items: center;
+  background-color: var(--tk-bg-surface-elevated);
+  padding: 2px;
+  border-radius: var(--tk-radius-md);
+  gap: 2px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.typePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--tk-radius-sm);
+  color: var(--tk-text-secondary);
+  white-space: nowrap;
+  transition: all var(--tk-transition-fast);
+}
+
+.typePill:hover {
+  color: var(--tk-text-primary);
+}
+
+.typePillActive {
   background-color: var(--tk-bg-surface);
   color: var(--tk-text-primary);
   box-shadow: var(--tk-shadow-sm);
@@ -240,6 +283,8 @@
   font-size: 12px;
   color: var(--tk-text-primary);
   font-weight: 600;
+  height: 32px;
+  flex-shrink: 0;
 }
 
 .sortSelect {
