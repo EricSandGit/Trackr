@@ -64,6 +64,9 @@ export const es: TranslationSchema = {
     viewHabitDetails: 'Ver historial y métricas',
     navDailyView: 'Diario',
     navAllHabitsView: 'Todos los Hábitos',
+    filterButton: 'Filtros',
+    hideFilters: 'Ocultar filtros',
+    showFilters: 'Mostrar filtros',
   },
   home: {
     dailyHabitsTitle: 'Hábitos del Día',

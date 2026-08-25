@@ -129,11 +129,20 @@
   color: inherit;
 }
 
-/* Search bar */
+/* Search bar and Filter Toggle Row */
+.searchBarRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+  width: 100%;
+}
+
 .searchWrapper {
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .searchIcon {
@@ -182,6 +191,51 @@
   background-color: var(--tk-bg-surface-hover);
 }
 
+.filterToggleBtn {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--tk-transition-fast);
+}
+
+.filterToggleBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
+}
+
+.filterToggleBtnOpen {
+  background-color: var(--tk-bg-surface-elevated);
+  border-color: var(--tk-border-focus);
+  color: var(--tk-text-primary);
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.filterToggleBtnActive {
+  background-color: rgba(35, 134, 54, 0.15);
+  border-color: var(--tk-accent);
+  color: var(--tk-text-primary);
+}
+
+.activeFilterCountBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-accent);
+  color: #ffffff;
+}
+
 /* Filter Controls Box */
 .filterControls {
   display: flex;
@@ -191,6 +245,18 @@
   border: 1px solid var(--tk-border-default);
   border-radius: var(--tk-radius-lg);
   padding: var(--tk-space-3);
+  animation: fadeInSlide 0.15s ease-out;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .filterRow {
@@ -236,14 +302,22 @@
   font-weight: 700;
 }
 
-/* Measurement Type Pills (Tipo de actividad) */
+/* Measurement Type Selector Row (Centrado) */
+.typeSelectorRow {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .typePills {
   display: flex;
   align-items: center;
+  justify-content: center;
   background-color: var(--tk-bg-surface-elevated);
-  padding: 2px;
+  padding: 3px;
   border-radius: var(--tk-radius-md);
   gap: 2px;
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -252,7 +326,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 9px;
+  padding: 5px 10px;
   font-size: 11px;
   font-weight: 600;
   border-radius: var(--tk-radius-sm);
@@ -272,22 +346,38 @@
   font-weight: 700;
 }
 
-.sortSelector {
+/* Symmetrical Combobox Row (Etiquetas & Ordenar) */
+.comboboxRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+  width: 100%;
+}
+
+.comboboxWrapper {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 6px;
   background-color: var(--tk-bg-surface-elevated);
   border: 1px solid var(--tk-border-default);
   border-radius: var(--tk-radius-md);
-  padding: 4px 10px;
+  padding: 0 10px;
+  height: 36px;
   font-size: 12px;
   color: var(--tk-text-primary);
   font-weight: 600;
-  height: 32px;
-  flex-shrink: 0;
+  transition: border-color var(--tk-transition-fast), box-shadow var(--tk-transition-fast);
 }
 
-.sortSelect {
+.comboboxWrapper:focus-within {
+  border-color: var(--tk-border-focus);
+}
+
+.comboboxSelect {
+  flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
   color: var(--tk-text-primary);
@@ -295,9 +385,10 @@
   font-weight: 600;
   outline: none;
   cursor: pointer;
+  text-overflow: ellipsis;
 }
 
-.sortSelect option {
+.comboboxSelect option {
   background-color: var(--tk-bg-surface-elevated);
   color: var(--tk-text-primary);
 }

@@ -71,6 +71,9 @@ export interface TranslationSchema {
     viewHabitDetails: string;
     navDailyView: string;
     navAllHabitsView: string;
+    filterButton: string;
+    hideFilters: string;
+    showFilters: string;
   };
   home: {
     dailyHabitsTitle: string;

@@ -18,6 +18,7 @@ import {
   CalendarDays,
   ShieldAlert,
   Activity,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { Habit, HabitType, CURATED_HABIT_CATEGORIES } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
@@ -63,12 +64,23 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
     await loadLogs();
   };
 
-  // Filters and sorting state
+  // Filter expansion & search state
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | HabitType>('all');
   const [sortBy, setSortBy] = useState<SortOption>('newest');
+
+  // Count non-default active filters
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (statusFilter !== 'all') count++;
+    if (typeFilter !== 'all') count++;
+    if (categoryFilter !== 'all') count++;
+    if (sortBy !== 'newest') count++;
+    return count;
+  }, [statusFilter, typeFilter, categoryFilter, sortBy]);
 
   // Compute stats for all habits
   const habitsWithStats = useMemo(() => {
@@ -295,146 +307,155 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
         </button>
       </div>
 
-      {/* Live Search Bar */}
-      <div className={styles.searchWrapper}>
-        <Search className={styles.searchIcon} size={18} />
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder={t('allHabits.searchPlaceholder')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        {searchQuery && (
-          <button
-            type="button"
-            className={styles.clearSearchBtn}
-            onClick={() => setSearchQuery('')}
-            aria-label="Clear search"
-          >
-            <X size={16} />
-          </button>
-        )}
-      </div>
-
-      {/* Filter and Sorting Control Panel */}
-      <div className={styles.filterControls}>
-        {/* Status Filter Row */}
-        <div className={styles.statusPills}>
-          <button
-            type="button"
-            className={`${styles.statusPill} ${statusFilter === 'all' ? styles.statusPillActive : ''}`}
-            onClick={() => setStatusFilter('all')}
-          >
-            {t('allHabits.statusAll')} ({habits.length})
-          </button>
-          <button
-            type="button"
-            className={`${styles.statusPill} ${statusFilter === 'active' ? styles.statusPillActive : ''}`}
-            onClick={() => setStatusFilter('active')}
-          >
-            {t('allHabits.statusActive')} ({activeCount})
-          </button>
-          <button
-            type="button"
-            className={`${styles.statusPill} ${statusFilter === 'archived' ? styles.statusPillActive : ''}`}
-            onClick={() => setStatusFilter('archived')}
-          >
-            {t('allHabits.statusArchived')} ({archivedCount})
-          </button>
+      {/* Live Search Bar and Filter Toggle Button */}
+      <div className={styles.searchBarRow}>
+        <div className={styles.searchWrapper}>
+          <Search className={styles.searchIcon} size={18} />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder={t('allHabits.searchPlaceholder')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              className={styles.clearSearchBtn}
+              onClick={() => setSearchQuery('')}
+              aria-label="Clear search"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
-        {/* Second Row: Measurement Type on the left, Sort/Filter on the right */}
-        <div className={styles.filterRow}>
-          {/* Measurement Type Pills (Tipo de actividad) */}
-          <div className={styles.typePills}>
+        <button
+          type="button"
+          className={`${styles.filterToggleBtn} ${isFiltersOpen ? styles.filterToggleBtnOpen : ''} ${activeFiltersCount > 0 ? styles.filterToggleBtnActive : ''}`}
+          onClick={() => setIsFiltersOpen((prev) => !prev)}
+          aria-expanded={isFiltersOpen}
+          title={isFiltersOpen ? t('allHabits.hideFilters') : t('allHabits.showFilters')}
+        >
+          <SlidersHorizontal size={15} />
+          <span>{t('allHabits.filterButton')}</span>
+          {activeFiltersCount > 0 && (
+            <span className={styles.activeFilterCountBadge}>{activeFiltersCount}</span>
+          )}
+        </button>
+      </div>
+
+      {/* Filter and Sorting Control Panel (Collapsible) */}
+      {isFiltersOpen && (
+        <div className={styles.filterControls}>
+          {/* Status Filter Row */}
+          <div className={styles.statusPills}>
             <button
               type="button"
-              className={`${styles.typePill} ${typeFilter === 'all' ? styles.typePillActive : ''}`}
-              onClick={() => setTypeFilter('all')}
-              title={t('allHabits.typeAll')}
+              className={`${styles.statusPill} ${statusFilter === 'all' ? styles.statusPillActive : ''}`}
+              onClick={() => setStatusFilter('all')}
             >
-              <span>{t('allHabits.typeAll')}</span>
+              {t('allHabits.statusAll')} ({habits.length})
             </button>
             <button
               type="button"
-              className={`${styles.typePill} ${typeFilter === 'boolean' ? styles.typePillActive : ''}`}
-              onClick={() => setTypeFilter('boolean')}
-              title={t('allHabits.typeBoolean')}
+              className={`${styles.statusPill} ${statusFilter === 'active' ? styles.statusPillActive : ''}`}
+              onClick={() => setStatusFilter('active')}
             >
-              <CheckCircle2 size={12} />
-              <span>{t('allHabits.typeBoolean')}</span>
+              {t('allHabits.statusActive')} ({activeCount})
             </button>
             <button
               type="button"
-              className={`${styles.typePill} ${typeFilter === 'quantitative' ? styles.typePillActive : ''}`}
-              onClick={() => setTypeFilter('quantitative')}
-              title={t('allHabits.typeQuantitative')}
+              className={`${styles.statusPill} ${statusFilter === 'archived' ? styles.statusPillActive : ''}`}
+              onClick={() => setStatusFilter('archived')}
             >
-              <Activity size={12} />
-              <span>{t('allHabits.typeQuantitative')}</span>
-            </button>
-            <button
-              type="button"
-              className={`${styles.typePill} ${typeFilter === 'avoidance' ? styles.typePillActive : ''}`}
-              onClick={() => setTypeFilter('avoidance')}
-              title={t('allHabits.typeAvoidance')}
-            >
-              <ShieldAlert size={12} color="var(--tk-warning)" />
-              <span>{t('allHabits.typeAvoidance')}</span>
+              {t('allHabits.statusArchived')} ({archivedCount})
             </button>
           </div>
 
-          {/* Sort Selector Dropdown (Botón del filtro / orden a la derecha) */}
-          <div className={styles.sortSelector}>
-            <ArrowUpDown size={14} color="var(--tk-text-muted)" />
-            <select
-              className={styles.sortSelect}
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              aria-label={t('allHabits.sortLabel')}
-            >
-              <option value="newest">📅 {t('allHabits.sortNewest')}</option>
-              <option value="oldest">⏳ {t('allHabits.sortOldest')}</option>
-              <option value="consistency_high">📈 {t('allHabits.sortConsistencyHigh')}</option>
-              <option value="consistency_low">📉 {t('allHabits.sortConsistencyLow')}</option>
-              <option value="streak_high">🔥 {t('allHabits.sortStreakHigh')}</option>
-              <option value="name_asc">🔤 {t('allHabits.sortAlphabetical')}</option>
-            </select>
+          {/* Row 2: Measurement Type Selector (Alineado al Centro) */}
+          <div className={styles.typeSelectorRow}>
+            <div className={styles.typePills}>
+              <button
+                type="button"
+                className={`${styles.typePill} ${typeFilter === 'all' ? styles.typePillActive : ''}`}
+                onClick={() => setTypeFilter('all')}
+                title={t('allHabits.typeAll')}
+              >
+                <span>{t('allHabits.typeAll')}</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.typePill} ${typeFilter === 'boolean' ? styles.typePillActive : ''}`}
+                onClick={() => setTypeFilter('boolean')}
+                title={t('allHabits.typeBoolean')}
+              >
+                <CheckCircle2 size={12} />
+                <span>{t('allHabits.typeBoolean')}</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.typePill} ${typeFilter === 'quantitative' ? styles.typePillActive : ''}`}
+                onClick={() => setTypeFilter('quantitative')}
+                title={t('allHabits.typeQuantitative')}
+              >
+                <Activity size={12} />
+                <span>{t('allHabits.typeQuantitative')}</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.typePill} ${typeFilter === 'avoidance' ? styles.typePillActive : ''}`}
+                onClick={() => setTypeFilter('avoidance')}
+                title={t('allHabits.typeAvoidance')}
+              >
+                <ShieldAlert size={12} color="var(--tk-warning)" />
+                <span>{t('allHabits.typeAvoidance')}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Row 3: Comboboxes Simétricos (Filtro de Etiquetas & Selector de Orden) */}
+          <div className={styles.comboboxRow}>
+            {/* Etiquetas / Categorías Combobox */}
+            <div className={styles.comboboxWrapper}>
+              <Tag size={14} color="var(--tk-text-muted)" style={{ flexShrink: 0 }} />
+              <select
+                className={styles.comboboxSelect}
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                aria-label={t('allHabits.allCategories')}
+              >
+                <option value="all">
+                  {t('allHabits.allCategories')} ({habits.length})
+                </option>
+                {categoriesWithCounts.map((cat) => (
+                  <option key={cat.name} value={cat.name}>
+                    {cat.name} ({cat.count})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort Selector Combobox */}
+            <div className={styles.comboboxWrapper}>
+              <ArrowUpDown size={14} color="var(--tk-text-muted)" style={{ flexShrink: 0 }} />
+              <select
+                className={styles.comboboxSelect}
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                aria-label={t('allHabits.sortLabel')}
+              >
+                <option value="newest">📅 {t('allHabits.sortNewest')}</option>
+                <option value="oldest">⏳ {t('allHabits.sortOldest')}</option>
+                <option value="consistency_high">📈 {t('allHabits.sortConsistencyHigh')}</option>
+                <option value="consistency_low">📉 {t('allHabits.sortConsistencyLow')}</option>
+                <option value="streak_high">🔥 {t('allHabits.sortStreakHigh')}</option>
+                <option value="name_asc">🔤 {t('allHabits.sortAlphabetical')}</option>
+              </select>
+            </div>
           </div>
         </div>
-
-        {/* Categories / Tags Chips */}
-        {categoriesWithCounts.length > 0 && (
-          <div className={styles.categoryBar}>
-            <button
-              type="button"
-              className={`${styles.chip} ${categoryFilter === 'all' ? styles.chipActive : ''}`}
-              onClick={() => setCategoryFilter('all')}
-            >
-              <Tag size={12} />
-              <span>{t('allHabits.allCategories')}</span>
-              <span className={styles.chipBadge}>{habits.length}</span>
-            </button>
-
-            {categoriesWithCounts.map((cat) => {
-              const isSelected = categoryFilter === cat.name;
-              return (
-                <button
-                  key={cat.name}
-                  type="button"
-                  className={`${styles.chip} ${isSelected ? styles.chipActive : ''}`}
-                  onClick={() => setCategoryFilter(cat.name)}
-                >
-                  <HabitIcon name={cat.icon} size={12} />
-                  <span>{cat.name}</span>
-                  <span className={styles.chipBadge}>{cat.count}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Results summary and clear filters */}
       <div className={styles.resultsSummary}>
