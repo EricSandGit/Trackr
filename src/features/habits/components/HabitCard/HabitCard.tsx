@@ -4,6 +4,7 @@ import { Habit, DailyActivityLog } from '@/core/types';
 import { Checkbox } from '@/core/ui/Checkbox';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { useI18nStore } from '@/core/i18n';
+import { triggerHaptic } from '@/core/utils/haptics';
 import styles from './HabitCard.module.css';
 
 export interface HabitCardProps {
@@ -14,7 +15,7 @@ export interface HabitCardProps {
   onOpenDetail: (habit: Habit) => void;
 }
 
-export const HabitCard: React.FC<HabitCardProps> = ({
+export const HabitCard: React.FC<HabitCardProps> = React.memo(({
   habit,
   log,
   onToggleCheck,
@@ -33,8 +34,10 @@ export const HabitCard: React.FC<HabitCardProps> = ({
 
   const handleCheckAction = () => {
     if (habit.type === 'quantitative') {
+      triggerHaptic('light');
       onOpenQuickLog(habit);
     } else {
+      triggerHaptic(isCompleted ? 'light' : 'success');
       onToggleCheck(habit);
     }
   };
@@ -157,4 +160,5 @@ export const HabitCard: React.FC<HabitCardProps> = ({
       </div>
     </div>
   );
-};
+});
+

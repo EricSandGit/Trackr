@@ -28,9 +28,14 @@ import { HabitIcon } from '@/core/ui/HabitIcon';
 import { Button } from '@/core/ui/Button';
 import { calculateHabitIndividualStats } from '@/features/stats/logic/streakCalculator';
 import { isHabitScheduledOnDate } from '@/features/heatmap/logic/heatmapCalculator';
-import { HabitFormModal } from '@/features/habits';
-import { SettingsModal } from '@/features/settings';
 import styles from './AllHabitsView.module.css';
+
+const HabitFormModal = React.lazy(() =>
+  import('@/features/habits').then((m) => ({ default: m.HabitFormModal }))
+);
+const SettingsModal = React.lazy(() =>
+  import('@/features/settings').then((m) => ({ default: m.SettingsModal }))
+);
 
 export interface AllHabitsViewProps {
   onOpenHabitDetail: (habit: Habit) => void;
@@ -644,20 +649,28 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
       )}
 
       {/* Create Habit Modal */}
-      <HabitFormModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSubmit={async (input) => {
-          await createHabit(input as any);
-        }}
-      />
+      {isCreateModalOpen && (
+        <React.Suspense fallback={null}>
+          <HabitFormModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onSubmit={async (input) => {
+              await createHabit(input as any);
+            }}
+          />
+        </React.Suspense>
+      )}
 
       {/* Settings & Backup Modal */}
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        onDataResetOrImported={handleDataResetOrImported}
-      />
+      {isSettingsModalOpen && (
+        <React.Suspense fallback={null}>
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            onClose={() => setIsSettingsModalOpen(false)}
+            onDataResetOrImported={handleDataResetOrImported}
+          />
+        </React.Suspense>
+      )}
     </div>
   );
 };
