@@ -13,6 +13,8 @@
   align-items: center;
   padding: var(--tk-space-4);
   animation: fadeIn 0.18s ease-out;
+  overscroll-behavior: contain;
+  touch-action: none;
 }
 
 .modal {
@@ -26,8 +28,11 @@
   animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 .header {
