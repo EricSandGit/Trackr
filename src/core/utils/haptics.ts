@@ -1,39 +1,68 @@
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
+
 /**
- * Haptic Feedback utility for mobile web and PWA / Capacitor
- * Gracefully degrades if vibration API is not supported.
+ * Haptic Feedback utility for native Capacitor Android/iOS and Web PWA.
+ * Gracefully uses native motor on mobile and falls back to Web Vibration API.
  */
 
 export type HapticType = 'light' | 'medium' | 'success' | 'record' | 'warning' | 'error';
 
-export function triggerHaptic(type: HapticType = 'light'): void {
-  if (typeof window === 'undefined' || !('navigator' in window) || !('vibrate' in navigator)) {
-    return;
-  }
-
+export async function triggerHaptic(type: HapticType = 'light'): Promise<void> {
   try {
     switch (type) {
       case 'light':
-        navigator.vibrate(10);
+        await Haptics.impact({ style: ImpactStyle.Light });
         break;
       case 'medium':
-        navigator.vibrate(20);
+        await Haptics.impact({ style: ImpactStyle.Medium });
         break;
       case 'success':
-        navigator.vibrate([15, 35, 25]);
+        await Haptics.notification({ type: NotificationType.Success });
         break;
       case 'record':
-        navigator.vibrate([25, 40, 35, 40, 50]);
+        await Haptics.notification({ type: NotificationType.Success });
+        if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+          navigator.vibrate([25, 40, 35, 40, 50]);
+        }
         break;
       case 'warning':
-        navigator.vibrate([30, 40, 30]);
+        await Haptics.notification({ type: NotificationType.Warning });
         break;
       case 'error':
-        navigator.vibrate([40, 30, 40, 30, 40]);
+        await Haptics.notification({ type: NotificationType.Error });
         break;
       default:
-        navigator.vibrate(10);
+        await Haptics.impact({ style: ImpactStyle.Light });
     }
   } catch {
-    // Ignore any browser restrictions
+    // Fallback to standard web vibration
+    if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
+      try {
+        switch (type) {
+          case 'light':
+            navigator.vibrate(10);
+            break;
+          case 'medium':
+            navigator.vibrate(20);
+            break;
+          case 'success':
+            navigator.vibrate([15, 35, 25]);
+            break;
+          case 'record':
+            navigator.vibrate([25, 40, 35, 40, 50]);
+            break;
+          case 'warning':
+            navigator.vibrate([30, 40, 30]);
+            break;
+          case 'error':
+            navigator.vibrate([40, 30, 40, 30, 40]);
+            break;
+          default:
+            navigator.vibrate(10);
+        }
+      } catch {
+        // Ignore
+      }
+    }
   }
 }
