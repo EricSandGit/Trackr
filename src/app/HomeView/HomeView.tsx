@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Plus, Settings, CalendarDays, Layers } from 'lucide-react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { GlobalHeatmap } from '@/features/heatmap';
 import { ConsistencyOverview } from '@/features/stats';
-import { HabitList, HabitFormModal } from '@/features/habits';
-import { QuickLogBottomSheet } from '@/features/logging';
+import { HabitList } from '@/features/habits';
 import { DateNavigator } from '@/core/ui/DateNavigator';
-import { SettingsModal } from '@/features/settings';
 import { useI18nStore } from '@/core/i18n';
 import styles from './HomeView.module.css';
+
+const QuickLogBottomSheet = lazy(() =>
+  import('@/features/logging').then((m) => ({ default: m.QuickLogBottomSheet }))
+);
+const HabitFormModal = lazy(() =>
+  import('@/features/habits').then((m) => ({ default: m.HabitFormModal }))
+);
+const SettingsModal = lazy(() =>
+  import('@/features/settings').then((m) => ({ default: m.SettingsModal }))
+);
 
 export interface HomeViewProps {
   onOpenHabitDetail: (habit: Habit) => void;
@@ -150,35 +158,47 @@ export const HomeView: React.FC<HomeViewProps> = ({
       />
 
       {/* Quick Log Volume Bottom Sheet */}
-      <QuickLogBottomSheet
-        isOpen={!!quickLogHabit}
-        onClose={handleCloseQuickLog}
-        habit={quickLogHabit}
-        targetDate={selectedDate}
-        currentLog={currentLogForQuickLog}
-        onAddVolume={async (h, amt, d, notes) => {
-          await addQuantitativeVolume(h, amt, d, notes);
-        }}
-        onSetDirectValue={async (h, val, d) => {
-          await setDirectQuantitativeValue(h, val, d);
-        }}
-      />
+      {!!quickLogHabit && (
+        <Suspense fallback={null}>
+          <QuickLogBottomSheet
+            isOpen={!!quickLogHabit}
+            onClose={handleCloseQuickLog}
+            habit={quickLogHabit}
+            targetDate={selectedDate}
+            currentLog={currentLogForQuickLog}
+            onAddVolume={async (h, amt, d, notes) => {
+              await addQuantitativeVolume(h, amt, d, notes);
+            }}
+            onSetDirectValue={async (h, val, d) => {
+              await setDirectQuantitativeValue(h, val, d);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Create Habit Modal */}
-      <HabitFormModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSubmit={async (input) => {
-          await createHabit(input as any);
-        }}
-      />
+      {isCreateModalOpen && (
+        <Suspense fallback={null}>
+          <HabitFormModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onSubmit={async (input) => {
+              await createHabit(input as any);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Settings & Backup Modal */}
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        onDataResetOrImported={handleDataResetOrImported}
-      />
+      {isSettingsModalOpen && (
+        <Suspense fallback={null}>
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            onClose={() => setIsSettingsModalOpen(false)}
+            onDataResetOrImported={handleDataResetOrImported}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

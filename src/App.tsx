@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { HomeView } from '@/app/HomeView';
-import { AllHabitsView } from '@/app/AllHabitsView';
-import { HabitDetailView } from '@/app/HabitDetailView';
+
+const AllHabitsView = lazy(() =>
+  import('@/app/AllHabitsView').then((m) => ({ default: m.AllHabitsView }))
+);
+const HabitDetailView = lazy(() =>
+  import('@/app/HabitDetailView').then((m) => ({ default: m.HabitDetailView }))
+);
 
 type ViewState =
   | { type: 'home' }
@@ -51,7 +56,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={null}>
       {currentView.type === 'home' && (
         <HomeView
           onOpenHabitDetail={handleOpenDetailFromHome}
@@ -72,6 +77,6 @@ export const App: React.FC = () => {
           onBack={handleBackFromDetail}
         />
       )}
-    </>
+    </Suspense>
   );
 };
