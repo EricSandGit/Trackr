@@ -73,8 +73,9 @@ export function calculateGlobalConsistencyStats(
     });
   }
 
-  // 4. Most consistent habit & habit to reinforce (last 30 days)
-  const habitPerformances = activeHabits.map((habit) => {
+  // 4. Most consistent habit & habit to reinforce (last 30 days, scheduled habits only)
+  const scheduledHabitsForRanking = activeHabits.filter((h) => h.frequency.type !== 'casual');
+  const habitPerformances = scheduledHabitsForRanking.map((habit) => {
     let plannedDaysCount = 0;
     let completedDaysCount = 0;
 
@@ -97,6 +98,8 @@ export function calculateGlobalConsistencyStats(
       icon: habit.icon,
       color: habit.color,
       percentage,
+      completedDays: completedDaysCount,
+      plannedDays: plannedDaysCount,
     };
   });
 
@@ -159,6 +162,27 @@ export function calculateHabitIndividualStats(
         }
       }
     });
+  }
+
+  if (habit.frequency.type === 'casual') {
+    let completedLast30 = 0;
+    for (let i = 0; i < 30; i++) {
+      const checkDate = shiftDate(todayStr, -i);
+      const log = habitLogs.find((l) => l.date === checkDate);
+      if (log && (log.isCompleted || log.totalValue > 0)) {
+        completedLast30++;
+      }
+    }
+    return {
+      currentStreak: completedLast30,
+      bestStreak: totalLifetimeEntries,
+      totalLifetimeEntries,
+      totalLifetimeVolume,
+      unit: habit.unit,
+      allTimeRecordValue,
+      allTimeRecordDate,
+      completionRateLast30Days: completedLast30,
+    };
   }
 
   // Calculate current streak for this habit

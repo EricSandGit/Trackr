@@ -89,7 +89,9 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
   };
 
   const frequencyLabel =
-    habit.frequency.type === 'everyday'
+    habit.frequency.type === 'casual'
+      ? t('casualActivities.frequencyLabel')
+      : habit.frequency.type === 'everyday'
       ? t('habitDetail.everyday')
       : t('habitDetail.selectedDaysFreq', {
           count: habit.frequency.daysOfWeek?.length || 0,

@@ -29,6 +29,7 @@ interface LogsStoreState {
     totalValue: number,
     date?: string
   ) => Promise<{ isRecord: boolean; isNowCompleted: boolean }>;
+  deleteLogForDate: (habitId: string, date?: string) => Promise<void>;
 }
 
 export const useLogsStore = create<LogsStoreState>((set, get) => ({
@@ -249,5 +250,18 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
     }
 
     return { isRecord, isNowCompleted };
+  },
+
+  deleteLogForDate: async (habitId: string, targetDate?: string) => {
+    const date = targetDate || get().selectedDate;
+    const logId = `${habitId}_${date}`;
+    const existingLog = get().logs.find((l) => l.id === logId);
+    if (!existingLog) return;
+
+    await storageAdapter.deleteLog(logId);
+    set((state) => ({
+      logs: state.logs.filter((l) => l.id !== logId),
+    }));
+    triggerHaptic('light');
   },
 }));

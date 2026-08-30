@@ -1,5 +1,5 @@
 import React from 'react';
-import { CURATED_HABIT_ICONS, HabitIcon } from '../HabitIcon';
+import { CURATED_HABIT_ICONS, HabitIcon, EMOJI_TO_ICON_NAME } from '../HabitIcon';
 import styles from './IconPicker.module.css';
 
 export interface IconPickerProps {
@@ -13,7 +13,9 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   onChange,
   label = 'Icono del Hábito',
 }) => {
-  const normalizedValue = (value || '').toLowerCase().replace(/[-_\s]/g, '');
+  const trimmedValue = (value || '').trim();
+  const mappedValue = EMOJI_TO_ICON_NAME[trimmedValue] || trimmedValue;
+  const normalizedValue = mappedValue.toLowerCase().replace(/[-_\s]/g, '');
 
   return (
     <div className={styles.container}>
@@ -32,6 +34,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
               onClick={() => onChange(item.name)}
             >
               <HabitIcon name={item.name} size={18} />
+              {isSelected && <span className={styles.checkDot} />}
             </button>
           );
         })}

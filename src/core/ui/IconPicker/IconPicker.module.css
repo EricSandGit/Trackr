@@ -14,9 +14,13 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: var(--tk-space-2);
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 4px 2px;
 }
 
 .iconBtn {
+  position: relative;
   height: 38px;
   display: flex;
   align-items: center;
@@ -25,20 +29,38 @@
   background-color: var(--tk-bg-surface-elevated);
   border: 1.5px solid var(--tk-border-default);
   color: var(--tk-text-secondary);
-  transition: all var(--tk-transition-fast);
+  transition: transform var(--tk-transition-fast), border-color var(--tk-transition-fast), background-color var(--tk-transition-fast);
   cursor: pointer;
+  outline: none;
 }
 
-.iconBtn:hover {
-  background-color: var(--tk-bg-surface-hover);
-  color: var(--tk-text-primary);
-  border-color: var(--tk-border-focus);
+@media (hover: hover) {
+  .iconBtn:hover:not(.selected) {
+    background-color: var(--tk-bg-surface-hover);
+    color: var(--tk-text-primary);
+    border-color: var(--tk-border-muted, rgba(255, 255, 255, 0.2));
+  }
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--tk-accent);
+  outline-offset: 2px;
 }
 
 .selected {
-  border-color: var(--tk-border-focus);
-  background-color: var(--tk-bg-surface-hover);
-  color: var(--tk-border-focus);
-  box-shadow: 0 0 10px rgba(139, 124, 246, 0.25);
-  transform: scale(1.05);
+  border-color: var(--tk-accent) !important;
+  background-color: var(--tk-accent-subtle, rgba(57, 211, 83, 0.15)) !important;
+  color: var(--tk-accent) !important;
+  box-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
+  transform: scale(1.08);
+}
+
+.checkDot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--tk-accent);
 }

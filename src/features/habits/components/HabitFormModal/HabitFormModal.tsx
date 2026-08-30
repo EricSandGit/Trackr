@@ -40,7 +40,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   const [dailyGoal, setDailyGoal] = useState<string>('30');
   const [weeklyGoal, setWeeklyGoal] = useState<string>('');
   const [monthlyGoal, setMonthlyGoal] = useState<string>('');
-  const [frequencyType, setFrequencyType] = useState<'everyday' | 'specific_days'>('everyday');
+  const [frequencyType, setFrequencyType] = useState<'everyday' | 'specific_days' | 'casual'>('everyday');
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]); // Mon-Fri
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -379,6 +379,13 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
             >
               <span className={styles.typeTitle}>{t('habitForm.frequencySpecificDays')}</span>
             </button>
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${frequencyType === 'casual' ? styles.typeBtnSelected : ''}`}
+              onClick={() => setFrequencyType('casual')}
+            >
+              <span className={styles.typeTitle}>{t('habitForm.frequencyCasual')}</span>
+            </button>
           </div>
 
           {frequencyType === 'specific_days' && (
@@ -397,6 +404,12 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
                 );
               })}
             </div>
+          )}
+
+          {frequencyType === 'casual' && (
+            <p style={{ fontSize: '12px', color: 'var(--tk-text-muted)', margin: '4px 0 0 0' }}>
+              {t('habitForm.frequencyCasualDesc')}
+            </p>
           )}
         </div>
 

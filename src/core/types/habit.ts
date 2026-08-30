@@ -1,7 +1,7 @@
 export type HabitType = 'boolean' | 'quantitative' | 'avoidance';
 
 export interface HabitFrequency {
-  type: 'everyday' | 'specific_days';
+  type: 'everyday' | 'specific_days' | 'casual';
   daysOfWeek?: number[]; // [1, 2, 3, 4, 5] (0 = Sunday, 1 = Monday...)
 }
 

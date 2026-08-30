@@ -78,7 +78,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
                   <span>{t('stats.mostConsistent')}</span>
                 </span>
                 <span className={styles.highlightName}>
-                  {stats.mostConsistentHabit.name} ({stats.mostConsistentHabit.percentage}%)
+                  {stats.mostConsistentHabit.name} ({stats.mostConsistentHabit.completedDays}/{stats.mostConsistentHabit.plannedDays} {t('common.days')} · {stats.mostConsistentHabit.percentage}%)
                 </span>
               </div>
             </div>
@@ -99,7 +99,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
                   <span>{t('stats.toReinforce')}</span>
                 </span>
                 <span className={styles.highlightName}>
-                  {stats.habitToReinforce.name} ({stats.habitToReinforce.percentage}%)
+                  {stats.habitToReinforce.name} ({stats.habitToReinforce.completedDays}/{stats.habitToReinforce.plannedDays} {t('common.days')} · {stats.habitToReinforce.percentage}%)
                 </span>
               </div>
             </div>
