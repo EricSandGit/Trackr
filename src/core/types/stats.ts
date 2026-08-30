@@ -10,6 +10,8 @@ export interface GlobalConsistencyStats {
     icon?: string;
     color: string;
     percentage: number;
+    completedDays: number;
+    plannedDays: number;
   } | null;
   habitToReinforce: {
     id: string;
@@ -17,6 +19,8 @@ export interface GlobalConsistencyStats {
     icon?: string;
     color: string;
     percentage: number;
+    completedDays: number;
+    plannedDays: number;
   } | null;
 }
 
