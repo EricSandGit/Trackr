@@ -247,6 +247,34 @@ export interface TranslationSchema {
     detailsBtn: string;
     deleteLogConfirm: string;
   };
+  auth: {
+    signIn: string;
+    signUp: string;
+    signOut: string;
+    loginTitle: string;
+    signupTitle: string;
+    accountTitle: string;
+    googleSignIn: string;
+    orEmail: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    passwordLabel: string;
+    passwordPlaceholder: string;
+    noAccountPrompt: string;
+    haveAccountPrompt: string;
+    switchToSignUp: string;
+    switchToSignIn: string;
+    cloudSyncActive: string;
+    guestMode: string;
+    guestModeDesc: string;
+    migrateDataPrompt: string;
+    migrateDataBtn: string;
+    migrationSuccess: string;
+    loggedAs: string;
+    signInSuccess: string;
+    signUpSuccess: string;
+    checkEmailVerification: string;
+  };
   settings: {
     title: string;
     languageSectionTitle: string;
