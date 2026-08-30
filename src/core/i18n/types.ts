@@ -204,6 +204,8 @@ export interface TranslationSchema {
     frequencyLabel: string;
     frequencyEveryday: string;
     frequencySpecificDays: string;
+    frequencyCasual: string;
+    frequencyCasualDesc: string;
     daysAbbrev: {
       sun: string;
       mon: string;
@@ -215,6 +217,35 @@ export interface TranslationSchema {
     };
     saveChanges: string;
     createHabit: string;
+  };
+  casualActivities: {
+    sectionTitle: string;
+    addBtn: string;
+    historyBtn: string;
+    emptyToday: string;
+    emptyTodayDesc: string;
+    loggedCount: string;
+    modalTitle: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    suggestionTitle: string;
+    suggestionDesc: string;
+    useExisting: string;
+    frequentTitle: string;
+    frequentDesc: string;
+    timesLogged: string;
+    lastDone: string;
+    neverDone: string;
+    logTodayBtn: string;
+    amountLabel: string;
+    amountPlaceholder: string;
+    historyTitle: string;
+    historySubtitle: string;
+    totalDone: string;
+    uniqueActivities: string;
+    frequencyLabel: string;
+    detailsBtn: string;
+    deleteLogConfirm: string;
   };
   settings: {
     title: string;

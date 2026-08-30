@@ -12,6 +12,9 @@ export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
     return false;
   }
 
+  // Casual activities are not scheduled on fixed days
+  if (habit.frequency.type === 'casual') return false;
+
   if (habit.frequency.type === 'everyday') return true;
 
   if (habit.frequency.type === 'specific_days' && habit.frequency.daysOfWeek) {

@@ -14,6 +14,9 @@ export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
     return false;
   }
 
+  // Casual activities are not scheduled on fixed days
+  if (habit.frequency.type === 'casual') return false;
+
   if (habit.frequency.type === 'everyday') return true;
 
   if (habit.frequency.type === 'specific_days' && habit.frequency.daysOfWeek) {
@@ -27,6 +30,7 @@ export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
 
 /**
  * Checks whether a habit was completed/clean on a specific date.
+ * - For casual habits: requires an explicit log with completed or positive value.
  * - For boolean/quantitative habits: requires an explicit completed log.
  * - For avoidance habits: scheduled days starting from creation date up to today are clean by default,
  *   unless a relapse log (isCompleted === false) is recorded.
@@ -36,6 +40,12 @@ export function isHabitSuccessfulOnDate(
   dateStr: string,
   log?: DailyActivityLog
 ): boolean {
+  if (habit.isArchived) return false;
+
+  if (habit.frequency.type === 'casual') {
+    return !!log && (log.isCompleted === true || log.totalValue > 0);
+  }
+
   if (!isHabitScheduledOnDate(habit, dateStr)) return false;
 
   if (habit.type === 'avoidance') {
@@ -69,13 +79,21 @@ export function calculateGlobalDaySummary(
   habits: Habit[],
   logs: DailyActivityLog[]
 ): DayActivitySummary {
-  const scheduledHabits = habits.filter((h) => isHabitScheduledOnDate(h, date));
-  const totalPlannedCount = scheduledHabits.length;
+  const activeHabits = habits.filter((h) => !h.isArchived);
+  const scheduledHabits = activeHabits.filter((h) => isHabitScheduledOnDate(h, date));
+  const casualLoggedHabits = activeHabits.filter(
+    (h) =>
+      h.frequency.type === 'casual' &&
+      logs.some((l) => l.habitId === h.id && l.date === date && (l.isCompleted || l.totalValue > 0))
+  );
+
+  const allApplicableHabits = [...scheduledHabits, ...casualLoggedHabits];
+  const totalPlannedCount = scheduledHabits.length + casualLoggedHabits.length;
 
   let completedCount = 0;
   let hasRecord = false;
 
-  const habitLogsSummary = scheduledHabits.map((habit) => {
+  const habitLogsSummary = allApplicableHabits.map((habit) => {
     const log = logs.find((l) => l.habitId === habit.id && l.date === date);
     const isCompleted = isHabitSuccessfulOnDate(habit, date, log);
     const isRecord = !!log?.isPersonalRecord;

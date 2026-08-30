@@ -224,6 +224,9 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
   };
 
   const getFrequencyLabel = (habit: Habit) => {
+    if (habit.frequency.type === 'casual') {
+      return t('casualActivities.frequencyLabel');
+    }
     if (habit.frequency.type === 'everyday') {
       return t('habitDetail.everyday');
     }

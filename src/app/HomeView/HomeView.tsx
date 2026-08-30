@@ -5,7 +5,7 @@ import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { GlobalHeatmap } from '@/features/heatmap';
 import { ConsistencyOverview } from '@/features/stats';
-import { HabitList } from '@/features/habits';
+import { HabitList, CasualActivitiesSection } from '@/features/habits';
 import { DateNavigator } from '@/core/ui/DateNavigator';
 import { useI18nStore } from '@/core/i18n';
 import styles from './HomeView.module.css';
@@ -15,6 +15,12 @@ const QuickLogBottomSheet = lazy(() =>
 );
 const HabitFormModal = lazy(() =>
   import('@/features/habits').then((m) => ({ default: m.HabitFormModal }))
+);
+const CasualActivityModal = lazy(() =>
+  import('@/features/habits').then((m) => ({ default: m.CasualActivityModal }))
+);
+const CasualHistoryModal = lazy(() =>
+  import('@/features/habits').then((m) => ({ default: m.CasualHistoryModal }))
 );
 const SettingsModal = lazy(() =>
   import('@/features/settings').then((m) => ({ default: m.SettingsModal }))
@@ -39,11 +45,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
     toggleAvoidanceHabit,
     addQuantitativeVolume,
     setDirectQuantitativeValue,
+    deleteLogForDate,
   } = useLogsStore();
   const { t } = useI18nStore();
 
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCasualModalOpen, setIsCasualModalOpen] = useState(false);
+  const [isCasualHistoryModalOpen, setIsCasualHistoryModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [quickLogHabit, setQuickLogHabit] = useState<Habit | null>(null);
 
@@ -58,6 +67,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const handleDataResetOrImported = async () => {
     await loadHabits();
     await loadLogs();
+  };
+
+  const handleLogExistingCasualActivity = async (habit: Habit, amount?: number) => {
+    if (habit.type === 'quantitative') {
+      await setDirectQuantitativeValue(habit, amount || 1, selectedDate);
+    } else {
+      const existing = logs.find((l) => l.habitId === habit.id && l.date === selectedDate);
+      if (!existing || !existing.isCompleted) {
+        await toggleBooleanHabit(habit, selectedDate);
+      }
+    }
+  };
+
+  const handleCreateAndLogCasualActivity = async (input: any, amount?: number) => {
+    const newHabit = await createHabit(input);
+    if (newHabit.type === 'quantitative') {
+      await setDirectQuantitativeValue(newHabit, amount || 1, selectedDate);
+    } else {
+      await toggleBooleanHabit(newHabit, selectedDate);
+    }
   };
 
   const currentLogForQuickLog = quickLogHabit
@@ -157,6 +186,20 @@ export const HomeView: React.FC<HomeViewProps> = ({
         onViewAllHabits={onSwitchToAllHabits}
       />
 
+      {/* Casual Activities (Spontaneous) Section */}
+      <CasualActivitiesSection
+        habits={habits}
+        logs={logs}
+        selectedDate={selectedDate}
+        onOpenCasualModal={() => setIsCasualModalOpen(true)}
+        onOpenHistoryModal={() => setIsCasualHistoryModalOpen(true)}
+        onOpenDetail={onOpenHabitDetail}
+        onAddVolume={handleOpenQuickLog}
+        onDeleteLogForDate={async (hId, d) => {
+          await deleteLogForDate(hId, d);
+        }}
+      />
+
       {/* Quick Log Volume Bottom Sheet */}
       {!!quickLogHabit && (
         <Suspense fallback={null}>
@@ -176,7 +219,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </Suspense>
       )}
 
-      {/* Create Habit Modal */}
+      {/* Create Regular Habit Modal */}
       {isCreateModalOpen && (
         <Suspense fallback={null}>
           <HabitFormModal
@@ -185,6 +228,37 @@ export const HomeView: React.FC<HomeViewProps> = ({
             onSubmit={async (input) => {
               await createHabit(input as any);
             }}
+          />
+        </Suspense>
+      )}
+
+      {/* Casual Activity Modal */}
+      {isCasualModalOpen && (
+        <Suspense fallback={null}>
+          <CasualActivityModal
+            isOpen={isCasualModalOpen}
+            onClose={() => setIsCasualModalOpen(false)}
+            selectedDate={selectedDate}
+            habits={habits}
+            onLogExistingCasualActivity={handleLogExistingCasualActivity}
+            onCreateAndLogCasualActivity={handleCreateAndLogCasualActivity}
+            onOpenHistory={() => {
+              setIsCasualModalOpen(false);
+              setIsCasualHistoryModalOpen(true);
+            }}
+          />
+        </Suspense>
+      )}
+
+      {/* Casual Activities History Modal */}
+      {isCasualHistoryModalOpen && (
+        <Suspense fallback={null}>
+          <CasualHistoryModal
+            isOpen={isCasualHistoryModalOpen}
+            onClose={() => setIsCasualHistoryModalOpen(false)}
+            habits={habits}
+            logs={logs}
+            onOpenDetail={onOpenHabitDetail}
           />
         </Suspense>
       )}
