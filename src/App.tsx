@@ -1,7 +1,6 @@
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Habit } from '@/core/types';
-import { useHabitsStore } from '@/features/habits';
-import { useLogsStore } from '@/features/logging';
+import { useAuthStore } from '@/features/auth';
 import { HomeView } from '@/app/HomeView';
 
 const AllHabitsView = lazy(() =>
@@ -17,14 +16,12 @@ type ViewState =
   | { type: 'detail'; habitId: string; returnTo: 'home' | 'all-habits' };
 
 export const App: React.FC = () => {
-  const { loadHabits } = useHabitsStore();
-  const { loadLogs } = useLogsStore();
+  const { initializeAuth } = useAuthStore();
   const [currentView, setCurrentView] = useState<ViewState>({ type: 'home' });
 
   useEffect(() => {
-    loadHabits();
-    loadLogs();
-  }, [loadHabits, loadLogs]);
+    initializeAuth();
+  }, [initializeAuth]);
 
   const handleOpenDetailFromHome = (habit: Habit) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

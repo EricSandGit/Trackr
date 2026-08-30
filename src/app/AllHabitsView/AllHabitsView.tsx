@@ -24,6 +24,7 @@ import { Habit, HabitType, CURATED_HABIT_CATEGORIES } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { useI18nStore } from '@/core/i18n';
+import { UserAccountButton } from '@/features/auth';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { Button } from '@/core/ui/Button';
 import { calculateHabitIndividualStats } from '@/features/stats/logic/streakCalculator';
@@ -274,6 +275,8 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
         </div>
 
         <div className={styles.topActions}>
+          <UserAccountButton />
+
           <button
             className={styles.actionBtn}
             onClick={() => setIsSettingsModalOpen(true)}

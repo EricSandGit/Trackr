@@ -6,6 +6,7 @@ import { useLogsStore } from '@/features/logging';
 import { GlobalHeatmap } from '@/features/heatmap';
 import { ConsistencyOverview } from '@/features/stats';
 import { HabitList, CasualActivitiesSection } from '@/features/habits';
+import { UserAccountButton } from '@/features/auth';
 import { DateNavigator } from '@/core/ui/DateNavigator';
 import { useI18nStore } from '@/core/i18n';
 import styles from './HomeView.module.css';
@@ -109,6 +110,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
 
         <div className={styles.topActions}>
+          <UserAccountButton />
+
           <button
             className={styles.actionBtn}
             onClick={() => setIsSettingsModalOpen(true)}
