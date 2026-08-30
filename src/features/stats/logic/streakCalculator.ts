@@ -35,7 +35,7 @@ export function calculateGlobalConsistencyStats(
   }
   const monthlyConsistencyPercentage = Math.round((activeDaysInLast30 / 30) * 100);
 
-  // 2. Current global streak & Best global streak
+  // 2. Current global streak & Best global streak (calculated dynamically over history)
   let currentStreak = 0;
   let isStreakActive = true;
 
@@ -46,7 +46,7 @@ export function calculateGlobalConsistencyStats(
   });
   let offset = hasTodayActivity ? 0 : 1;
 
-  while (isStreakActive && offset < 365) {
+  while (isStreakActive && offset < 730) {
     const checkDate = shiftDate(todayStr, -offset);
     const anyCompleted = activeHabits.some((habit) => {
       const log = logs.find((l) => l.habitId === habit.id && l.date === checkDate);
@@ -59,6 +59,33 @@ export function calculateGlobalConsistencyStats(
     } else {
       isStreakActive = false;
     }
+  }
+
+  // Calculate historical best global streak by scanning forward from oldest activity date
+  let bestGlobalStreak = currentStreak;
+  let tempGlobalStreak = 0;
+  const logDates = logs.filter((l) => l.isCompleted || l.totalValue > 0).map((l) => l.date).sort();
+  const creationDates = activeHabits.map((h) => h.createdAt?.slice(0, 10)).filter(Boolean) as string[];
+  const allKnownDates = [...logDates, ...creationDates].sort();
+  const oldestDateStr = allKnownDates.length > 0 ? allKnownDates[0] : todayStr;
+
+  let scanDate = oldestDateStr;
+  while (scanDate <= todayStr) {
+    const anyCompleted = activeHabits.some((habit) => {
+      const log = logs.find((l) => l.habitId === habit.id && l.date === scanDate);
+      return isHabitSuccessfulOnDate(habit, scanDate, log);
+    });
+
+    if (anyCompleted) {
+      tempGlobalStreak++;
+      if (tempGlobalStreak > bestGlobalStreak) {
+        bestGlobalStreak = tempGlobalStreak;
+      }
+    } else {
+      tempGlobalStreak = 0;
+    }
+
+    scanDate = shiftDate(scanDate, 1);
   }
 
   // 3. Total activities this week (past 7 days)
@@ -113,7 +140,7 @@ export function calculateGlobalConsistencyStats(
   return {
     monthlyConsistencyPercentage,
     currentGlobalStreak: currentStreak,
-    bestGlobalStreak: Math.max(currentStreak, activeDaysInLast30 > 10 ? 12 : currentStreak),
+    bestGlobalStreak,
     totalActivitiesThisWeek,
     activeHabitsCount: activeHabits.length,
     mostConsistentHabit,
@@ -195,15 +222,15 @@ export function calculateHabitIndividualStats(
 
   let offset = isTodayCleanOrCompleted ? 0 : 1;
 
-  while (isStreakActive && offset < 365) {
+  const creationDateStr = habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr;
+  const habitLogDates = habitLogs.filter((l) => l.isCompleted || l.totalValue > 0).map((l) => l.date).sort();
+  const habitStartDate = habitLogDates.length > 0 && habitLogDates[0] < creationDateStr ? habitLogDates[0] : creationDateStr;
+
+  while (isStreakActive && offset < 730) {
     const checkDate = shiftDate(todayStr, -offset);
-    if (habit.type === 'avoidance') {
-      const creationDateStr = habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr;
-      if (checkDate < creationDateStr) break;
-    }
+    if (checkDate < habitStartDate) break;
 
     const isScheduled = isHabitScheduledOnDate(habit, checkDate);
-
     if (isScheduled) {
       const log = habitLogs.find((l) => l.date === checkDate);
       if (isHabitSuccessfulOnDate(habit, checkDate, log)) {
@@ -213,6 +240,32 @@ export function calculateHabitIndividualStats(
       }
     }
     offset++;
+  }
+
+  // Calculate real historical best streak by scanning chronological history
+  let bestStreak = currentStreak;
+  let tempStreak = 0;
+  let curScanDate = habitStartDate;
+
+  while (curScanDate <= todayStr) {
+    const isScheduled = isHabitScheduledOnDate(habit, curScanDate);
+    if (isScheduled) {
+      const log = habitLogs.find((l) => l.date === curScanDate);
+      const isSuccessful = isHabitSuccessfulOnDate(habit, curScanDate, log);
+      if (isSuccessful) {
+        tempStreak++;
+        if (tempStreak > bestStreak) {
+          bestStreak = tempStreak;
+        }
+      } else {
+        // If today is scheduled but not completed yet, don't reset bestStreak
+        if (curScanDate !== todayStr) {
+          tempStreak = 0;
+        }
+      }
+    }
+    // Non-scheduled days are ignored, preserving the streak count!
+    curScanDate = shiftDate(curScanDate, 1);
   }
 
   // 30 days completion rate
@@ -233,7 +286,7 @@ export function calculateHabitIndividualStats(
 
   return {
     currentStreak,
-    bestStreak: Math.max(currentStreak, habit.type === 'avoidance' ? currentStreak : (allTimeRecordValue > 0 ? 14 : currentStreak)),
+    bestStreak,
     totalLifetimeEntries,
     totalLifetimeVolume,
     unit: habit.unit,
