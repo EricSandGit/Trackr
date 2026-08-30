@@ -173,7 +173,7 @@ export const CURATED_HABIT_ICONS: Array<{ name: string; label: string }> = [
   { name: 'Compass', label: 'Explorar' },
 ];
 
-const EMOJI_TO_ICON_NAME: Record<string, string> = {
+export const EMOJI_TO_ICON_NAME: Record<string, string> = {
   '🎯': 'Target',
   '📚': 'BookOpen',
   '📖': 'BookOpen',
