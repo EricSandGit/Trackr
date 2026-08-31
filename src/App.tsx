@@ -9,6 +9,12 @@ const AllHabitsView = lazy(() =>
 const HabitDetailView = lazy(() =>
   import('@/app/HabitDetailView').then((m) => ({ default: m.HabitDetailView }))
 );
+const PrivacyPolicyModal = lazy(() =>
+  import('@/features/legal').then((m) => ({ default: m.PrivacyPolicyModal }))
+);
+const TermsOfServiceModal = lazy(() =>
+  import('@/features/legal').then((m) => ({ default: m.TermsOfServiceModal }))
+);
 
 type ViewState =
   | { type: 'home' }
@@ -18,9 +24,27 @@ type ViewState =
 export const App: React.FC = () => {
   const { initializeAuth } = useAuthStore();
   const [currentView, setCurrentView] = useState<ViewState>({ type: 'home' });
+  const [isDirectPrivacyOpen, setIsDirectPrivacyOpen] = useState(false);
+  const [isDirectTermsOpen, setIsDirectTermsOpen] = useState(false);
 
   useEffect(() => {
     initializeAuth();
+
+    const checkLegalRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      const search = window.location.search.toLowerCase();
+
+      if (hash.includes('privacy') || path.includes('privacy') || search.includes('privacy')) {
+        setIsDirectPrivacyOpen(true);
+      } else if (hash.includes('terms') || path.includes('terms') || search.includes('terms')) {
+        setIsDirectTermsOpen(true);
+      }
+    };
+
+    checkLegalRoute();
+    window.addEventListener('hashchange', checkLegalRoute);
+    return () => window.removeEventListener('hashchange', checkLegalRoute);
   }, [initializeAuth]);
 
   const handleOpenDetailFromHome = (habit: Habit) => {
@@ -72,6 +96,30 @@ export const App: React.FC = () => {
         <HabitDetailView
           habitId={currentView.habitId}
           onBack={handleBackFromDetail}
+        />
+      )}
+
+      {isDirectPrivacyOpen && (
+        <PrivacyPolicyModal
+          isOpen={isDirectPrivacyOpen}
+          onClose={() => {
+            setIsDirectPrivacyOpen(false);
+            if (window.location.hash.includes('privacy')) {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+          }}
+        />
+      )}
+
+      {isDirectTermsOpen && (
+        <TermsOfServiceModal
+          isOpen={isDirectTermsOpen}
+          onClose={() => {
+            setIsDirectTermsOpen(false);
+            if (window.location.hash.includes('terms')) {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+          }}
         />
       )}
     </Suspense>

@@ -312,6 +312,16 @@ export interface TranslationSchema {
     creativity: string;
     personal: string;
   };
+  legal: {
+    privacyTitle: string;
+    termsTitle: string;
+    legalSectionTitle: string;
+    legalDesc: string;
+    openPrivacyBtn: string;
+    openTermsBtn: string;
+    lastUpdated: string;
+    closeBtn: string;
+  };
   languages: {
     es: string;
     en: string;

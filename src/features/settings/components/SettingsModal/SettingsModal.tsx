@@ -17,6 +17,7 @@ import { Button } from '@/core/ui/Button';
 import { useThemeStore, ThemeMode } from '@/core/theme/useThemeStore';
 import { useI18nStore, LanguageCode } from '@/core/i18n';
 import { jsonBackupService, storageAdapter } from '@/services/storage';
+import { PrivacyPolicyModal, TermsOfServiceModal } from '@/features/legal';
 import styles from './SettingsModal.module.css';
 
 export interface SettingsModalProps {
@@ -36,6 +37,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const langDropdownRef = useRef<HTMLDivElement>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
 
   // Close language dropdown on click outside
   useEffect(() => {
@@ -255,6 +258,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           />
         </div>
 
+        {/* Legal & Privacy Section */}
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>
+            <Shield size={16} color="var(--tk-accent)" />
+            <span>{t('legal.legalSectionTitle')}</span>
+          </div>
+          <p className={styles.description}>
+            {t('legal.legalDesc')}
+          </p>
+          <div className={styles.actions} style={{ marginTop: '8px' }}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsPrivacyOpen(true)}
+            >
+              {t('legal.openPrivacyBtn')}
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsTermsOpen(true)}
+            >
+              {t('legal.openTermsBtn')}
+            </Button>
+          </div>
+        </div>
+
         {/* PWA Info */}
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
@@ -290,6 +320,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <strong>Trackr v1.0.0</strong>
           <span>{t('settings.appTagline')}</span>
         </div>
+
+        {/* Privacy Policy Modal */}
+        <PrivacyPolicyModal
+          isOpen={isPrivacyOpen}
+          onClose={() => setIsPrivacyOpen(false)}
+        />
+
+        {/* Terms of Service Modal */}
+        <TermsOfServiceModal
+          isOpen={isTermsOpen}
+          onClose={() => setIsTermsOpen(false)}
+        />
       </div>
     </Modal>
   );
