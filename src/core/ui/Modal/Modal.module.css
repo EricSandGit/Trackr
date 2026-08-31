@@ -7,7 +7,7 @@
   background-color: var(--tk-bg-overlay);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 110;
+  z-index: 1200;
   display: flex;
   justify-content: center;
   align-items: center;
