@@ -15,6 +15,11 @@ const PrivacyPolicyModal = lazy(() =>
 const TermsOfServiceModal = lazy(() =>
   import('@/features/legal').then((m) => ({ default: m.TermsOfServiceModal }))
 );
+const LegalConsentModal = lazy(() =>
+  import('@/features/legal').then((m) => ({ default: m.LegalConsentModal }))
+);
+
+const TERMS_ACCEPTED_KEY = 'tk_terms_accepted_v1';
 
 type ViewState =
   | { type: 'home' }
@@ -26,6 +31,15 @@ export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>({ type: 'home' });
   const [isDirectPrivacyOpen, setIsDirectPrivacyOpen] = useState(false);
   const [isDirectTermsOpen, setIsDirectTermsOpen] = useState(false);
+  const [isConsentRequired, setIsConsentRequired] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(TERMS_ACCEPTED_KEY) !== 'true';
+  });
+
+  const handleAcceptConsent = () => {
+    localStorage.setItem(TERMS_ACCEPTED_KEY, 'true');
+    setIsConsentRequired(false);
+  };
 
   useEffect(() => {
     initializeAuth();
@@ -120,6 +134,13 @@ export const App: React.FC = () => {
               window.history.replaceState(null, '', window.location.pathname);
             }
           }}
+        />
+      )}
+
+      {isConsentRequired && (
+        <LegalConsentModal
+          isOpen={isConsentRequired}
+          onAccept={handleAcceptConsent}
         />
       )}
     </Suspense>

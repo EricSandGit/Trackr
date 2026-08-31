@@ -321,6 +321,17 @@ export interface TranslationSchema {
     openTermsBtn: string;
     lastUpdated: string;
     closeBtn: string;
+    consentModalTitle: string;
+    consentModalSubtitle: string;
+    consentWelcome: string;
+    consentPointsTitle: string;
+    consentPoint1: string;
+    consentPoint2: string;
+    consentPoint3: string;
+    consentCheckbox: string;
+    consentAcceptBtn: string;
+    termsLink: string;
+    privacyLink: string;
   };
   languages: {
     es: string;

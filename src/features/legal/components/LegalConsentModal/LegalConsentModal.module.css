@@ -1,0 +1,204 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tk-space-4);
+  animation: fadeIn var(--tk-transition-normal) ease-out;
+}
+
+.modal {
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-xl);
+  box-shadow: var(--tk-shadow-lg), 0 0 35px rgba(57, 211, 83, 0.15);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--tk-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-4);
+  animation: slideUp var(--tk-transition-normal) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brandIcon {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background-color: var(--tk-bg-surface-elevated);
+  border-radius: var(--tk-radius-sm);
+  border: 1px solid var(--tk-border-default);
+  flex-shrink: 0;
+}
+
+.brandIconDot {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--tk-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.highlightBox {
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+}
+
+.highlightTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pointsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pointItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+  line-height: 1.45;
+}
+
+.pointIcon {
+  color: var(--tk-accent);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.linksRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 13px;
+  padding: var(--tk-space-1) 0;
+}
+
+.linkBtn {
+  background: transparent;
+  border: none;
+  color: var(--tk-accent);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.linkBtn:hover {
+  color: var(--tk-accent-hover, #2ea043);
+}
+
+.linkDivider {
+  color: var(--tk-text-muted);
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 12px;
+  border-radius: var(--tk-radius-md);
+  background-color: rgba(57, 211, 83, 0.05);
+  border: 1px solid rgba(57, 211, 83, 0.2);
+  transition: all var(--tk-transition-fast);
+}
+
+.checkboxContainer:hover {
+  background-color: rgba(57, 211, 83, 0.09);
+  border-color: var(--tk-accent);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--tk-accent);
+  margin-top: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  font-size: 13px;
+  color: var(--tk-text-primary);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
