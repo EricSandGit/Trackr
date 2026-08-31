@@ -305,6 +305,16 @@ export const en: TranslationSchema = {
     creativity: 'Creativity',
     personal: 'Personal',
   },
+  legal: {
+    privacyTitle: 'Privacy Policy',
+    termsTitle: 'Terms of Service',
+    legalSectionTitle: 'Legal & Privacy',
+    legalDesc: 'Full transparency regarding data protection and terms of using the application.',
+    openPrivacyBtn: 'View Privacy Policy',
+    openTermsBtn: 'View Terms of Service',
+    lastUpdated: 'Last updated: August 2026',
+    closeBtn: 'Close',
+  },
   languages: {
     es: 'Spanish',
     en: 'English',
