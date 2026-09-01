@@ -11,6 +11,8 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  min-height: 86px;
+  box-sizing: border-box;
 }
 
 .card:hover {
@@ -31,8 +33,8 @@
 }
 
 .iconWrapper {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--tk-radius-md);
   background-color: var(--tk-bg-surface-elevated);
   display: flex;
@@ -46,27 +48,25 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  justify-content: center;
+  gap: 3px;
   min-width: 0;
 }
 
-.nameRow {
+/* Category & Record tags touching the top-right edge of the card */
+.tagGroup {
+  position: absolute;
+  top: 8px;
+  right: 12px;
   display: flex;
   align-items: center;
-  gap: var(--tk-space-2);
-}
-
-.name {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--tk-text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 4px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .recordBadge {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   color: var(--tk-record-gold);
   background-color: rgba(251, 191, 36, 0.15);
@@ -76,48 +76,96 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  flex-shrink: 0;
 }
 
 .categoryTag {
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 9.5px;
+  font-weight: 700;
   color: var(--tk-text-muted);
   background-color: var(--tk-bg-surface-elevated);
-  border: 1px solid var(--tk-border-muted);
+  border: 1px solid var(--tk-border-default);
   padding: 1px 6px;
   border-radius: var(--tk-radius-full);
   display: inline-flex;
   align-items: center;
   gap: 3px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.metaRow {
+.nameRow {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  padding-right: 75px; /* prevents title from ever overlapping the top-right tag */
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.statusRow {
   display: flex;
   align-items: center;
   gap: var(--tk-space-2);
-  flex-wrap: wrap;
 }
 
 .progressText {
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--tk-text-secondary);
-  font-weight: 500;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .completedText {
   color: var(--tk-accent);
 }
 
+.relapseText {
+  color: #ef4444;
+}
+
+.goalRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-2);
+}
+
 .periodicGoalBadge {
   font-size: 11px;
   color: var(--tk-text-muted);
   font-family: var(--tk-font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .checkAction {
   display: flex;
   align-items: center;
   padding-left: var(--tk-space-2);
+  flex-shrink: 0;
 }
 
+.actionBtn {
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-default);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.actionBtn:hover {
+  filter: brightness(1.1);
+}
