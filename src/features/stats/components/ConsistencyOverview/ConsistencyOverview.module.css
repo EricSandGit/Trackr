@@ -1,30 +1,24 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--tk-space-3);
+  gap: var(--tk-space-2);
   width: 100%;
   box-sizing: border-box;
 }
 
 @media (min-width: 901px) {
   .container {
+    gap: var(--tk-space-3);
     height: 100%;
     justify-content: space-between;
   }
 }
 
-/* 3 Top Metric Cards */
+/* 3 Top Metric Cards: 3 columns on both mobile and desktop */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--tk-space-2);
-}
-
-@media (min-width: 641px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--tk-space-2);
-  }
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
 }
 
 @media (min-width: 901px) {
@@ -37,17 +31,26 @@
 .card {
   background-color: var(--tk-bg-surface);
   border: 1px solid var(--tk-border-default);
-  border-radius: var(--tk-radius-lg);
-  padding: var(--tk-space-3) var(--tk-space-4);
+  border-radius: var(--tk-radius-md);
+  padding: 8px 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 5px;
   box-shadow: var(--tk-shadow-sm);
   transition: all var(--tk-transition-fast);
   position: relative;
   min-width: 0;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (min-width: 901px) {
+  .card {
+    border-radius: var(--tk-radius-lg);
+    padding: var(--tk-space-3) var(--tk-space-3);
+    gap: 6px;
+  }
 }
 
 .card:hover {
@@ -56,26 +59,35 @@
   box-shadow: var(--tk-shadow-md);
 }
 
+/* Mobile: header stacks vertically so badge NEVER overlaps title */
 .cardHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-width: 0;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 100%;
+}
+
+@media (min-width: 901px) {
+  .cardHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
 }
 
 .cardTitleGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+  width: 100%;
   min-width: 0;
-  flex-shrink: 1;
 }
 
 .iconBadge {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: var(--tk-radius-sm);
   display: flex;
   align-items: center;
@@ -83,28 +95,70 @@
   flex-shrink: 0;
 }
 
+@media (min-width: 901px) {
+  .iconBadge {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 .cardLabel {
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 800;
   color: var(--tk-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 901px) {
+  .cardLabel {
+    font-size: 13px;
+  }
+}
+
+.pillBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  white-space: nowrap;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+@media (min-width: 901px) {
+  .pillBadge {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+  }
 }
 
 .cardValueRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 4px;
+  gap: 2px;
 }
 
 .metric {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   font-family: var(--tk-font-mono);
   color: var(--tk-text-primary);
   line-height: 1;
+}
+
+@media (min-width: 901px) {
+  .metric {
+    font-size: 26px;
+  }
 }
 
 @media (min-width: 1400px) {
@@ -113,26 +167,19 @@
   }
 }
 
-.pillBadge {
-  font-size: 11.5px;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: var(--tk-radius-full);
-  background-color: var(--tk-bg-surface-elevated);
-  border: 1px solid var(--tk-border-default);
-  color: var(--tk-text-secondary);
-  white-space: nowrap;
-  flex-shrink: 0;
-  line-height: 1.2;
-}
-
 /* Mini Progress Bar */
 .progressBarTrack {
   width: 100%;
-  height: 6px;
+  height: 4px;
   background-color: var(--tk-bg-surface-elevated);
   border-radius: var(--tk-radius-full);
   overflow: hidden;
+}
+
+@media (min-width: 901px) {
+  .progressBarTrack {
+    height: 5px;
+  }
 }
 
 .progressBarFill {
@@ -142,26 +189,26 @@
 }
 
 .subtext {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--tk-text-muted);
-  line-height: 1.4;
-  white-space: normal;
-  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
-/* 2 Bottom Highlight Cards */
+@media (min-width: 901px) {
+  .subtext {
+    font-size: 12px;
+  }
+}
+
+/* 2 Bottom Highlight Cards: 2 columns on mobile and desktop */
 .highlightsRow {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--tk-space-2);
-}
-
-@media (min-width: 641px) {
-  .highlightsRow {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--tk-space-2);
-  }
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
 }
 
 @media (min-width: 901px) {
@@ -174,16 +221,25 @@
 .highlightCard {
   background-color: var(--tk-bg-surface);
   border: 1px solid var(--tk-border-default);
-  border-radius: var(--tk-radius-lg);
-  padding: var(--tk-space-3) var(--tk-space-4);
+  border-radius: var(--tk-radius-md);
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 6px;
   min-width: 0;
   box-shadow: var(--tk-shadow-sm);
   transition: all var(--tk-transition-fast);
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (min-width: 901px) {
+  .highlightCard {
+    border-radius: var(--tk-radius-lg);
+    padding: var(--tk-space-3) var(--tk-space-4);
+    gap: 8px;
+  }
 }
 
 .highlightCard:hover {
@@ -196,43 +252,59 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 4px;
   min-width: 0;
-  flex-wrap: wrap;
 }
 
 .highlightLabel {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 901px) {
+  .highlightLabel {
+    font-size: 13px;
+    gap: 6px;
+    letter-spacing: 0.04em;
+  }
 }
 
 .highlightPercentBadge {
-  font-size: 12.5px;
+  font-size: 10.5px;
   font-weight: 800;
   font-family: var(--tk-font-mono);
-  padding: 2px 7px;
+  padding: 1px 5px;
   border-radius: var(--tk-radius-full);
   flex-shrink: 0;
+}
+
+@media (min-width: 901px) {
+  .highlightPercentBadge {
+    font-size: 12.5px;
+    padding: 2px 7px;
+  }
 }
 
 /* Big Name right next to the Logo */
 .highlightMainRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
 }
 
 .highlightIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--tk-radius-md);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--tk-radius-sm);
   background-color: var(--tk-bg-surface-elevated);
   border: 1px solid var(--tk-border-default);
   display: flex;
@@ -241,13 +313,28 @@
   flex-shrink: 0;
 }
 
+@media (min-width: 901px) {
+  .highlightIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--tk-radius-md);
+  }
+}
+
 .highlightNameBig {
-  font-size: 16px;
+  font-size: 13.5px;
   font-weight: 800;
   color: var(--tk-text-primary);
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+@media (min-width: 901px) {
+  .highlightNameBig {
+    font-size: 17px;
+  }
 }
 
 @media (min-width: 1400px) {
@@ -259,17 +346,23 @@
 .highlightMetaGroup {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: var(--tk-space-2) 0;
+  gap: 2px;
 }
 
 .highlightMetaLine {
-  font-size: 12.5px;
+  font-size: 11px;
   color: var(--tk-text-secondary);
-  line-height: 1.45;
-  white-space: normal;
-  word-break: break-word;
-  display: block;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 901px) {
+  .highlightMetaLine {
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
 }
 
 .highlightMetaLine strong {
@@ -281,36 +374,45 @@
 .highlightBottom {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   margin-top: auto;
-  padding-top: var(--tk-space-1);
 }
 
 .highlightStatsRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  flex-wrap: wrap;
 }
 
 .highlightStats {
-  font-size: 12px;
+  font-size: 10.5px;
   font-weight: 600;
   color: var(--tk-text-secondary);
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.4;
-  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 901px) {
+  .highlightStats {
+    font-size: 12.5px;
+  }
 }
 
 .emptyHighlight {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--tk-text-muted);
-  font-size: 12.5px;
+  font-size: 11px;
   font-weight: 500;
-  padding: var(--tk-space-3) 0;
-  line-height: 1.4;
+  padding: 4px 0;
+}
+
+@media (min-width: 901px) {
+  .emptyHighlight {
+    font-size: 12px;
+    gap: 8px;
+    padding: var(--tk-space-2) 0;
+  }
 }
