@@ -1,11 +1,20 @@
-import confetti from 'canvas-confetti';
+import type confetti from 'canvas-confetti';
+
+/**
+ * Dynamically import canvas-confetti only when triggered
+ */
+async function getConfetti(): Promise<typeof confetti> {
+  const module = await import('canvas-confetti');
+  return (module.default || module) as unknown as typeof confetti;
+}
 
 /**
  * Trigger explosion of confetti for breaking a personal best record
  */
-export function fireRecordConfetti(): void {
+export async function fireRecordConfetti(): Promise<void> {
   try {
-    confetti({
+    const launchConfetti = await getConfetti();
+    launchConfetti({
       particleCount: 80,
       spread: 70,
       origin: { y: 0.75 },
@@ -22,9 +31,10 @@ export function fireRecordConfetti(): void {
 /**
  * Subtle sparkle confetti when reaching 100% of daily habits
  */
-export function fireCompletionConfetti(): void {
+export async function fireCompletionConfetti(): Promise<void> {
   try {
-    confetti({
+    const launchConfetti = await getConfetti();
+    launchConfetti({
       particleCount: 45,
       spread: 60,
       origin: { y: 0.8 },

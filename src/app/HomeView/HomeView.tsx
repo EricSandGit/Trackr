@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, Suspense, lazy, useCallback } from 'react';
 import { Habit } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -29,30 +29,40 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenCasualHistory,
   onOpenCreateHabit,
 }) => {
-  const { habits, createHabit } = useHabitsStore();
-  const {
-    logs,
-    selectedDate,
-    setSelectedDate,
-    toggleBooleanHabit,
-    toggleAvoidanceHabit,
-    addQuantitativeVolume,
-    setDirectQuantitativeValue,
-    deleteLogForDate,
-  } = useLogsStore();
+  const habits = useHabitsStore((s) => s.habits);
+  const createHabit = useHabitsStore((s) => s.createHabit);
+  const logs = useLogsStore((s) => s.logs);
+  const selectedDate = useLogsStore((s) => s.selectedDate);
+  const setSelectedDate = useLogsStore((s) => s.setSelectedDate);
+  const toggleBooleanHabit = useLogsStore((s) => s.toggleBooleanHabit);
+  const toggleAvoidanceHabit = useLogsStore((s) => s.toggleAvoidanceHabit);
+  const addQuantitativeVolume = useLogsStore((s) => s.addQuantitativeVolume);
+  const setDirectQuantitativeValue = useLogsStore((s) => s.setDirectQuantitativeValue);
+  const deleteLogForDate = useLogsStore((s) => s.deleteLogForDate);
 
   // Modals state
   const [isCasualModalOpen, setIsCasualModalOpen] = useState(false);
   const [isCasualHistoryModalOpen, setIsCasualHistoryModalOpen] = useState(false);
   const [quickLogHabit, setQuickLogHabit] = useState<Habit | null>(null);
 
-  const handleOpenQuickLog = (habit: Habit) => {
+  const handleOpenQuickLog = useCallback((habit: Habit) => {
     setQuickLogHabit(habit);
-  };
+  }, []);
 
-  const handleCloseQuickLog = () => {
+  const handleCloseQuickLog = useCallback(() => {
     setQuickLogHabit(null);
-  };
+  }, []);
+
+  const handleToggleCheck = useCallback(
+    async (habit: Habit) => {
+      if (habit.type === 'avoidance') {
+        await toggleAvoidanceHabit(habit, selectedDate);
+      } else {
+        await toggleBooleanHabit(habit, selectedDate);
+      }
+    },
+    [toggleAvoidanceHabit, toggleBooleanHabit, selectedDate]
+  );
 
   const handleLogExistingCasualActivity = async (habit: Habit, amount?: number) => {
     if (habit.type === 'quantitative') {
@@ -104,18 +114,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
       </div>
 
-      {/* Scheduled Habits List for Selected Date */}
+      {/* Daily Scheduled Habits List */}
       <HabitList
         habits={habits}
         logs={logs}
         selectedDate={selectedDate}
-        onToggleCheck={async (h: Habit) => {
-          if (h.type === 'avoidance') {
-            await toggleAvoidanceHabit(h, selectedDate);
-          } else {
-            await toggleBooleanHabit(h, selectedDate);
-          }
-        }}
+        onToggleCheck={handleToggleCheck}
         onOpenQuickLog={handleOpenQuickLog}
         onOpenDetail={onOpenHabitDetail}
         onOpenCreateModal={onOpenCreateHabit || (() => {})}

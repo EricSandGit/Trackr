@@ -32,7 +32,7 @@ export interface GlobalHeatmapProps {
   footerSlot?: React.ReactNode;
 }
 
-export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
+export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
   habits,
   logs,
   selectedDate,
@@ -267,4 +267,4 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
       )}
     </div>
   );
-};
+});

@@ -48,8 +48,9 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
   onOpenCreateHabit,
   initialCategory,
 }) => {
-  const { habits } = useHabitsStore();
-  const { logs, selectedDate } = useLogsStore();
+  const habits = useHabitsStore((s) => s.habits);
+  const logs = useLogsStore((s) => s.logs);
+  const selectedDate = useLogsStore((s) => s.selectedDate);
   const { t, language } = useI18nStore();
 
   // Filter expansion & search state

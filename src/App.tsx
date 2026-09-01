@@ -82,7 +82,18 @@ export const App: React.FC = () => {
 
     checkLegalRoute();
     window.addEventListener('hashchange', checkLegalRoute);
-    return () => window.removeEventListener('hashchange', checkLegalRoute);
+
+    const handleResize = () => {
+      if (window.innerWidth <= 900) {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('hashchange', checkLegalRoute);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [initializeAuth]);
 
   const handleDataResetOrImported = async () => {
