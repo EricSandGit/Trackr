@@ -23,6 +23,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={t('legal.privacyTitle')}
+      size="xl"
     >
       <div className={styles.container}>
         <div className={styles.badge}>

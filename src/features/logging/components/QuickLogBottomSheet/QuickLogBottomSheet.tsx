@@ -122,7 +122,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
 
         {/* Quick Add Presets */}
         <div>
-          <span className={styles.habitDate} style={{ marginBottom: '6px', display: 'block' }}>
+          <span className={styles.sectionLabel}>
             {t('quickLog.quickAdd')}
           </span>
           <div className={styles.quickPresets}>
@@ -142,7 +142,7 @@ export const QuickLogBottomSheet: React.FC<QuickLogBottomSheetProps> = ({
 
         {/* Custom Input */}
         <form onSubmit={handleCustomSubmit} className={styles.manualInputSection}>
-          <span className={styles.habitDate}>{t('quickLog.exactAdd')}</span>
+          <span className={styles.sectionLabel}>{t('quickLog.exactAdd')}</span>
           <div className={styles.inputRow}>
             <input
               type="number"

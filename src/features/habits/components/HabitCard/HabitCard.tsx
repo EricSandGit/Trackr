@@ -57,41 +57,60 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
     progressLabel = isCompleted ? t('habitCard.completed') : t('habitCard.pending');
   }
 
+  const periodicGoalText = habit.weeklyGoal
+    ? t('habitCard.weeklyGoal', {
+        goal: habit.weeklyGoal,
+        unit: habit.type === 'quantitative' ? habit.unit || '' : t('common.days'),
+      })
+    : habit.frequency?.type === 'everyday'
+    ? 'Todos los días'
+    : habit.frequency?.type === 'specific_days'
+    ? `${habit.frequency.daysOfWeek?.length || 0} días por semana`
+    : 'Actividad casual';
+
   return (
     <div className={styles.card} onClick={handleCardClick}>
       <div className={styles.colorStrip} style={{ backgroundColor: habit.color }} />
+
+      {/* Category Tag & Record Badge positioned at the top-right edge of the card */}
+      {(habit.category || isRecord) && (
+        <div className={styles.tagGroup}>
+          {isRecord && (
+            <span className={styles.recordBadge}>
+              <Sparkles size={10} /> {t('habitCard.record')}
+            </span>
+          )}
+          {habit.category && (
+            <span className={styles.categoryTag}>{habit.category}</span>
+          )}
+        </div>
+      )}
 
       <div className={styles.iconWrapper}>
         <HabitIcon name={habit.icon} size={20} color={habit.color} />
       </div>
 
       <div className={styles.content}>
+        {/* Tier 1: Name (left, truncating before reaching the top-right tag) */}
         <div className={styles.nameRow}>
-          <span className={styles.name}>{habit.name}</span>
-          {habit.category && (
-            <span className={styles.categoryTag}>{habit.category}</span>
-          )}
-          {isRecord && (
-            <span className={styles.recordBadge}>
-              <Sparkles size={10} /> {t('habitCard.record')}
-            </span>
-          )}
+          <span className={styles.name} title={habit.name}>{habit.name}</span>
         </div>
-        <div className={styles.metaRow}>
+
+        {/* Tier 2: Status / Daily Progress */}
+        <div className={styles.statusRow}>
           <span
             className={`${styles.progressText} ${isCompleted ? styles.completedText : ''} ${isRelapse ? styles.relapseText : ''}`}
             style={{ color: isRelapse ? '#ef4444' : undefined }}
           >
             {progressLabel}
           </span>
-          {habit.weeklyGoal && (
-            <span className={styles.periodicGoalBadge}>
-              {t('habitCard.weeklyGoal', {
-                goal: habit.weeklyGoal,
-                unit: habit.type === 'quantitative' ? habit.unit || '' : t('common.days'),
-              })}
-            </span>
-          )}
+        </div>
+
+        {/* Tier 3: Weekly Goal or Frequency */}
+        <div className={styles.goalRow}>
+          <span className={styles.periodicGoalBadge}>
+            {periodicGoalText}
+          </span>
         </div>
       </div>
 
@@ -106,19 +125,13 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
         ) : habit.type === 'avoidance' ? (
           <button
             type="button"
-            className={styles.card}
+            className={styles.actionBtn}
             style={{
               padding: '6px 10px',
-              borderRadius: 'var(--tk-radius-md)',
               backgroundColor: isRelapse ? 'rgba(239, 68, 68, 0.15)' : 'var(--tk-bg-surface-elevated)',
               color: isRelapse ? '#ef4444' : 'var(--tk-text-secondary)',
               borderColor: isRelapse ? '#ef4444' : 'var(--tk-border-default)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontWeight: 600,
               fontSize: '11px',
-              cursor: 'pointer',
             }}
             onClick={handleCheckAction}
             title={isRelapse ? t('habitCard.undoRelapse') : t('habitCard.markRelapse')}
@@ -138,17 +151,12 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
         ) : (
           <button
             type="button"
-            className={styles.card}
+            className={styles.actionBtn}
             style={{
               padding: '6px 12px',
-              borderRadius: 'var(--tk-radius-md)',
               backgroundColor: isCompleted ? habit.color : 'var(--tk-bg-surface-elevated)',
               color: isCompleted ? '#ffffff' : 'var(--tk-text-primary)',
               borderColor: isCompleted ? habit.color : 'var(--tk-border-default)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontWeight: 600,
               fontSize: '12px',
             }}
             onClick={handleCheckAction}
@@ -161,4 +169,3 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
     </div>
   );
 });
-

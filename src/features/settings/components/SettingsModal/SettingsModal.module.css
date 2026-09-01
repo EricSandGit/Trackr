@@ -4,42 +4,57 @@
   gap: var(--tk-space-4);
 }
 
+@media (min-width: 640px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--tk-space-4);
+  }
+
+  .dangerSection,
+  .appInfo {
+    grid-column: span 2;
+  }
+}
+
 .section {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--tk-space-2);
   background-color: var(--tk-bg-surface-elevated);
-  padding: var(--tk-space-3);
-  border-radius: var(--tk-radius-md);
+  padding: var(--tk-space-4);
+  border-radius: var(--tk-radius-lg);
   border: 1px solid var(--tk-border-muted);
 }
 
 .sectionTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--tk-text-primary);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tk-space-2);
+  gap: var(--tk-space-3);
 }
 
 .description {
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--tk-text-secondary);
-  line-height: 1.4;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .comboboxWrapper {
   position: relative;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .comboboxTrigger {
@@ -83,7 +98,7 @@
 }
 
 .comboboxLabel {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--tk-text-primary);
 }
@@ -175,7 +190,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--tk-space-2);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .themeBtn {
@@ -184,12 +199,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 6px;
+  padding: 12px 6px;
   border-radius: var(--tk-radius-md);
   background-color: var(--tk-bg-surface);
   border: 1.5px solid var(--tk-border-default);
   color: var(--tk-text-secondary);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--tk-transition-fast);
@@ -212,6 +227,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--tk-space-2);
+  margin-top: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--tk-space-2);
 }
 
 .hiddenInput {
@@ -219,16 +240,16 @@
 }
 
 .dangerSection {
-  border-color: rgba(248, 81, 73, 0.2);
-  background-color: rgba(248, 81, 73, 0.05);
+  border-color: rgba(248, 81, 73, 0.25);
+  background-color: rgba(248, 81, 73, 0.06);
 }
 
 .appInfo {
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--tk-text-muted);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   margin-top: var(--tk-space-2);
 }

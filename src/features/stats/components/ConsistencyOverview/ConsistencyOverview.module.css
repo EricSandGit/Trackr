@@ -2,103 +2,288 @@
   display: flex;
   flex-direction: column;
   gap: var(--tk-space-3);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
 }
 
+/* 3 Top Metric Cards */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--tk-space-2);
+  flex: 1;
+}
+
+@media (min-width: 901px) {
+  .grid {
+    gap: var(--tk-space-3);
+  }
 }
 
 .card {
   background-color: var(--tk-bg-surface);
   border: 1px solid var(--tk-border-default);
   border-radius: var(--tk-radius-lg);
-  padding: var(--tk-space-3);
+  padding: var(--tk-space-3) var(--tk-space-3);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
+  gap: 5px;
   box-shadow: var(--tk-shadow-sm);
+  transition: all var(--tk-transition-fast);
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.card:hover {
+  border-color: var(--tk-border-focus);
+  transform: translateY(-1px);
+  box-shadow: var(--tk-shadow-md);
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--tk-text-secondary);
-  line-height: 1.2;
-}
-
-.cardHeader svg {
-  transform: translateY(-1px);
-}
-
-.metric {
-  font-size: 20px;
-  font-weight: 700;
-  font-family: var(--tk-font-mono);
-  color: var(--tk-text-primary);
-  line-height: 1.1;
-}
-
-.subtext {
-  font-size: 10px;
-  color: var(--tk-text-muted);
-}
-
-.highlightsRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--tk-space-2);
-}
-
-.highlightCard {
-  background-color: var(--tk-bg-surface);
-  border: 1px solid var(--tk-border-default);
-  border-radius: var(--tk-radius-md);
-  padding: var(--tk-space-2) var(--tk-space-3);
-  display: flex;
-  align-items: center;
-  gap: var(--tk-space-2);
+  justify-content: space-between;
+  gap: 6px;
   min-width: 0;
 }
 
-.highlightIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--tk-radius-md);
-  background-color: var(--tk-bg-surface-elevated);
+.cardTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.iconBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--tk-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.highlightInfo {
+.cardLabel {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--tk-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.cardValueRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.metric {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: var(--tk-font-mono);
+  color: var(--tk-text-primary);
+  line-height: 1;
+}
+
+@media (min-width: 1400px) {
+  .metric {
+    font-size: 28px;
+  }
+}
+
+.pillBadge {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+/* Mini Progress Bar */
+.progressBarTrack {
+  width: 100%;
+  height: 5px;
+  background-color: var(--tk-bg-surface-elevated);
+  border-radius: var(--tk-radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: var(--tk-radius-full);
+  transition: width 0.4s ease-out;
+}
+
+.subtext {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tk-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 2 Bottom Highlight Cards */
+.highlightsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-2);
+  flex: 1.15;
+}
+
+@media (min-width: 901px) {
+  .highlightsRow {
+    gap: var(--tk-space-3);
+  }
+}
+
+.highlightCard {
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-3) var(--tk-space-4);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  box-shadow: var(--tk-shadow-sm);
+  transition: all var(--tk-transition-fast);
+}
+
+.highlightCard:hover {
+  border-color: var(--tk-border-focus);
+  transform: translateY(-1px);
+  box-shadow: var(--tk-shadow-md);
+}
+
+.highlightHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
 }
 
 .highlightLabel {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 10px;
-  font-weight: 600;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--tk-text-secondary);
-  line-height: 1.2;
+  white-space: nowrap;
 }
 
-.highlightName {
-  font-size: 12px;
-  font-weight: 700;
+.highlightPercentBadge {
+  font-size: 12.5px;
+  font-weight: 800;
+  font-family: var(--tk-font-mono);
+  padding: 2px 7px;
+  border-radius: var(--tk-radius-full);
+  flex-shrink: 0;
+}
+
+/* Big Name right next to the Logo */
+.highlightMainRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.highlightIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--tk-radius-md);
+  background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.highlightNameBig {
+  font-size: 17px;
+  font-weight: 800;
   color: var(--tk-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+@media (min-width: 1400px) {
+  .highlightNameBig {
+    font-size: 18px;
+  }
+}
+
+.highlightMetaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.highlightMetaLine {
+  font-size: 11.5px;
+  color: var(--tk-text-secondary);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highlightMetaLine strong {
+  color: var(--tk-text-primary);
+  font-weight: 700;
+}
+
+/* Bottom stats & progress */
+.highlightBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.highlightStatsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.highlightStats {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emptyHighlight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tk-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  padding: var(--tk-space-2) 0;
 }

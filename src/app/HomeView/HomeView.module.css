@@ -1,130 +1,45 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: calc(var(--tk-space-4) + var(--tk-safe-top)) var(--tk-space-4) calc(var(--tk-space-8) + var(--tk-safe-bottom));
+  min-height: calc(100vh - 61px);
+  padding: var(--tk-space-5) var(--tk-space-6);
   gap: var(--tk-space-4);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.topBar {
+@media (max-width: 768px) {
+  .container {
+    padding: var(--tk-space-3);
+    gap: var(--tk-space-3);
+  }
+}
+
+/* Top Dashboard Row: Heatmap (fit-content) on the left + Stats on the right */
+.topAnalyticsRow {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: var(--tk-space-3);
+  width: 100%;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: var(--tk-space-2);
-}
+@media (min-width: 901px) {
+  .topAnalyticsRow {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--tk-space-4);
+  }
 
-.brandIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--tk-radius-sm);
-  background-color: var(--tk-bg-surface-elevated);
-  border: 1px solid var(--tk-border-default);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 4px;
-  gap: 2px;
-}
+  .heatmapWrapper {
+    flex-shrink: 0;
+    width: fit-content;
+    display: flex;
+  }
 
-.brandIconDot {
-  border-radius: 1px;
-}
-
-.brandTitle {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--tk-text-primary);
-}
-
-.brandBadge {
-  font-size: 10px;
-  font-weight: 700;
-  background-color: rgba(35, 134, 54, 0.2);
-  color: var(--tk-accent);
-  border: 1px solid rgba(35, 134, 54, 0.4);
-  padding: 1px 6px;
-  border-radius: var(--tk-radius-full);
-}
-
-.topActions {
-  display: flex;
-  align-items: center;
-  gap: var(--tk-space-1);
-}
-
-.actionBtn {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--tk-radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--tk-bg-surface);
-  border: 1px solid var(--tk-border-default);
-  color: var(--tk-text-secondary);
-  transition: all var(--tk-transition-fast);
-}
-
-.actionBtn:hover {
-  background-color: var(--tk-bg-surface-hover);
-  color: var(--tk-text-primary);
-}
-
-.createBtn {
-  background-color: var(--tk-accent);
-  color: #ffffff;
-  border-color: transparent;
-}
-
-.createBtn:hover {
-  background-color: var(--tk-accent-hover);
-}
-
-/* Tab View Switcher (Diario / Todos) */
-.viewSwitcher {
-  display: flex;
-  background-color: var(--tk-bg-surface);
-  padding: 3px;
-  border-radius: var(--tk-radius-lg);
-  border: 1px solid var(--tk-border-default);
-  gap: 2px;
-}
-
-.viewTab {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: var(--tk-radius-md);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--tk-text-secondary);
-  transition: all var(--tk-transition-fast);
-}
-
-.viewTab:hover {
-  color: var(--tk-text-primary);
-}
-
-.viewTabActive {
-  background-color: var(--tk-bg-surface-elevated);
-  color: var(--tk-text-primary);
-  box-shadow: var(--tk-shadow-sm);
-  border: 1px solid var(--tk-border-muted);
-}
-
-.viewTabBadge {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: var(--tk-radius-full);
-  background-color: rgba(255, 255, 255, 0.08);
-  color: inherit;
+  .statsWrapper {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+  }
 }

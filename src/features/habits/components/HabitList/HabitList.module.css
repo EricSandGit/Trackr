@@ -79,9 +79,16 @@
 }
 
 .list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--tk-space-2);
+}
+
+@media (min-width: 768px) {
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--tk-space-3);
+  }
 }
 
 .emptyState {

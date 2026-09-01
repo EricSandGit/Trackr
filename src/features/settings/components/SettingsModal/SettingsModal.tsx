@@ -111,7 +111,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('settings.title')}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('settings.title')} size="lg">
       <div className={styles.container}>
         {feedbackMsg && (
           <div

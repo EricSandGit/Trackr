@@ -7,6 +7,7 @@ export interface ModalProps {
   onClose: () => void;
   title?: React.ReactNode;
   children: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -14,6 +15,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
+  size = 'lg',
 }) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -28,9 +30,11 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
+  const sizeClass = styles[size] || styles.lg;
+
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modal} ${sizeClass}`} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <div className={styles.title}>{title}</div>
           <button className={styles.closeButton} onClick={onClose} aria-label="Cerrar">

@@ -9,6 +9,14 @@
   box-shadow: var(--tk-shadow-sm);
 }
 
+.embedded {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
 .centerInfo {
   display: flex;
   flex-direction: column;

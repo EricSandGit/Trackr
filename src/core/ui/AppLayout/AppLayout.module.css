@@ -1,0 +1,23 @@
+.appWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--tk-bg-base);
+  color: var(--tk-text-primary);
+}
+
+.mainContainer {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  min-height: calc(100vh - 61px);
+}
+
+.contentArea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--tk-transition-normal) ease;
+}

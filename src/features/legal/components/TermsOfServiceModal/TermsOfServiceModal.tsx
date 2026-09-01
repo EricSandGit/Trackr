@@ -23,6 +23,7 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={t('legal.termsTitle')}
+      size="xl"
     >
       <div className={styles.container}>
         <div className={styles.badge}>
