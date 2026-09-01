@@ -34,6 +34,17 @@ export interface TranslationSchema {
     allHabits: string;
     dailyHabits: string;
   };
+  sidebar: {
+    navigationTitle: string;
+    dailyView: string;
+    allHabitsView: string;
+    casualHistory: string;
+    categoriesTitle: string;
+    allCategories: string;
+    openMenu: string;
+    closeMenu: string;
+    statsOverview: string;
+  };
   allHabits: {
     title: string;
     subtitle: string;

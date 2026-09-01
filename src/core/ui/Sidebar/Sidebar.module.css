@@ -1,0 +1,225 @@
+/* Backdrop overlay ONLY for mobile */
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--tk-transition-normal) ease;
+  }
+
+  .backdropOpen {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Sidebar Container */
+.sidebar {
+  width: 260px;
+  background-color: var(--tk-bg-surface);
+  border-right: 1px solid var(--tk-border-default);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 61px);
+  position: sticky;
+  top: 61px;
+  align-self: flex-start;
+  z-index: 80;
+  transition: transform var(--tk-transition-normal) cubic-bezier(0.16, 1, 0.3, 1),
+              width var(--tk-transition-normal) ease,
+              opacity var(--tk-transition-normal) ease;
+  overflow-y: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* Mobile Drawer Behavior */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1060;
+    transform: translateX(-100%);
+    box-shadow: var(--tk-shadow-lg);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+}
+
+/* Desktop Docked Sidebar (No backdrop, adjusts layout content) */
+@media (min-width: 901px) {
+  .sidebarCollapsed {
+    transform: translateX(-100%);
+    width: 0;
+    border-right: none;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    width: 260px;
+    opacity: 1;
+  }
+
+  .mobileHeader {
+    display: none !important;
+  }
+}
+
+/* Header inside Mobile Drawer ONLY */
+.mobileHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--tk-border-default);
+}
+
+.mobileHeaderTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.closeBtn {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-default);
+  background: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-secondary);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.closeBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+/* Content Body */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tk-space-4);
+  padding: 16px 12px;
+  flex: 1;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tk-text-muted);
+  padding: 0 10px 6px 10px;
+}
+
+/* Nav Item */
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--tk-radius-md);
+  border: none;
+  background: transparent;
+  color: var(--tk-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.navItem:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+}
+
+.navItemActive {
+  background-color: rgba(57, 211, 83, 0.12);
+  color: var(--tk-accent);
+  font-weight: 700;
+}
+
+.navItemActive:hover {
+  background-color: rgba(57, 211, 83, 0.18);
+  color: var(--tk-accent);
+}
+
+.navItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.navItemLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--tk-radius-full);
+  background-color: var(--tk-bg-surface-elevated);
+  color: var(--tk-text-secondary);
+  border: 1px solid var(--tk-border-default);
+}
+
+.badgeActive {
+  background-color: var(--tk-accent);
+  color: #ffffff;
+  border-color: var(--tk-accent);
+}
+
+/* Category dot */
+.categoryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  padding: 12px;
+  border-top: 1px solid var(--tk-border-default);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
