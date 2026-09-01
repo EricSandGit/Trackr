@@ -11,13 +11,15 @@ import {
   ShieldAlert,
   RotateCcw,
   Calendar,
+  Activity,
+  CheckCircle2,
 } from 'lucide-react';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { Button } from '@/core/ui/Button';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { useI18nStore } from '@/core/i18n';
-import { MonthlyGrid, AnnualHeatmap } from '@/features/heatmap';
+import { HabitHeatmap, AnnualHeatmap } from '@/features/heatmap';
 import { HabitStatBadges, HabitEvolutionChart, PeriodicGoalCards } from '@/features/stats';
 import { HabitFormModal } from '@/features/habits';
 import { QuickLogBottomSheet } from '@/features/logging';
@@ -258,29 +260,78 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
         </div>
       </div>
 
+      {/* Main Analytics Section: 2 Columns (Heatmap Left ~50% + Histogram/Evolution Right ~50%) */}
+      <div className={styles.chartsRow}>
+        {/* Left: Individual GitHub-Style Heatmap (Compact 18-week matrix) */}
+        <div className={styles.chartCol}>
+          <HabitHeatmap
+            habit={habit}
+            logs={logs}
+            selectedDate={selectedDate}
+            onSelectDate={handleDaySelect}
+            weeksCount={24}
+          />
+        </div>
+
+        {/* Right: Evolution/Histogram for Quantitative Habits, or Informative Overview Card */}
+        <div className={styles.chartCol}>
+          {habit.type === 'quantitative' ? (
+            <HabitEvolutionChart
+              habit={habit}
+              logs={logs}
+              onSelectDate={handleDaySelect}
+            />
+          ) : (
+            <div className={styles.noHistogramCard}>
+              <div className={styles.noHistogramHeader}>
+                <div
+                  className={styles.noHistogramIconWrapper}
+                  style={{ backgroundColor: `${habit.color}20` }}
+                >
+                  {habit.type === 'avoidance' ? (
+                    <Activity size={20} color={habit.color} />
+                  ) : (
+                    <CheckCircle2 size={20} color={habit.color} />
+                  )}
+                </div>
+                <div>
+                  <h4 className={styles.noHistogramTitle}>
+                    {habit.type === 'avoidance'
+                      ? 'Hábito de Evitación'
+                      : 'Hábito Simple (Sí / No)'}
+                  </h4>
+                  <span className={styles.noHistogramSubtitle}>Registro de cumplimiento directo</span>
+                </div>
+              </div>
+
+              <p className={styles.noHistogramDesc}>
+                Los gráficos de evolución e histogramas de volumen aplican a hábitos numéricos de cantidad (páginas, minutos, repeticiones). Este hábito registra directamente cumplimiento diario y rachas en el cuadro de actividad.
+              </p>
+
+              <div className={styles.noHistogramStats}>
+                <div className={styles.noHistogramStatItem}>
+                  <span className={styles.noHistogramStatLabel}>Modalidad</span>
+                  <span className={styles.noHistogramStatValue} style={{ color: habit.color }}>
+                    {habit.type === 'avoidance' ? 'Día Limpio' : 'Completado (1 Check)'}
+                  </span>
+                </div>
+                <div className={styles.noHistogramStatItem}>
+                  <span className={styles.noHistogramStatLabel}>Frecuencia</span>
+                  <span className={styles.noHistogramStatValue}>{frequencyLabel}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Metric Badges (Streaks, Records, Lifetime Volume) */}
+      <HabitStatBadges habit={habit} logs={logs} />
+
       {/* Periodic Goal Cards (Weekly and Monthly progress) */}
       <PeriodicGoalCards habit={habit} logs={logs} referenceDate={selectedDate} />
 
-      {/* Metric Badges */}
-      <HabitStatBadges habit={habit} logs={logs} />
-
-      {/* Evolutionary Line Chart for Quantitative Habits */}
-      {habit.type === 'quantitative' && (
-        <HabitEvolutionChart
-          habit={habit}
-          logs={logs}
-          onSelectDate={handleDaySelect}
-        />
-      )}
-
-      {/* Monthly Calendar View */}
-      <MonthlyGrid
-        habit={habit}
-        logs={logs}
-        onSelectDate={handleDaySelect}
-      />
-
-      {/* Toggle Expand / Annual Heatmap */}
+      {/* Toggle Expand / Annual Heatmap (Full 52 Weeks) */}
       <button
         className={styles.expandToggleBtn}
         onClick={() => setShowAnnualHeatmap(!showAnnualHeatmap)}

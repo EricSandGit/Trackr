@@ -1,33 +1,36 @@
 .container {
-  --cell-size: 13px;
-  --cell-gap: 3px;
-  --col-step: 16px;
+  --cell-size: 14px;
+  --cell-gap: 3.5px;
+  --col-step: 17.5px;
   background-color: var(--tk-bg-surface);
   border-radius: var(--tk-radius-lg);
   border: 1px solid var(--tk-border-default);
   padding: var(--tk-space-4);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--tk-space-3);
   box-shadow: var(--tk-shadow-sm);
+  position: relative;
   width: 100%;
+  min-height: 310px;
   box-sizing: border-box;
 }
 
 @media (min-width: 901px) {
   .container {
-    --cell-size: 17.5px;
+    --cell-size: 16px;
     --cell-gap: 4px;
-    --col-step: 21.5px;
-    padding: var(--tk-space-4) var(--tk-space-5);
+    --col-step: 20px;
+    padding: var(--tk-space-4) var(--tk-space-4);
   }
 }
 
 @media (min-width: 1200px) {
   .container {
-    --cell-size: 18px;
+    --cell-size: 16.5px;
     --cell-gap: 4px;
-    --col-step: 22px;
+    --col-step: 20.5px;
   }
 }
 
@@ -35,6 +38,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .titleWrapper {
@@ -45,34 +49,37 @@
 
 .title {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--tk-text-primary);
   margin: 0;
 }
 
 .subtitle {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--tk-text-secondary);
 }
 
 .scrollArea {
   width: 100%;
   overflow-x: auto;
-  padding-bottom: var(--tk-space-2);
-  scrollbar-width: thin;
-  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   display: flex;
   justify-content: center;
 }
 
-@media (max-width: 1100px) {
+.scrollArea::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 600px) {
   .scrollArea {
     justify-content: flex-start;
   }
 }
 
 .matrixWrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   width: fit-content;
   gap: 4px;
@@ -81,7 +88,7 @@
 .monthLabelsRow {
   display: flex;
   height: 20px;
-  margin-left: 28px;
+  margin-left: 24px;
   position: relative;
 }
 
@@ -102,7 +109,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--cell-gap);
-  width: 24px;
+  width: 20px;
   padding-right: 4px;
 }
 
@@ -125,7 +132,7 @@
 .cell {
   width: var(--cell-size);
   height: var(--cell-size);
-  border-radius: 3.5px;
+  border-radius: 3px;
   background-color: var(--tk-cell-empty);
   border: 1px solid var(--tk-cell-border);
   cursor: pointer;
@@ -139,10 +146,21 @@
   border-color: #ffffff;
 }
 
+.cell:active {
+  transform: scale(1.1);
+}
+
 .futureCell {
   opacity: 0.15;
   cursor: default;
   pointer-events: none;
+}
+
+.selectedCell {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.4);
+  transform: scale(1.15);
+  z-index: 5;
 }
 
 .recordCell {
@@ -192,8 +210,8 @@
 
 @media (min-width: 901px) {
   .legendCell {
-    width: 13px;
-    height: 13px;
-    border-radius: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 2.5px;
   }
 }

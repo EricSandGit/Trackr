@@ -4,6 +4,10 @@
   min-height: 100vh;
   padding: calc(var(--tk-space-4) + var(--tk-safe-top)) var(--tk-space-4) calc(var(--tk-space-8) + var(--tk-safe-bottom));
   gap: var(--tk-space-4);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .topNav {
@@ -113,6 +117,110 @@
   line-height: 1.4;
 }
 
+/* 2-Column Row for Charts (50% / 50% on Desktop) */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--tk-space-4);
+  align-items: stretch;
+}
+
+@media (min-width: 901px) {
+  .chartsRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chartCol {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.chartCol > * {
+  height: 100%;
+}
+
+/* Informative Placeholder Card for Non-Quantitative Habits */
+.noHistogramCard {
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-lg);
+  padding: var(--tk-space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--tk-space-3);
+  box-shadow: var(--tk-shadow-sm);
+  box-sizing: border-box;
+}
+
+.noHistogramHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--tk-space-3);
+}
+
+.noHistogramIconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--tk-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.noHistogramTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  margin: 0;
+}
+
+.noHistogramSubtitle {
+  font-size: 12px;
+  color: var(--tk-text-secondary);
+}
+
+.noHistogramDesc {
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.noHistogramStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tk-space-2);
+  padding-top: var(--tk-space-3);
+  border-top: 1px solid var(--tk-border-default);
+}
+
+.noHistogramStatItem {
+  background-color: var(--tk-bg-surface-elevated);
+  padding: var(--tk-space-2) var(--tk-space-3);
+  border-radius: var(--tk-radius-md);
+  border: 1px solid var(--tk-border-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.noHistogramStatLabel {
+  font-size: 11px;
+  color: var(--tk-text-muted);
+  font-weight: 600;
+}
+
+.noHistogramStatValue {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+}
+
 .expandToggleBtn {
   display: flex;
   align-items: center;
@@ -126,6 +234,7 @@
   font-size: 13px;
   font-weight: 600;
   transition: all var(--tk-transition-fast);
+  cursor: pointer;
 }
 
 .expandToggleBtn:hover {

@@ -8,29 +8,32 @@ import {
 } from '@/features/heatmap/logic/heatmapCalculator';
 import { useThemeStore } from '@/core/theme/useThemeStore';
 import { useI18nStore } from '@/core/i18n';
-import styles from './AnnualHeatmap.module.css';
+import styles from './HabitHeatmap.module.css';
 
-export interface AnnualHeatmapProps {
+export interface HabitHeatmapProps {
   habit: Habit;
   logs: DailyActivityLog[];
+  selectedDate: string;
   onSelectDate: (date: string) => void;
+  weeksCount?: number;
 }
 
-export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
+export const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
   habit,
   logs,
+  selectedDate,
   onSelectDate,
+  weeksCount = 24,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { theme } = useThemeStore();
   const { t, language } = useI18nStore();
   const isDark = theme === 'dark';
 
-  // 52 weeks = 1 full year
   const weeks = useMemo(() => {
     const locale = language === 'en' ? 'en-US' : 'es-ES';
-    return generateHeatmapWeeks(52, new Date(), locale);
-  }, [language]);
+    return generateHeatmapWeeks(weeksCount, new Date(), locale);
+  }, [weeksCount, language]);
 
   const logsMap = useMemo(() => {
     const map = new Map<string, DailyActivityLog>();
@@ -55,26 +58,27 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
-          <Calendar size={18} color={habitColor} />
+          <Calendar size={17} color={habitColor} />
           <h4 className={styles.title}>
-            {language === 'en' ? 'Annual History' : 'Historial Anual'}
+            {language === 'en' ? 'Activity History' : 'Historial de Actividad'}
           </h4>
           <span className={styles.subtitle}>
-            {language === 'en' ? '(Full 52 weeks)' : '(52 semanas completas)'}
+            {language === 'en' ? `(Last ${weeksCount} weeks)` : `(Últimas ${weeksCount} semanas)`}
           </span>
         </div>
       </div>
 
       <div className={styles.scrollArea} ref={scrollRef}>
         <div className={styles.matrixWrapper}>
+          {/* Month Labels Row */}
           <div className={styles.monthLabelsRow}>
             {weeks.map((week, idx) => {
               if (week.monthLabel) {
                 return (
                   <span
-                    key={`ann_month_${idx}`}
+                    key={`hmonth_${idx}`}
                     className={styles.monthLabel}
-                    style={{ left: `calc(${idx} * var(--col-step, 21.5px))` }}
+                    style={{ left: `calc(${idx} * var(--col-step, 19px))` }}
                   >
                     {week.monthLabel}
                   </span>
@@ -85,6 +89,7 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
           </div>
 
           <div className={styles.gridBody}>
+            {/* Day of week abbreviations */}
             <div className={styles.dayLabelsCol}>
               {dayNames.map((d, i) => (
                 <span key={i} className={styles.dayLabel}>
@@ -93,9 +98,11 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
               ))}
             </div>
 
+            {/* Matrix of Columns (Weeks) */}
             {weeks.map((week) => (
               <div key={week.weekIndex} className={styles.weekCol}>
                 {week.days.map((day) => {
+                  const isSelected = day.date === selectedDate;
                   const log = logsMap.get(day.date);
                   const { level, isRecord, value } = calculateHabitDayIntensity(
                     day.date,
@@ -103,24 +110,25 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
                     log
                   );
 
-                  const cellColor = level > 0 ? getHabitCustomColorShade(habitColor, level, isDark) : undefined;
+                  const cellColor = level > 0
+                    ? getHabitCustomColorShade(habitColor, level, isDark)
+                    : undefined;
 
                   const isRelapseDay = habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
 
                   const cellClasses = [
                     styles.cell,
                     day.isFuture ? styles.futureCell : '',
+                    isSelected ? styles.selectedCell : '',
                     isRecord ? styles.recordCell : '',
                     isRelapseDay ? styles.relapseCell : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
 
-                  const style: React.CSSProperties = {
-                    backgroundColor: cellColor,
-                  };
-
-                  const tooltip = habit.type === 'quantitative'
+                  const tooltipText = day.isFuture
+                    ? ''
+                    : habit.type === 'quantitative'
                     ? `${day.date}: ${value} ${habit.unit || ''}`
                     : habit.type === 'avoidance'
                     ? `${day.date}: ${isRelapseDay ? 'Recaída' : 'Día limpio'}`
@@ -130,8 +138,8 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
                     <div
                       key={day.date}
                       className={cellClasses}
-                      style={style}
-                      title={tooltip}
+                      style={{ backgroundColor: cellColor }}
+                      title={tooltipText}
                       onClick={() => !day.isFuture && onSelectDate(day.date)}
                     />
                   );
