@@ -11,11 +11,13 @@ import styles from './DateNavigator.module.css';
 export interface DateNavigatorProps {
   selectedDate: string;
   onSelectDate: (date: string) => void;
+  variant?: 'default' | 'embedded';
 }
 
 export const DateNavigator: React.FC<DateNavigatorProps> = ({
   selectedDate,
   onSelectDate,
+  variant = 'default',
 }) => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const { t, formatRelativeDate, formatFullDate } = useI18nStore();
@@ -41,7 +43,9 @@ export const DateNavigator: React.FC<DateNavigatorProps> = ({
   const formattedFull = formatFullDate(selectedDate);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${variant === 'embedded' ? styles.embedded : ''}`}
+    >
       <div className={styles.navArrows}>
         <button className={styles.arrowBtn} onClick={handlePrevDay} aria-label={t('nav.prevDay')}>
           <ChevronLeft size={16} />

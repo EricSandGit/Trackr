@@ -29,6 +29,7 @@ export interface GlobalHeatmapProps {
   selectedDate: string;
   onSelectDate: (date: string) => void;
   weeksCount?: number;
+  footerSlot?: React.ReactNode;
 }
 
 export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
@@ -37,6 +38,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
   selectedDate,
   onSelectDate,
   weeksCount = 20,
+  footerSlot,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { theme } = useThemeStore();
@@ -158,12 +160,11 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
           <div className={styles.monthLabelsRow}>
             {weeks.map((week, idx) => {
               if (week.monthLabel) {
-                const leftPos = idx * 15;
                 return (
                   <span
                     key={`month_${idx}`}
                     className={styles.monthLabel}
-                    style={{ left: `${leftPos}px` }}
+                    style={{ left: `calc(${idx} * var(--col-step, 15px))` }}
                   >
                     {week.monthLabel}
                   </span>
@@ -258,6 +259,12 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = ({
           <span>{t('stats.more')}</span>
         </div>
       </div>
+
+      {footerSlot && (
+        <div className={styles.footerSlotWrapper}>
+          {footerSlot}
+        </div>
+      )}
     </div>
   );
 };

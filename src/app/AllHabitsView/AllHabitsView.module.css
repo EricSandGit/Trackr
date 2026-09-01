@@ -1,9 +1,38 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: calc(var(--tk-space-4) + var(--tk-safe-top)) var(--tk-space-4) calc(var(--tk-space-8) + var(--tk-safe-bottom));
+  min-height: calc(100vh - 61px);
+  padding: var(--tk-space-5) var(--tk-space-6);
   gap: var(--tk-space-4);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--tk-space-3);
+    gap: var(--tk-space-3);
+  }
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--tk-space-1);
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--tk-text-primary);
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: var(--tk-text-secondary);
+  margin: 2px 0 0 0;
 }
 
 .topBar {
@@ -477,9 +506,16 @@
 
 /* Habits Catalog List */
 .habitsList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--tk-space-3);
+}
+
+@media (min-width: 768px) {
+  .habitsList {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--tk-space-4);
+  }
 }
 
 /* Detailed Catalog Habit Card */

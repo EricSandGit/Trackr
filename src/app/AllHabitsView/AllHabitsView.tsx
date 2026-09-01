@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   Plus,
-  Settings,
   Search,
-  Layers,
   ArrowUpDown,
   Calendar,
   Flame,
@@ -15,7 +13,6 @@ import {
   X,
   Tag,
   CheckCircle2,
-  CalendarDays,
   ShieldAlert,
   Activity,
   SlidersHorizontal,
@@ -24,23 +21,16 @@ import { Habit, HabitType, CURATED_HABIT_CATEGORIES } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
 import { useI18nStore } from '@/core/i18n';
-import { UserAccountButton } from '@/features/auth';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { Button } from '@/core/ui/Button';
 import { calculateHabitIndividualStats } from '@/features/stats/logic/streakCalculator';
 import { isHabitScheduledOnDate } from '@/features/heatmap/logic/heatmapCalculator';
 import styles from './AllHabitsView.module.css';
 
-const HabitFormModal = React.lazy(() =>
-  import('@/features/habits').then((m) => ({ default: m.HabitFormModal }))
-);
-const SettingsModal = React.lazy(() =>
-  import('@/features/settings').then((m) => ({ default: m.SettingsModal }))
-);
-
 export interface AllHabitsViewProps {
   onOpenHabitDetail: (habit: Habit) => void;
-  onSwitchToDailyView: () => void;
+  onOpenCreateHabit?: () => void;
+  initialCategory?: string;
 }
 
 type SortOption =
@@ -55,28 +45,26 @@ type StatusFilter = 'all' | 'active' | 'archived';
 
 export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
   onOpenHabitDetail,
-  onSwitchToDailyView,
+  onOpenCreateHabit,
+  initialCategory,
 }) => {
-  const { habits, loadHabits, createHabit } = useHabitsStore();
-  const { logs, selectedDate, loadLogs } = useLogsStore();
+  const { habits } = useHabitsStore();
+  const { logs, selectedDate } = useLogsStore();
   const { t, language } = useI18nStore();
-
-  // Modals state
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-
-  const handleDataResetOrImported = async () => {
-    await loadHabits();
-    await loadLogs();
-  };
 
   // Filter expansion & search state
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>(initialCategory || 'all');
   const [typeFilter, setTypeFilter] = useState<'all' | HabitType>('all');
   const [sortBy, setSortBy] = useState<SortOption>('newest');
+
+  React.useEffect(() => {
+    if (initialCategory) {
+      setCategoryFilter(initialCategory);
+    }
+  }, [initialCategory]);
 
   // Count non-default active filters
   const activeFiltersCount = useMemo(() => {
@@ -259,63 +247,14 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
 
   return (
     <div className={styles.container}>
-      {/* Top Header */}
-      <header className={styles.topBar}>
-        <div className={styles.brand}>
-          <div className={styles.brandIcon}>
-            <div className={styles.brandIconDot} style={{ backgroundColor: '#238636' }} />
-            <div className={styles.brandIconDot} style={{ backgroundColor: '#39d353' }} />
-            <div className={styles.brandIconDot} style={{ backgroundColor: '#0e4429' }} />
-            <div className={styles.brandIconDot} style={{ backgroundColor: '#2ea043' }} />
-          </div>
-          <h1 className={styles.brandTitle}>Trackr</h1>
-          <span className={styles.brandCountBadge}>
+      {/* Page Title & Stats Header */}
+      <div className={styles.pageHeader}>
+        <div>
+          <h2 className={styles.pageTitle}>{t('allHabits.title')}</h2>
+          <p className={styles.pageSubtitle}>
             {t('allHabits.subtitle', { active: activeCount, archived: archivedCount })}
-          </span>
+          </p>
         </div>
-
-        <div className={styles.topActions}>
-          <UserAccountButton />
-
-          <button
-            className={styles.actionBtn}
-            onClick={() => setIsSettingsModalOpen(true)}
-            aria-label={t('nav.settings')}
-            title={t('nav.settings')}
-          >
-            <Settings size={18} />
-          </button>
-
-          <button
-            className={`${styles.actionBtn} ${styles.createBtn}`}
-            onClick={() => setIsCreateModalOpen(true)}
-            aria-label={t('nav.newHabit')}
-            title={t('nav.newHabit')}
-          >
-            <Plus size={20} strokeWidth={2.5} />
-          </button>
-        </div>
-      </header>
-
-      {/* Main Tab Switcher between Daily & All Habits */}
-      <div className={styles.viewSwitcher}>
-        <button
-          type="button"
-          className={styles.viewTab}
-          onClick={onSwitchToDailyView}
-        >
-          <CalendarDays size={16} />
-          <span>{t('allHabits.navDailyView')}</span>
-        </button>
-
-        <button
-          type="button"
-          className={`${styles.viewTab} ${styles.viewTabActive}`}
-        >
-          <Layers size={16} />
-          <span>{t('allHabits.navAllHabitsView')}</span>
-          <span className={styles.viewTabBadge}>{habits.length}</span>
-        </button>
       </div>
 
       {/* Live Search Bar and Filter Toggle Button */}
@@ -501,7 +440,7 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
             variant="primary"
             size="md"
             leftIcon={<Plus size={16} />}
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={onOpenCreateHabit || (() => {})}
           >
             {t('home.createHabit')}
           </Button>
@@ -652,30 +591,6 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
             );
           })}
         </div>
-      )}
-
-      {/* Create Habit Modal */}
-      {isCreateModalOpen && (
-        <React.Suspense fallback={null}>
-          <HabitFormModal
-            isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
-            onSubmit={async (input) => {
-              await createHabit(input as any);
-            }}
-          />
-        </React.Suspense>
-      )}
-
-      {/* Settings & Backup Modal */}
-      {isSettingsModalOpen && (
-        <React.Suspense fallback={null}>
-          <SettingsModal
-            isOpen={isSettingsModalOpen}
-            onClose={() => setIsSettingsModalOpen(false)}
-            onDataResetOrImported={handleDataResetOrImported}
-          />
-        </React.Suspense>
       )}
     </div>
   );
