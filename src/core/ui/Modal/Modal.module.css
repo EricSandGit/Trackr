@@ -5,8 +5,8 @@
   right: 0;
   bottom: 0;
   background-color: var(--tk-bg-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 1200;
   display: flex;
   justify-content: center;
@@ -19,20 +19,43 @@
 
 .modal {
   width: 100%;
-  max-width: 480px;
   background-color: var(--tk-bg-surface);
-  border-radius: var(--tk-radius-lg);
+  border-radius: var(--tk-radius-xl);
   border: 1px solid var(--tk-border-default);
   box-shadow: var(--tk-shadow-lg);
-  padding: var(--tk-space-5);
+  padding: var(--tk-space-4) var(--tk-space-5);
   animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
+  max-height: 88vh;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
+  box-sizing: border-box;
+}
+
+@media (min-width: 601px) {
+  .modal {
+    padding: var(--tk-space-5) var(--tk-space-6);
+  }
+}
+
+/* Modal Size Variants */
+.sm {
+  max-width: 480px;
+}
+
+.md {
+  max-width: 600px;
+}
+
+.lg {
+  max-width: 780px;
+}
+
+.xl {
+  max-width: 900px;
 }
 
 .header {
@@ -40,28 +63,35 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--tk-space-4);
+  padding-bottom: var(--tk-space-3);
+  border-bottom: 1px solid var(--tk-border-muted);
 }
 
 .title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--tk-text-primary);
+  letter-spacing: -0.3px;
 }
 
 .closeButton {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--tk-radius-full);
   color: var(--tk-text-secondary);
   background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
 }
 
 .closeButton:hover {
   background-color: var(--tk-bg-surface-hover);
   color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
 }
 
 @keyframes fadeIn {

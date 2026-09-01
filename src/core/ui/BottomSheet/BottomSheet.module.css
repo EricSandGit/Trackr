@@ -5,8 +5,8 @@
   right: 0;
   bottom: 0;
   background-color: var(--tk-bg-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -14,11 +14,19 @@
   animation: fadeIn 0.2s ease-out;
   overscroll-behavior: contain;
   touch-action: none;
+  padding: 0;
+}
+
+@media (min-width: 601px) {
+  .overlay {
+    align-items: center;
+    padding: var(--tk-space-4);
+  }
 }
 
 .sheet {
   width: 100%;
-  max-width: 540px;
+  max-width: 620px;
   background-color: var(--tk-bg-surface);
   border-top-left-radius: var(--tk-radius-xl);
   border-top-right-radius: var(--tk-radius-xl);
@@ -34,6 +42,16 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
+  box-sizing: border-box;
+}
+
+@media (min-width: 601px) {
+  .sheet {
+    border-radius: var(--tk-radius-xl);
+    border-bottom: 1px solid var(--tk-border-default);
+    padding: var(--tk-space-5) var(--tk-space-6);
+    animation: modalPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 
 .handleBar {
@@ -45,6 +63,12 @@
   flex-shrink: 0;
 }
 
+@media (min-width: 601px) {
+  .handleBar {
+    display: none;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -53,25 +77,30 @@
 }
 
 .title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 19px;
+  font-weight: 800;
   color: var(--tk-text-primary);
+  letter-spacing: -0.3px;
 }
 
 .closeButton {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--tk-radius-full);
   color: var(--tk-text-secondary);
   background-color: var(--tk-bg-surface-elevated);
+  border: 1px solid var(--tk-border-default);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
 }
 
 .closeButton:hover {
   background-color: var(--tk-bg-surface-hover);
   color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
 }
 
 @keyframes fadeIn {
@@ -89,5 +118,16 @@
   }
   to {
     transform: translateY(0);
+  }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
