@@ -32,16 +32,18 @@ export interface HabitDetailViewProps {
 }
 
 export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBack }) => {
-  const { habits, updateHabit, toggleArchiveHabit, deleteHabit } = useHabitsStore();
-  const {
-    logs,
-    selectedDate,
-    setSelectedDate,
-    toggleBooleanHabit,
-    toggleAvoidanceHabit,
-    addQuantitativeVolume,
-    setDirectQuantitativeValue,
-  } = useLogsStore();
+  const habits = useHabitsStore((s) => s.habits);
+  const updateHabit = useHabitsStore((s) => s.updateHabit);
+  const toggleArchiveHabit = useHabitsStore((s) => s.toggleArchiveHabit);
+  const deleteHabit = useHabitsStore((s) => s.deleteHabit);
+
+  const logs = useLogsStore((s) => s.logs);
+  const selectedDate = useLogsStore((s) => s.selectedDate);
+  const setSelectedDate = useLogsStore((s) => s.setSelectedDate);
+  const toggleBooleanHabit = useLogsStore((s) => s.toggleBooleanHabit);
+  const toggleAvoidanceHabit = useLogsStore((s) => s.toggleAvoidanceHabit);
+  const addQuantitativeVolume = useLogsStore((s) => s.addQuantitativeVolume);
+  const setDirectQuantitativeValue = useLogsStore((s) => s.setDirectQuantitativeValue);
   const { t, formatRelativeDate } = useI18nStore();
 
   const [showAnnualHeatmap, setShowAnnualHeatmap] = useState(false);

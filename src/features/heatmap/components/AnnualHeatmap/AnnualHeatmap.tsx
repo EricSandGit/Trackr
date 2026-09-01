@@ -16,7 +16,7 @@ export interface AnnualHeatmapProps {
   onSelectDate: (date: string) => void;
 }
 
-export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
+export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
   habit,
   logs,
   onSelectDate,
@@ -173,4 +173,4 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = ({
       </div>
     </div>
   );
-};
+});

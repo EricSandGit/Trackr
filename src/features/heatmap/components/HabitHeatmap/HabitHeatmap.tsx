@@ -18,7 +18,7 @@ export interface HabitHeatmapProps {
   weeksCount?: number;
 }
 
-export const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
+export const HabitHeatmap: React.FC<HabitHeatmapProps> = React.memo(({
   habit,
   logs,
   selectedDate,
@@ -181,4 +181,4 @@ export const HabitHeatmap: React.FC<HabitHeatmapProps> = ({
       </div>
     </div>
   );
-};
+});

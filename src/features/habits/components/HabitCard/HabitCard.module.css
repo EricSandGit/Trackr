@@ -13,6 +13,8 @@
   overflow: hidden;
   min-height: 86px;
   box-sizing: border-box;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 86px;
 }
 
 .card:hover {
