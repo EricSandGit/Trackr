@@ -1,4 +1,4 @@
-export type LanguageCode = 'es' | 'en';
+export type LanguageCode = 'es' | 'en' | 'pt' | 'fr' | 'de' | 'it';
 
 export interface LanguageOption {
   code: LanguageCode;
@@ -352,6 +352,10 @@ export interface TranslationSchema {
   languages: {
     es: string;
     en: string;
+    pt: string;
+    fr: string;
+    de: string;
+    it: string;
     [code: string]: string;
   };
 }
@@ -359,4 +363,8 @@ export interface TranslationSchema {
 export const SUPPORTED_LANGUAGES: LanguageOption[] = [
   { code: 'es', label: 'Español', nativeName: 'Español', flag: '🇪🇸' },
   { code: 'en', label: 'Inglés', nativeName: 'English', flag: '🇺🇸' },
+  { code: 'pt', label: 'Portugués', nativeName: 'Português', flag: '🇧🇷' },
+  { code: 'fr', label: 'Francés', nativeName: 'Français', flag: '🇫🇷' },
+  { code: 'de', label: 'Alemán', nativeName: 'Deutsch', flag: '🇩🇪' },
+  { code: 'it', label: 'Italiano', nativeName: 'Italiano', flag: '🇮🇹' },
 ];

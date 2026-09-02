@@ -2,11 +2,28 @@ import { create } from 'zustand';
 import { LanguageCode, LanguageOption, TranslationSchema, SUPPORTED_LANGUAGES } from './types';
 import { es } from './locales/es';
 import { en } from './locales/en';
+import { pt } from './locales/pt';
+import { fr } from './locales/fr';
+import { de } from './locales/de';
+import { it } from './locales/it';
 import { parseISODate, isToday, isYesterday } from '../utils/dateUtils';
 
 const DICTIONARIES: Record<LanguageCode, TranslationSchema> = {
   es,
   en,
+  pt,
+  fr,
+  de,
+  it,
+};
+
+const LOCALE_MAP: Record<LanguageCode, string> = {
+  es: 'es-ES',
+  en: 'en-US',
+  pt: 'pt-BR',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  it: 'it-IT',
 };
 
 const LANGUAGE_STORAGE_KEY = 'tk_language_preference';
@@ -98,7 +115,7 @@ export const useI18nStore = create<I18nState>((set, get) => {
       if (isYesterday(dateStr)) return t('common.yesterday');
 
       const date = parseISODate(dateStr);
-      const locale = language === 'en' ? 'en-US' : 'es-ES';
+      const locale = LOCALE_MAP[language] || 'es-ES';
       const options: Intl.DateTimeFormatOptions =
         format === 'long'
           ? { weekday: 'long', day: 'numeric', month: 'long' }
@@ -110,7 +127,7 @@ export const useI18nStore = create<I18nState>((set, get) => {
 
     formatMonthName: (year: number, monthIndex: number) => {
       const { language } = get();
-      const locale = language === 'en' ? 'en-US' : 'es-ES';
+      const locale = LOCALE_MAP[language] || 'es-ES';
       const date = new Date(year, monthIndex, 1);
       const name = date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
       return name.charAt(0).toUpperCase() + name.slice(1);
@@ -118,7 +135,7 @@ export const useI18nStore = create<I18nState>((set, get) => {
 
     formatFullDate: (dateStr: string) => {
       const { language } = get();
-      const locale = language === 'en' ? 'en-US' : 'es-ES';
+      const locale = LOCALE_MAP[language] || 'es-ES';
       const date = parseISODate(dateStr);
       const formatted = date.toLocaleDateString(locale, {
         weekday: 'short',
