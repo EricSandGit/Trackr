@@ -156,6 +156,14 @@
   pointer-events: none;
 }
 
+.outOfRangeCell {
+  background-color: var(--tk-cell-locked) !important;
+  border: 1px solid var(--tk-cell-locked-border) !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 1;
+}
+
 .selectedCell {
   border-color: #58a6ff !important;
   box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.4);

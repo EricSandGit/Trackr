@@ -102,7 +102,8 @@ export const HabitHeatmap: React.FC<HabitHeatmapProps> = React.memo(({
             {weeks.map((week) => (
               <div key={week.weekIndex} className={styles.weekCol}>
                 {week.days.map((day) => {
-                  const isSelected = day.date === selectedDate;
+                  const isOutOfRange = (habit.startDate && day.date < habit.startDate) || (habit.endDate && day.date > habit.endDate);
+                  const isSelected = !isOutOfRange && day.date === selectedDate;
                   const log = logsMap.get(day.date);
                   const { level, isRecord, value } = calculateHabitDayIntensity(
                     day.date,
@@ -110,17 +111,18 @@ export const HabitHeatmap: React.FC<HabitHeatmapProps> = React.memo(({
                     log
                   );
 
-                  const cellColor = level > 0
+                  const cellColor = level > 0 && !isOutOfRange
                     ? getHabitCustomColorShade(habitColor, level, isDark)
                     : undefined;
 
-                  const isRelapseDay = habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
+                  const isRelapseDay = !isOutOfRange && habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
 
                   const cellClasses = [
                     styles.cell,
                     day.isFuture ? styles.futureCell : '',
+                    isOutOfRange ? styles.outOfRangeCell : '',
                     isSelected ? styles.selectedCell : '',
-                    isRecord ? styles.recordCell : '',
+                    isRecord && !isOutOfRange ? styles.recordCell : '',
                     isRelapseDay ? styles.relapseCell : '',
                   ]
                     .filter(Boolean)
@@ -128,6 +130,8 @@ export const HabitHeatmap: React.FC<HabitHeatmapProps> = React.memo(({
 
                   const tooltipText = day.isFuture
                     ? ''
+                    : isOutOfRange
+                    ? `${day.date} (${language === 'en' ? 'Outside period' : 'Fuera del periodo'})`
                     : habit.type === 'quantitative'
                     ? `${day.date}: ${value} ${habit.unit || ''}`
                     : habit.type === 'avoidance'
@@ -140,7 +144,7 @@ export const HabitHeatmap: React.FC<HabitHeatmapProps> = React.memo(({
                       className={cellClasses}
                       style={{ backgroundColor: cellColor }}
                       title={tooltipText}
-                      onClick={() => !day.isFuture && onSelectDate(day.date)}
+                      onClick={() => !day.isFuture && !isOutOfRange && onSelectDate(day.date)}
                     />
                   );
                 })}
