@@ -294,7 +294,9 @@ export interface TranslationSchema {
     themeDesc: string;
     themes: {
       dark: string;
+      zinc: string;
       light: string;
+      slate: string;
       warm: string;
     };
     backupSectionTitle: string;

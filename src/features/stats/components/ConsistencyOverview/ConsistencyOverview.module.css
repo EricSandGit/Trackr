@@ -366,8 +366,8 @@
 }
 
 .highlightMetaLine strong {
-  color: var(--tk-text-primary);
-  font-weight: 700;
+  color: var(--tk-text-bold, var(--tk-text-primary));
+  font-weight: 600;
 }
 
 /* Bottom stats & progress */

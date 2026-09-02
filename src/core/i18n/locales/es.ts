@@ -286,8 +286,10 @@ export const es: TranslationSchema = {
     themeSectionTitle: 'Tema Visual',
     themeDesc: 'Selecciona la apariencia y paleta de colores de la aplicación:',
     themes: {
-      dark: 'Oscuro',
+      dark: 'Grafito',
+      zinc: 'Zinc',
       light: 'Claro',
+      slate: 'Slate',
       warm: 'Cálido',
     },
     backupSectionTitle: 'Respaldo de Datos (JSON)',

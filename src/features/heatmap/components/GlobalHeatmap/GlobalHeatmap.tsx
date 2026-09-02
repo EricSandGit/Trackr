@@ -52,12 +52,31 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
     return '#39d353';
   });
 
+  const [recordColor, setRecordColor] = useState<'gold' | 'silver'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tk_record_color') as 'gold' | 'silver';
+      if (saved === 'gold' || saved === 'silver') {
+        document.documentElement.setAttribute('data-record-color', saved);
+        return saved;
+      }
+    }
+    return 'gold';
+  });
+
   const [showColorPopover, setShowColorPopover] = useState(false);
 
   const handleColorChange = (hex: string) => {
     setGlobalColor(hex);
     if (typeof window !== 'undefined') {
       localStorage.setItem(GLOBAL_COLOR_STORAGE_KEY, hex);
+    }
+  };
+
+  const handleRecordColorChange = (color: 'gold' | 'silver') => {
+    setRecordColor(color);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tk_record_color', color);
+      document.documentElement.setAttribute('data-record-color', color);
     }
   };
 
@@ -147,6 +166,29 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
                     value={globalColor}
                     onChange={(e) => handleColorChange(e.target.value)}
                   />
+                </div>
+
+                {/* Record Glow Color: Gold vs Silver */}
+                <div className={styles.recordColorSection}>
+                  <span className={styles.recordColorTitle}>Borde de Récord</span>
+                  <div className={styles.recordColorGrid}>
+                    <button
+                      type="button"
+                      className={`${styles.recordColorBtn} ${recordColor === 'gold' ? styles.recordColorBtnActive : ''}`}
+                      onClick={() => handleRecordColorChange('gold')}
+                    >
+                      <span>🏆</span>
+                      <span>Dorado</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.recordColorBtn} ${recordColor === 'silver' ? styles.recordColorBtnActive : ''}`}
+                      onClick={() => handleRecordColorChange('silver')}
+                    >
+                      <span>🥈</span>
+                      <span>Plateado</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </>

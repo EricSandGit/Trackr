@@ -286,8 +286,10 @@ export const en: TranslationSchema = {
     themeSectionTitle: 'Visual Theme',
     themeDesc: 'Choose application appearance and color palette:',
     themes: {
-      dark: 'Dark',
+      dark: 'Graphite',
+      zinc: 'Zinc',
       light: 'Light',
+      slate: 'Slate',
       warm: 'Warm',
     },
     backupSectionTitle: 'Data Backup (JSON)',

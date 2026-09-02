@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ThemeMode = 'dark' | 'light' | 'warm';
+export type ThemeMode = 'dark' | 'zinc' | 'light' | 'slate' | 'warm';
 
 interface ThemeState {
   theme: ThemeMode;
@@ -13,7 +13,15 @@ const THEME_STORAGE_KEY = 'tk_theme_mode';
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') return 'dark';
   const saved = localStorage.getItem(THEME_STORAGE_KEY);
-  if (saved === 'dark' || saved === 'light' || saved === 'warm') return saved;
+  if (
+    saved === 'dark' ||
+    saved === 'zinc' ||
+    saved === 'light' ||
+    saved === 'slate' ||
+    saved === 'warm'
+  ) {
+    return saved;
+  }
   return 'dark';
 }
 
@@ -24,11 +32,17 @@ function applyThemeToDom(theme: ThemeMode) {
   if (meta) {
     const themeColorMap: Record<ThemeMode, string> = {
       dark: '#121317',
+      zinc: '#09090b',
+      slate: '#0a0f1d',
       light: '#f8f9fb',
       warm: '#f5efe6',
     };
-    meta.setAttribute('content', themeColorMap[theme]);
+    meta.setAttribute('content', themeColorMap[theme] || '#121317');
   }
+
+  // Ensure record color attribute is active
+  const savedRecordColor = localStorage.getItem('tk_record_color') || 'gold';
+  document.documentElement.setAttribute('data-record-color', savedRecordColor);
 }
 
 export const useThemeStore = create<ThemeState>((set) => {
@@ -44,10 +58,9 @@ export const useThemeStore = create<ThemeState>((set) => {
     },
     toggleTheme: () => {
       set((state) => {
-        let next: ThemeMode;
-        if (state.theme === 'dark') next = 'light';
-        else if (state.theme === 'light') next = 'warm';
-        else next = 'dark';
+        const order: ThemeMode[] = ['dark', 'zinc', 'light', 'slate', 'warm'];
+        const currentIndex = order.indexOf(state.theme);
+        const next = order[(currentIndex + 1) % order.length];
 
         localStorage.setItem(THEME_STORAGE_KEY, next);
         applyThemeToDom(next);

@@ -5,6 +5,8 @@ import {
   Moon,
   Sun,
   Flame,
+  Layers,
+  Sparkles,
   RotateCcw,
   Shield,
   Smartphone,
@@ -70,7 +72,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const THEMES: Array<{ id: ThemeMode; label: string; icon: React.ReactNode }> = [
     { id: 'dark', label: t('settings.themes.dark'), icon: <Moon size={16} /> },
+    { id: 'zinc', label: t('settings.themes.zinc'), icon: <Layers size={16} /> },
     { id: 'light', label: t('settings.themes.light'), icon: <Sun size={16} /> },
+    { id: 'slate', label: t('settings.themes.slate'), icon: <Sparkles size={16} /> },
     { id: 'warm', label: t('settings.themes.warm'), icon: <Flame size={16} /> },
   ];
 

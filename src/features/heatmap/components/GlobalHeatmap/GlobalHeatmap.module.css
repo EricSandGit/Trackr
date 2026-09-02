@@ -205,6 +205,57 @@
   border-radius: var(--tk-radius-sm);
 }
 
+.recordColorSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tk-border-muted);
+}
+
+.recordColorTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tk-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.recordColorGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.recordColorBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--tk-radius-sm);
+  background-color: var(--tk-bg-surface);
+  border: 1.5px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.recordColorBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
+}
+
+.recordColorBtnActive {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
+  box-shadow: 0 0 0 1px var(--tk-border-focus);
+}
+
 /* Scroll Area: No scrollbar, completely visible on desktop */
 .scrollArea {
   width: 100%;
