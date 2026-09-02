@@ -90,6 +90,17 @@ export const App: React.FC = () => {
     };
     window.addEventListener('resize', handleResize);
 
+    // Smoothly dismiss splash screen once mounted
+    const splash = document.getElementById('splash-screen');
+    if (splash) {
+      setTimeout(() => {
+        splash.classList.add('splash-fade-out');
+        setTimeout(() => {
+          splash.remove();
+        }, 450);
+      }, 350);
+    }
+
     return () => {
       window.removeEventListener('hashchange', checkLegalRoute);
       window.removeEventListener('resize', handleResize);
