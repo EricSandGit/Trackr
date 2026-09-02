@@ -261,41 +261,62 @@
 }
 
 .buttonGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--tk-space-2);
-  margin-top: 4px;
+  margin-top: 6px;
   width: 100%;
   box-sizing: border-box;
 }
 
-@media (max-width: 380px) {
+@media (min-width: 580px) {
   .buttonGrid {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
+.buttonGrid button,
 .buttonGrid > * {
-  width: 100%;
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  word-break: break-word;
+  text-align: center;
+  line-height: 1.3;
+  padding: 8px 12px;
+  height: auto !important;
+  min-height: 38px;
   box-sizing: border-box;
 }
 
 .actions {
   display: flex;
+  flex-direction: column;
   gap: var(--tk-space-2);
   width: 100%;
   box-sizing: border-box;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-@media (max-width: 380px) {
+@media (min-width: 580px) {
   .actions {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
+.actions button,
 .actions > * {
-  width: 100%;
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  word-break: break-word;
+  text-align: center;
+  line-height: 1.3;
+  padding: 8px 12px;
+  height: auto !important;
+  min-height: 38px;
   box-sizing: border-box;
 }
 
