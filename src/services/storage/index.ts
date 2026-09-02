@@ -1,17 +1,26 @@
 import { IStorageAdapter } from './IStorageAdapter';
 import { LocalStorageAdapter } from './LocalStorageAdapter';
+import { IndexedDbStorageAdapter } from './IndexedDbStorageAdapter';
 import { SupabaseStorageAdapter } from './SupabaseStorageAdapter';
 import { JsonBackupService } from './JsonBackupService';
+import { CsvExportService } from './CsvExportService';
 
 export * from './IStorageAdapter';
 export * from './LocalStorageAdapter';
+export * from './IndexedDbStorageAdapter';
 export * from './SupabaseStorageAdapter';
 export * from './JsonBackupService';
+export * from './CsvExportService';
 
 export class DynamicStorageManager implements IStorageAdapter {
+  private indexedDbAdapter: IndexedDbStorageAdapter;
   private localAdapter = new LocalStorageAdapter();
   private supabaseAdapter = new SupabaseStorageAdapter();
   private activeMode: 'local' | 'supabase' = 'local';
+
+  constructor() {
+    this.indexedDbAdapter = new IndexedDbStorageAdapter();
+  }
 
   public setMode(mode: 'local' | 'supabase') {
     this.activeMode = mode;
@@ -22,10 +31,20 @@ export class DynamicStorageManager implements IStorageAdapter {
   }
 
   public getActiveAdapter(): IStorageAdapter {
-    return this.activeMode === 'supabase' ? this.supabaseAdapter : this.localAdapter;
+    if (this.activeMode === 'supabase') {
+      return this.supabaseAdapter;
+    }
+    // Prefer modern IndexedDB; if unsupported, fallback to LocalStorage
+    if (typeof window !== 'undefined' && 'indexedDB' in window) {
+      return this.indexedDbAdapter;
+    }
+    return this.localAdapter;
   }
 
-  public getLocalAdapter(): LocalStorageAdapter {
+  public getLocalAdapter(): IStorageAdapter {
+    if (typeof window !== 'undefined' && 'indexedDB' in window) {
+      return this.indexedDbAdapter;
+    }
     return this.localAdapter;
   }
 
@@ -77,3 +96,4 @@ export class DynamicStorageManager implements IStorageAdapter {
 export const storageManager = new DynamicStorageManager();
 export const storageAdapter: IStorageAdapter = storageManager;
 export const jsonBackupService: JsonBackupService = new JsonBackupService(storageAdapter);
+export const csvExportService: CsvExportService = new CsvExportService(storageAdapter);
