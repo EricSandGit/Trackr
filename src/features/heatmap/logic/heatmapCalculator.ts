@@ -8,10 +8,22 @@ import { parseISODate, formatDateToISO } from '@/core/utils/dateUtils';
 export function isHabitScheduledOnDate(habit: Habit, dateStr: string): boolean {
   if (habit.isArchived) return false;
 
-  // A habit cannot be scheduled before it was created
-  const createdDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : '';
-  if (createdDateStr && dateStr < createdDateStr) {
+  // Check explicit start date
+  if (habit.startDate && dateStr < habit.startDate) {
     return false;
+  }
+
+  // Check explicit end date
+  if (habit.endDate && dateStr > habit.endDate) {
+    return false;
+  }
+
+  // A habit cannot be scheduled before it was created (if no startDate is set)
+  if (!habit.startDate) {
+    const createdDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : '';
+    if (createdDateStr && dateStr < createdDateStr) {
+      return false;
+    }
   }
 
   // Casual activities are not scheduled on fixed days
@@ -49,9 +61,12 @@ export function isHabitSuccessfulOnDate(
   if (!isHabitScheduledOnDate(habit, dateStr)) return false;
 
   if (habit.type === 'avoidance') {
-    const createdDateStr = habit.createdAt ? habit.createdAt.slice(0, 10) : '';
-    // Avoidance habits only track from their creation date onwards
-    if (createdDateStr && dateStr < createdDateStr) {
+    const effectiveStartDate = habit.startDate || (habit.createdAt ? habit.createdAt.slice(0, 10) : '');
+    // Avoidance habits only track from their start/creation date onwards
+    if (effectiveStartDate && dateStr < effectiveStartDate) {
+      return false;
+    }
+    if (habit.endDate && dateStr > habit.endDate) {
       return false;
     }
 
@@ -151,6 +166,10 @@ export function calculateHabitDayIntensity(
   habit: Habit,
   log?: DailyActivityLog
 ): { level: 0 | 1 | 2 | 3 | 4; isRecord: boolean; isCompleted: boolean; value: number } {
+  if ((habit.startDate && date < habit.startDate) || (habit.endDate && date > habit.endDate)) {
+    return { level: 0, isRecord: false, isCompleted: false, value: 0 };
+  }
+
   if (habit.type === 'avoidance') {
     const isCompleted = isHabitSuccessfulOnDate(habit, date, log);
     return {

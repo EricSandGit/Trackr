@@ -34,6 +34,8 @@ export interface Habit {
   weeklyGoal?: number; // Target for the week (e.g. 5 days or 140 págs)
   monthlyGoal?: number; // Target for the month (e.g. 20 days or 600 págs)
   frequency: HabitFrequency;
+  startDate?: string; // ISO String 'YYYY-MM-DD' - Start date of the habit/challenge
+  endDate?: string; // ISO String 'YYYY-MM-DD' - End date of the habit/challenge (optional)
   isArchived: boolean;
   createdAt: string; // ISO String
   updatedAt: string; // ISO String

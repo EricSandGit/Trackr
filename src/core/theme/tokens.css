@@ -24,6 +24,8 @@
 
   --tk-cell-empty: #18181b;
   --tk-cell-border: rgba(255, 255, 255, 0.06);
+  --tk-cell-locked: #4b5563;
+  --tk-cell-locked-border: #6b7280;
   --tk-cell-level-1: #0e4429;
   --tk-cell-level-2: #006d32;
   --tk-cell-level-3: #26a641;
@@ -102,6 +104,8 @@
 
   --tk-cell-empty: #1c1e24;
   --tk-cell-border: rgba(240, 246, 252, 0.06);
+  --tk-cell-locked: #4b5563;
+  --tk-cell-locked-border: #6b7280;
   --tk-cell-level-1: #0e4429;
   --tk-cell-level-2: #006d32;
   --tk-cell-level-3: #26a641;
@@ -139,6 +143,8 @@
 
   --tk-cell-empty: #e8ded0;
   --tk-cell-border: rgba(61, 51, 42, 0.08);
+  --tk-cell-locked: #beb3a4;
+  --tk-cell-locked-border: #a89d8d;
   --tk-cell-level-1: #9be9a8;
   --tk-cell-level-2: #40c463;
   --tk-cell-level-3: #30a14e;
@@ -182,6 +188,8 @@
 
   --tk-cell-empty: #e2e8f0;
   --tk-cell-border: rgba(15, 23, 42, 0.08);
+  --tk-cell-locked: #94a3b8;
+  --tk-cell-locked-border: #64748b;
   --tk-cell-level-1: #9be9a8;
   --tk-cell-level-2: #40c463;
   --tk-cell-level-3: #30a14e;
@@ -224,6 +232,8 @@
 
   --tk-cell-empty: #ebedf0;
   --tk-cell-border: rgba(31, 35, 40, 0.08);
+  --tk-cell-locked: #9ca3af;
+  --tk-cell-locked-border: #6b7280;
   --tk-cell-level-1: #9be9a8;
   --tk-cell-level-2: #40c463;
   --tk-cell-level-3: #30a14e;

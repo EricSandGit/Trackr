@@ -13,12 +13,14 @@ import styles from './AnnualHeatmap.module.css';
 export interface AnnualHeatmapProps {
   habit: Habit;
   logs: DailyActivityLog[];
+  selectedDate?: string;
   onSelectDate: (date: string) => void;
 }
 
 export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
   habit,
   logs,
+  selectedDate,
   onSelectDate,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -96,6 +98,8 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
             {weeks.map((week) => (
               <div key={week.weekIndex} className={styles.weekCol}>
                 {week.days.map((day) => {
+                  const isOutOfRange = (habit.startDate && day.date < habit.startDate) || (habit.endDate && day.date > habit.endDate);
+                  const isSelected = !isOutOfRange && day.date === selectedDate;
                   const log = logsMap.get(day.date);
                   const { level, isRecord, value } = calculateHabitDayIntensity(
                     day.date,
@@ -103,14 +107,16 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
                     log
                   );
 
-                  const cellColor = level > 0 ? getHabitCustomColorShade(habitColor, level, isDark) : undefined;
+                  const cellColor = level > 0 && !isOutOfRange ? getHabitCustomColorShade(habitColor, level, isDark) : undefined;
 
-                  const isRelapseDay = habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
+                  const isRelapseDay = !isOutOfRange && habit.type === 'avoidance' && log !== undefined && log.isCompleted === false;
 
                   const cellClasses = [
                     styles.cell,
                     day.isFuture ? styles.futureCell : '',
-                    isRecord ? styles.recordCell : '',
+                    isOutOfRange ? styles.outOfRangeCell : '',
+                    isSelected ? styles.selectedCell : '',
+                    isRecord && !isOutOfRange ? styles.recordCell : '',
                     isRelapseDay ? styles.relapseCell : '',
                   ]
                     .filter(Boolean)
@@ -120,7 +126,11 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
                     backgroundColor: cellColor,
                   };
 
-                  const tooltip = habit.type === 'quantitative'
+                  const tooltip = day.isFuture
+                    ? ''
+                    : isOutOfRange
+                    ? `${day.date} (${language === 'en' ? 'Outside period' : 'Fuera del periodo'})`
+                    : habit.type === 'quantitative'
                     ? `${day.date}: ${value} ${habit.unit || ''}`
                     : habit.type === 'avoidance'
                     ? `${day.date}: ${isRelapseDay ? 'Recaída' : 'Día limpio'}`
@@ -132,7 +142,7 @@ export const AnnualHeatmap: React.FC<AnnualHeatmapProps> = React.memo(({
                       className={cellClasses}
                       style={style}
                       title={tooltip}
-                      onClick={() => !day.isFuture && onSelectDate(day.date)}
+                      onClick={() => !day.isFuture && !isOutOfRange && onSelectDate(day.date)}
                     />
                   );
                 })}

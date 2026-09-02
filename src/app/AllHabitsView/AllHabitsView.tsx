@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   Activity,
   SlidersHorizontal,
+  Flag,
 } from 'lucide-react';
 import { Habit, HabitType, CURATED_HABIT_CATEGORIES } from '@/core/types';
 import { useHabitsStore } from '@/features/habits';
@@ -512,6 +513,12 @@ export const AllHabitsView: React.FC<AllHabitsViewProps> = ({
                         <Calendar size={11} />
                         {getFrequencyLabel(habit)}
                       </span>
+                      {(habit.startDate || habit.endDate) && (
+                        <span className={styles.freqBadge} style={{ color: 'var(--tk-accent)', borderColor: 'var(--tk-accent)' }}>
+                          <Flag size={10} />
+                          {habit.startDate || ''} — {habit.endDate || '∞'}
+                        </span>
+                      )}
                       {!habit.isArchived && (
                         <span
                           style={{

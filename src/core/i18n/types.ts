@@ -124,6 +124,11 @@ export interface TranslationSchema {
     relapse: string;
     markRelapse: string;
     undoRelapse: string;
+    challengeActive: string;
+    challengeCompleted: string;
+    challengeUpcoming: string;
+    challengeDaysLeft: string;
+    dateRangeBadge: string;
   };
   habitDetail: {
     notFound: string;
@@ -153,6 +158,10 @@ export interface TranslationSchema {
     backToToday: string;
     everyday: string;
     selectedDaysFreq: string;
+    dateRangeLabel: string;
+    challengeStatusActive: string;
+    challengeStatusCompleted: string;
+    challengeStatusUpcoming: string;
   };
   badges: {
     currentStreak: string;
@@ -212,6 +221,20 @@ export interface TranslationSchema {
     weeklyGoalLabelQuantitative: string;
     monthlyGoalLabelBoolean: string;
     monthlyGoalLabelQuantitative: string;
+    durationTitle: string;
+    durationContinuous: string;
+    durationContinuousDesc: string;
+    durationDateRange: string;
+    durationDateRangeDesc: string;
+    startDateLabel: string;
+    endDateLabel: string;
+    quickDurationsTitle: string;
+    duration1Week: string;
+    duration30Days: string;
+    duration3Months: string;
+    duration6Months: string;
+    duration1Year: string;
+    invalidDateRange: string;
     frequencyLabel: string;
     frequencyEveryday: string;
     frequencySpecificDays: string;

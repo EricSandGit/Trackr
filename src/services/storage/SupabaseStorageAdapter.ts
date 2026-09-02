@@ -32,6 +32,8 @@ export class SupabaseStorageAdapter implements IStorageAdapter {
         daysOfWeek: row.frequency_days || undefined,
       },
       isArchived: row.is_archived || false,
+      startDate: row.start_date || undefined,
+      endDate: row.end_date || undefined,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     }));
@@ -53,6 +55,8 @@ export class SupabaseStorageAdapter implements IStorageAdapter {
       frequency_type: habit.frequency.type,
       frequency_days: habit.frequency.daysOfWeek || null,
       is_archived: habit.isArchived,
+      start_date: habit.startDate || null,
+      end_date: habit.endDate || null,
       created_at: habit.createdAt,
       updated_at: habit.updatedAt || new Date().toISOString(),
     };

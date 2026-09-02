@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Check, CheckSquare, Hash, Target, Sparkles, PenLine, ShieldAlert } from 'lucide-react';
+import {
+  Check,
+  CheckSquare,
+  Sparkles,
+  PenLine,
+  Calendar,
+  Infinity as InfinityIcon,
+  Flag,
+  Target,
+} from 'lucide-react';
 import {
   Habit,
   HabitType,
@@ -13,6 +22,7 @@ import { ColorPicker, CURATED_HABIT_COLORS } from '@/core/ui/ColorPicker';
 import { IconPicker } from '@/core/ui/IconPicker';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { useI18nStore } from '@/core/i18n';
+import { formatDateToISO, shiftDate } from '@/core/utils/dateUtils';
 import styles from './HabitFormModal.module.css';
 
 export interface HabitFormModalProps {
@@ -29,6 +39,8 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   onSubmit,
 }) => {
   const { t } = useI18nStore();
+  const todayStr = formatDateToISO(new Date());
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState('Target');
@@ -42,6 +54,13 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
   const [monthlyGoal, setMonthlyGoal] = useState<string>('');
   const [frequencyType, setFrequencyType] = useState<'everyday' | 'specific_days' | 'casual'>('everyday');
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]); // Mon-Fri
+  
+  // Date Range / Challenge Settings
+  const [hasDateRange, setHasDateRange] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<string>(todayStr);
+  const [endDate, setEndDate] = useState<string>('');
+  const [dateError, setDateError] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -65,6 +84,17 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
       setMonthlyGoal(habitToEdit.monthlyGoal ? String(habitToEdit.monthlyGoal) : '');
       setFrequencyType(habitToEdit.frequency.type);
       setSelectedDays(habitToEdit.frequency.daysOfWeek || [1, 2, 3, 4, 5]);
+
+      if (habitToEdit.startDate || habitToEdit.endDate) {
+        setHasDateRange(true);
+        setStartDate(habitToEdit.startDate || (habitToEdit.createdAt ? habitToEdit.createdAt.slice(0, 10) : todayStr));
+        setEndDate(habitToEdit.endDate || '');
+      } else {
+        setHasDateRange(false);
+        setStartDate(todayStr);
+        setEndDate('');
+      }
+      setDateError(null);
     } else {
       setName('');
       setDescription('');
@@ -79,8 +109,12 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
       setMonthlyGoal('');
       setFrequencyType('everyday');
       setSelectedDays([1, 2, 3, 4, 5]);
+      setHasDateRange(false);
+      setStartDate(todayStr);
+      setEndDate('');
+      setDateError(null);
     }
-  }, [isOpen, habitToEdit]);
+  }, [isOpen, habitToEdit, todayStr]);
 
   const daysLabels = [
     { label: t('habitForm.daysAbbrev.sun'), value: 0 },
@@ -127,13 +161,45 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     }
   };
 
+  const handleQuickDuration = (days: number) => {
+    const base = startDate || todayStr;
+    const computedEnd = shiftDate(base, days);
+    setEndDate(computedEnd);
+    setDateError(null);
+  };
+
+  const handleStartDateChange = (val: string) => {
+    setStartDate(val);
+    if (endDate && val > endDate) {
+      setDateError(t('habitForm.invalidDateRange'));
+    } else {
+      setDateError(null);
+    }
+  };
+
+  const handleEndDateChange = (val: string) => {
+    setEndDate(val);
+    if (val && startDate && val < startDate) {
+      setDateError(t('habitForm.invalidDateRange'));
+    } else {
+      setDateError(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
+    if (hasDateRange && endDate && startDate && endDate < startDate) {
+      setDateError(t('habitForm.invalidDateRange'));
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const selectedCategory = category === '__custom__' ? customCategory.trim() : category;
+      const finalStartDate = hasDateRange && startDate ? startDate : undefined;
+      const finalEndDate = hasDateRange && endDate ? endDate : undefined;
 
       const data: CreateHabitInput = {
         name: name.trim(),
@@ -150,6 +216,8 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
           type: frequencyType,
           daysOfWeek: frequencyType === 'specific_days' ? selectedDays : undefined,
         },
+        startDate: finalStartDate,
+        endDate: finalEndDate,
       };
 
       await onSubmit(data);
@@ -253,7 +321,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               className={`${styles.typeBtn} ${type === 'quantitative' ? styles.typeBtnSelected : ''}`}
               onClick={() => setType('quantitative')}
             >
-              <Hash size={20} color={type === 'quantitative' ? 'var(--tk-accent)' : undefined} />
+              <Target size={20} color={type === 'quantitative' ? 'var(--tk-accent)' : undefined} />
               <span className={styles.typeTitle}>{t('habitForm.quantitativeTypeTitle')}</span>
               <span className={styles.typeDesc}>{t('habitForm.quantitativeTypeDesc')}</span>
             </button>
@@ -263,14 +331,14 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               className={`${styles.typeBtn} ${type === 'avoidance' ? styles.typeBtnSelected : ''}`}
               onClick={() => setType('avoidance')}
             >
-              <ShieldAlert size={20} color={type === 'avoidance' ? 'var(--tk-warning)' : undefined} />
+              <Check size={20} color={type === 'avoidance' ? 'var(--tk-accent)' : undefined} />
               <span className={styles.typeTitle}>{t('habitForm.avoidanceTypeTitle')}</span>
               <span className={styles.typeDesc}>{t('habitForm.avoidanceTypeDesc')}</span>
             </button>
           </div>
         </div>
 
-        {/* Quantitative specific inputs */}
+        {/* Quantitative Fields */}
         {type === 'quantitative' && (
           <div className={styles.quantitativeFields}>
             <div className={styles.field}>
@@ -288,7 +356,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
               <input
                 type="number"
                 step="any"
-                min="1"
+                min="0.1"
                 placeholder={t('habitForm.dailyGoalPlaceholder')}
                 className={styles.input}
                 value={dailyGoal}
@@ -298,22 +366,129 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
           </div>
         )}
 
-        {/* Periodic Goals (Weekly & Monthly Targets) */}
+        {/* Duration & Date Range (Time-Bound Challenge or Continuous) */}
+        <div className={styles.dateRangeSection}>
+          <div className={styles.dateRangeTitle}>
+            <Calendar size={16} color="var(--tk-accent)" />
+            <span>{t('habitForm.durationTitle')}</span>
+          </div>
+
+          <div className={styles.typeSelector}>
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${!hasDateRange ? styles.typeBtnSelected : ''}`}
+              onClick={() => {
+                setHasDateRange(false);
+                setDateError(null);
+              }}
+            >
+              <InfinityIcon size={18} color={!hasDateRange ? 'var(--tk-accent)' : undefined} />
+              <span className={styles.typeTitle}>{t('habitForm.durationContinuous')}</span>
+              <span className={styles.typeDesc}>{t('habitForm.durationContinuousDesc')}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${hasDateRange ? styles.typeBtnSelected : ''}`}
+              onClick={() => {
+                setHasDateRange(true);
+                if (!startDate) setStartDate(todayStr);
+                if (!endDate) setEndDate(shiftDate(todayStr, 30));
+              }}
+            >
+              <Flag size={18} color={hasDateRange ? 'var(--tk-accent)' : undefined} />
+              <span className={styles.typeTitle}>{t('habitForm.durationDateRange')}</span>
+              <span className={styles.typeDesc}>{t('habitForm.durationDateRangeDesc')}</span>
+            </button>
+          </div>
+
+          {hasDateRange && (
+            <>
+              <div className={styles.dateInputsGrid}>
+                <div className={styles.dateInputWrapper}>
+                  <label className={styles.dateFieldLabel}>{t('habitForm.startDateLabel')}</label>
+                  <input
+                    type="date"
+                    required={hasDateRange}
+                    className={styles.dateInput}
+                    value={startDate}
+                    onChange={(e) => handleStartDateChange(e.target.value)}
+                  />
+                </div>
+                <div className={styles.dateInputWrapper}>
+                  <label className={styles.dateFieldLabel}>{t('habitForm.endDateLabel')}</label>
+                  <input
+                    type="date"
+                    required={hasDateRange}
+                    className={styles.dateInput}
+                    value={endDate}
+                    onChange={(e) => handleEndDateChange(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {dateError && <span className={styles.dateErrorText}>{dateError}</span>}
+
+              <div className={styles.quickDurationsRow}>
+                <span style={{ fontSize: '11px', color: 'var(--tk-text-muted)', fontWeight: 600 }}>
+                  {t('habitForm.quickDurationsTitle')}
+                </span>
+                <button
+                  type="button"
+                  className={styles.quickDurationBtn}
+                  onClick={() => handleQuickDuration(7)}
+                >
+                  {t('habitForm.duration1Week')}
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickDurationBtn}
+                  onClick={() => handleQuickDuration(30)}
+                >
+                  {t('habitForm.duration30Days')}
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickDurationBtn}
+                  onClick={() => handleQuickDuration(90)}
+                >
+                  {t('habitForm.duration3Months')}
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickDurationBtn}
+                  onClick={() => handleQuickDuration(180)}
+                >
+                  {t('habitForm.duration6Months')}
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickDurationBtn}
+                  onClick={() => handleQuickDuration(365)}
+                >
+                  {t('habitForm.duration1Year')}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Periodic Goals */}
         <div className={styles.periodicGoalsSection}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className={styles.periodicSectionTitle}>
-              <Target size={15} color="var(--tk-accent)" />
+              <Sparkles size={16} color="var(--tk-accent)" />
               <span>{t('habitForm.periodicGoalsTitle')}</span>
             </div>
             <button
               type="button"
               onClick={handleAutoSuggestPeriodicGoals}
               style={{
-                background: 'none',
+                background: 'transparent',
                 border: 'none',
                 color: 'var(--tk-accent)',
                 fontSize: '11px',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -421,7 +596,7 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
           <Button
             type="submit"
             variant="primary"
-            disabled={!name.trim() || isSubmitting}
+            disabled={!name.trim() || isSubmitting || !!dateError}
             leftIcon={<Check size={16} />}
           >
             {habitToEdit ? t('habitForm.saveChanges') : t('habitForm.createHabit')}
@@ -431,4 +606,3 @@ export const HabitFormModal: React.FC<HabitFormModalProps> = ({
     </Modal>
   );
 };
-

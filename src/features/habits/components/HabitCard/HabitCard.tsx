@@ -1,10 +1,11 @@
 import React from 'react';
-import { Sparkles, Plus, ShieldAlert, RotateCcw } from 'lucide-react';
+import { Sparkles, Plus, ShieldAlert, RotateCcw, Flag } from 'lucide-react';
 import { Habit, DailyActivityLog } from '@/core/types';
 import { Checkbox } from '@/core/ui/Checkbox';
 import { HabitIcon } from '@/core/ui/HabitIcon';
 import { useI18nStore } from '@/core/i18n';
 import { triggerHaptic } from '@/core/utils/haptics';
+import { formatDateToISO } from '@/core/utils/dateUtils';
 import styles from './HabitCard.module.css';
 
 export interface HabitCardProps {
@@ -23,10 +24,15 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
   onOpenDetail,
 }) => {
   const { t } = useI18nStore();
+  const todayStr = formatDateToISO(new Date());
   const isRelapse = habit.type === 'avoidance' && log?.isCompleted === false;
   const isCompleted = habit.type === 'avoidance' ? !isRelapse : !!log?.isCompleted;
   const isRecord = !!log?.isPersonalRecord;
   const currentTotal = log?.totalValue || 0;
+
+  const isChallenge = !!(habit.startDate || habit.endDate);
+  const isChallengeFinished = !!(habit.endDate && todayStr > habit.endDate);
+  const isChallengeUpcoming = !!(habit.startDate && todayStr < habit.startDate);
 
   const handleCardClick = () => {
     onOpenDetail(habit);
@@ -73,11 +79,44 @@ export const HabitCard: React.FC<HabitCardProps> = React.memo(({
       <div className={styles.colorStrip} style={{ backgroundColor: habit.color }} />
 
       {/* Category Tag & Record Badge positioned at the top-right edge of the card */}
-      {(habit.category || isRecord) && (
+      {(habit.category || isRecord || isChallenge) && (
         <div className={styles.tagGroup}>
           {isRecord && (
             <span className={styles.recordBadge}>
               <Sparkles size={10} /> {t('habitCard.record')}
+            </span>
+          )}
+          {isChallenge && (
+            <span
+              className={styles.challengeBadge}
+              style={{
+                backgroundColor: isChallengeFinished
+                  ? 'rgba(56, 189, 248, 0.15)'
+                  : isChallengeUpcoming
+                  ? 'rgba(234, 179, 8, 0.15)'
+                  : 'var(--tk-accent-surface)',
+                color: isChallengeFinished
+                  ? 'var(--tk-info)'
+                  : isChallengeUpcoming
+                  ? 'var(--tk-warning)'
+                  : 'var(--tk-accent)',
+                borderColor: isChallengeFinished
+                  ? 'var(--tk-info)'
+                  : isChallengeUpcoming
+                  ? 'var(--tk-warning)'
+                  : 'var(--tk-accent)',
+              }}
+            >
+              <Flag size={9} />
+              {isChallengeFinished
+                ? t('habitCard.challengeCompleted')
+                : isChallengeUpcoming
+                ? t('habitCard.challengeUpcoming')
+                : habit.endDate
+                ? t('habitCard.challengeDaysLeft', {
+                    days: Math.max(0, Math.ceil((new Date(habit.endDate).getTime() - new Date(todayStr).getTime()) / (1000 * 60 * 60 * 24))),
+                  })
+                : t('habitCard.challengeActive')}
             </span>
           )}
           {habit.category && (

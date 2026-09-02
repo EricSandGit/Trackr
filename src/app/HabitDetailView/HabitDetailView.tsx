@@ -11,8 +11,8 @@ import {
   ShieldAlert,
   RotateCcw,
   Calendar,
-  Activity,
   CheckCircle2,
+  Flag,
 } from 'lucide-react';
 import { useHabitsStore } from '@/features/habits';
 import { useLogsStore } from '@/features/logging';
@@ -32,20 +32,12 @@ export interface HabitDetailViewProps {
 }
 
 export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBack }) => {
-  const habits = useHabitsStore((s) => s.habits);
-  const updateHabit = useHabitsStore((s) => s.updateHabit);
-  const toggleArchiveHabit = useHabitsStore((s) => s.toggleArchiveHabit);
-  const deleteHabit = useHabitsStore((s) => s.deleteHabit);
+  const { t, formatRelativeDate, language } = useI18nStore();
+  const todayStr = formatDateToISO(new Date());
+  const { habits, deleteHabit, toggleArchiveHabit, updateHabit } = useHabitsStore();
+  const { logs, toggleBooleanHabit, toggleAvoidanceHabit, addQuantitativeVolume, setDirectQuantitativeValue } = useLogsStore();
 
-  const logs = useLogsStore((s) => s.logs);
-  const selectedDate = useLogsStore((s) => s.selectedDate);
-  const setSelectedDate = useLogsStore((s) => s.setSelectedDate);
-  const toggleBooleanHabit = useLogsStore((s) => s.toggleBooleanHabit);
-  const toggleAvoidanceHabit = useLogsStore((s) => s.toggleAvoidanceHabit);
-  const addQuantitativeVolume = useLogsStore((s) => s.addQuantitativeVolume);
-  const setDirectQuantitativeValue = useLogsStore((s) => s.setDirectQuantitativeValue);
-  const { t, formatRelativeDate } = useI18nStore();
-
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr);
   const [showAnnualHeatmap, setShowAnnualHeatmap] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isQuickLogOpen, setIsQuickLogOpen] = useState(false);
@@ -70,6 +62,11 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
   const isCurrentDay = isToday(selectedDate);
   const relativeDate = formatRelativeDate(selectedDate);
 
+  const isDateOutOfRange = Boolean(
+    (habit.startDate && selectedDate < habit.startDate) ||
+    (habit.endDate && selectedDate > habit.endDate)
+  );
+
   const handleDelete = async () => {
     if (window.confirm(t('habitDetail.deleteConfirm', { name: habit.name }))) {
       await deleteHabit(habit.id);
@@ -82,14 +79,12 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
   };
 
   const handleDaySelect = (date: string) => {
+    const isOutOfRange = Boolean(
+      (habit.startDate && date < habit.startDate) ||
+      (habit.endDate && date > habit.endDate)
+    );
+    if (isOutOfRange) return;
     setSelectedDate(date);
-    if (habit.type === 'quantitative') {
-      setIsQuickLogOpen(true);
-    } else if (habit.type === 'avoidance') {
-      toggleAvoidanceHabit(habit, date);
-    } else {
-      toggleBooleanHabit(habit, date);
-    }
   };
 
   const frequencyLabel =
@@ -185,6 +180,46 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
 
         {habit.description && <p className={styles.description}>{habit.description}</p>}
 
+        {/* Challenge / Date Range Banner */}
+        {(habit.startDate || habit.endDate) && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px 14px',
+              backgroundColor: 'var(--tk-accent-surface)',
+              border: '1px solid var(--tk-accent)',
+              borderRadius: 'var(--tk-radius-md)',
+              fontSize: '13px',
+              marginTop: '10px',
+              flexWrap: 'wrap',
+              gap: '8px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--tk-accent)' }}>
+              <Flag size={16} />
+              <span>
+                {habit.endDate && todayStr > habit.endDate
+                  ? t('habitDetail.challengeStatusCompleted')
+                  : habit.startDate && todayStr < habit.startDate
+                  ? t('habitDetail.challengeStatusUpcoming', { date: habit.startDate })
+                  : habit.endDate
+                  ? t('habitDetail.challengeStatusActive', {
+                      daysLeft: Math.max(0, Math.ceil((new Date(habit.endDate).getTime() - new Date(todayStr).getTime()) / (1000 * 60 * 60 * 24))),
+                    })
+                  : t('habitDetail.challengeStatusActive', { daysLeft: '∞' })}
+              </span>
+            </div>
+            <span style={{ fontSize: '12px', color: 'var(--tk-text-secondary)', fontWeight: 600 }}>
+              {t('habitDetail.dateRangeLabel', {
+                start: habit.startDate || (habit as any).createdAt?.slice(0, 10) || '',
+                end: habit.endDate || '∞',
+              })}
+            </span>
+          </div>
+        )}
+
         {!isCurrentDay && (
           <div
             style={{
@@ -237,16 +272,18 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
               variant={isRelapse ? 'danger' : 'secondary'}
               size="md"
               fullWidth
+              disabled={isDateOutOfRange}
               onClick={() => toggleAvoidanceHabit(habit, selectedDate)}
               leftIcon={isRelapse ? <RotateCcw size={16} /> : <ShieldAlert size={16} color="var(--tk-warning)" />}
             >
-              {actionButtonText}
+              {isDateOutOfRange ? (language === 'en' ? 'Date outside habit period' : 'Fecha fuera del periodo') : actionButtonText}
             </Button>
           ) : (
             <Button
               variant="primary"
               size="md"
               fullWidth
+              disabled={isDateOutOfRange}
               onClick={() => {
                 if (habit.type === 'boolean') {
                   toggleBooleanHabit(habit, selectedDate);
@@ -256,7 +293,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
               }}
               leftIcon={<Plus size={16} />}
             >
-              {actionButtonText}
+              {isDateOutOfRange ? (language === 'en' ? 'Date outside habit period' : 'Fecha fuera del periodo') : actionButtonText}
             </Button>
           )}
         </div>
@@ -288,12 +325,12 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
               <div className={styles.noHistogramHeader}>
                 <div
                   className={styles.noHistogramIconWrapper}
-                  style={{ backgroundColor: `${habit.color}20` }}
+                  style={{ backgroundColor: habit.color + '22', color: habit.color }}
                 >
                   {habit.type === 'avoidance' ? (
-                    <Activity size={20} color={habit.color} />
+                    <ShieldAlert size={20} />
                   ) : (
-                    <CheckCircle2 size={20} color={habit.color} />
+                    <CheckCircle2 size={20} />
                   )}
                 </div>
                 <div>
@@ -356,6 +393,7 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
         <AnnualHeatmap
           habit={habit}
           logs={logs}
+          selectedDate={selectedDate}
           onSelectDate={handleDaySelect}
         />
       )}

@@ -54,6 +54,9 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
 
   toggleBooleanHabit: async (habit: Habit, targetDate?: string) => {
     const date = targetDate || get().selectedDate;
+    if ((habit.startDate && date < habit.startDate) || (habit.endDate && date > habit.endDate)) {
+      return;
+    }
     const logId = `${habit.id}_${date}`;
     const existingLog = get().logs.find((l) => l.id === logId);
 
@@ -104,6 +107,9 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
 
   toggleAvoidanceHabit: async (habit: Habit, targetDate?: string) => {
     const date = targetDate || get().selectedDate;
+    if ((habit.startDate && date < habit.startDate) || (habit.endDate && date > habit.endDate)) {
+      return;
+    }
     const logId = `${habit.id}_${date}`;
     const existingLog = get().logs.find((l) => l.id === logId);
 
@@ -155,6 +161,9 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
 
   addQuantitativeVolume: async (habit: Habit, amount: number, targetDate?: string, notes?: string) => {
     const date = targetDate || get().selectedDate;
+    if ((habit.startDate && date < habit.startDate) || (habit.endDate && date > habit.endDate)) {
+      return { isRecord: false, isNowCompleted: false };
+    }
     const logId = `${habit.id}_${date}`;
     const allLogs = get().logs;
     const existingLog = allLogs.find((l) => l.id === logId);
@@ -208,6 +217,9 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
 
   setDirectQuantitativeValue: async (habit: Habit, totalValue: number, targetDate?: string) => {
     const date = targetDate || get().selectedDate;
+    if ((habit.startDate && date < habit.startDate) || (habit.endDate && date > habit.endDate)) {
+      return { isRecord: false, isNowCompleted: false };
+    }
     const logId = `${habit.id}_${date}`;
     const allLogs = get().logs;
 
