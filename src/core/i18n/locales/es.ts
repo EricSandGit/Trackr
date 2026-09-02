@@ -345,5 +345,9 @@ export const es: TranslationSchema = {
   languages: {
     es: 'Español',
     en: 'Inglés',
+    pt: 'Portugués',
+    fr: 'Francés',
+    de: 'Alemán',
+    it: 'Italiano',
   },
 };
