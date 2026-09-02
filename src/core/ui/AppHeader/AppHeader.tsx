@@ -40,7 +40,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <div className={styles.brandIconDot} style={{ backgroundColor: '#2ea043' }} />
           </div>
           <h1 className={styles.brandTitle}>Trackr</h1>
-          <span className={styles.brandBadge}>PWA</span>
         </div>
       </div>
 
