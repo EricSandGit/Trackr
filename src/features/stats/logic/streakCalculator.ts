@@ -216,18 +216,19 @@ export function calculateHabitIndividualStats(
   let currentStreak = 0;
   let isStreakActive = true;
 
-  // Check today
-  const todayLog = habitLogs.find((l) => l.date === todayStr);
-  const isTodayCleanOrCompleted = isHabitSuccessfulOnDate(habit, todayStr, todayLog);
+  // If habit has ended, anchor calculation on its end date rather than today
+  const anchorDateStr = (habit.endDate && todayStr > habit.endDate) ? habit.endDate : todayStr;
+  const anchorLog = habitLogs.find((l) => l.date === anchorDateStr);
+  const isAnchorCleanOrCompleted = isHabitSuccessfulOnDate(habit, anchorDateStr, anchorLog);
 
-  let offset = isTodayCleanOrCompleted ? 0 : 1;
+  let offset = isAnchorCleanOrCompleted ? 0 : 1;
 
-  const creationDateStr = habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr;
+  const creationDateStr = habit.startDate || (habit.createdAt ? formatDateToISO(new Date(habit.createdAt)) : todayStr);
   const habitLogDates = habitLogs.filter((l) => l.isCompleted || l.totalValue > 0).map((l) => l.date).sort();
-  const habitStartDate = habitLogDates.length > 0 && habitLogDates[0] < creationDateStr ? habitLogDates[0] : creationDateStr;
+  const habitStartDate = habit.startDate || (habitLogDates.length > 0 && habitLogDates[0] < creationDateStr ? habitLogDates[0] : creationDateStr);
 
   while (isStreakActive && offset < 730) {
-    const checkDate = shiftDate(todayStr, -offset);
+    const checkDate = shiftDate(anchorDateStr, -offset);
     if (checkDate < habitStartDate) break;
 
     const isScheduled = isHabitScheduledOnDate(habit, checkDate);
@@ -246,8 +247,9 @@ export function calculateHabitIndividualStats(
   let bestStreak = currentStreak;
   let tempStreak = 0;
   let curScanDate = habitStartDate;
+  const maxScanDate = (habit.endDate && todayStr > habit.endDate) ? habit.endDate : todayStr;
 
-  while (curScanDate <= todayStr) {
+  while (curScanDate <= maxScanDate) {
     const isScheduled = isHabitScheduledOnDate(habit, curScanDate);
     if (isScheduled) {
       const log = habitLogs.find((l) => l.date === curScanDate);
@@ -258,8 +260,8 @@ export function calculateHabitIndividualStats(
           bestStreak = tempStreak;
         }
       } else {
-        // If today is scheduled but not completed yet, don't reset bestStreak
-        if (curScanDate !== todayStr) {
+        // If anchor date is scheduled but not completed yet, don't reset bestStreak
+        if (curScanDate !== maxScanDate) {
           tempStreak = 0;
         }
       }

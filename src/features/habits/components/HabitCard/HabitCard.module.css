@@ -81,6 +81,18 @@
   flex-shrink: 0;
 }
 
+.challengeBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--tk-radius-full);
+  border: 1px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
 .categoryTag {
   font-size: 9.5px;
   font-weight: 700;

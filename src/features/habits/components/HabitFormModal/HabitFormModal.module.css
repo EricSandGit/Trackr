@@ -66,6 +66,7 @@
   cursor: pointer;
   transition: all var(--tk-transition-fast);
   gap: 4px;
+  text-align: center;
 }
 
 .typeBtn:hover {
@@ -74,7 +75,7 @@
 
 .typeBtnSelected {
   border-color: var(--tk-accent);
-  background-color: rgba(35, 134, 54, 0.15);
+  background-color: var(--tk-accent-surface);
   box-shadow: 0 0 0 1px var(--tk-accent);
 }
 
@@ -159,7 +160,8 @@
   box-shadow: 0 0 0 1px var(--tk-accent);
 }
 
-.periodicGoalsSection {
+.periodicGoalsSection,
+.dateRangeSection {
   background-color: var(--tk-bg-surface-elevated);
   padding: var(--tk-space-3);
   border-radius: var(--tk-radius-md);
@@ -169,7 +171,8 @@
   gap: var(--tk-space-3);
 }
 
-.periodicSectionTitle {
+.periodicSectionTitle,
+.dateRangeTitle {
   font-size: 13px;
   font-weight: 700;
   color: var(--tk-text-primary);
@@ -178,10 +181,71 @@
   gap: 6px;
 }
 
-.periodicInputsGrid {
+.periodicInputsGrid,
+.dateInputsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--tk-space-3);
+}
+
+.dateInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dateFieldLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.dateInput {
+  height: 38px;
+  background-color: var(--tk-bg-input);
+  border: 1.5px solid var(--tk-border-default);
+  border-radius: var(--tk-radius-md);
+  padding: 0 10px;
+  font-size: 13px;
+  font-family: var(--tk-font-sans);
+  color: var(--tk-text-primary);
+  outline: none;
+  transition: border-color var(--tk-transition-fast);
+}
+
+.dateInput:focus {
+  border-color: var(--tk-border-focus);
+}
+
+.quickDurationsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.quickDurationBtn {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--tk-radius-sm);
+  background-color: var(--tk-bg-surface);
+  border: 1px solid var(--tk-border-default);
+  color: var(--tk-text-secondary);
+  cursor: pointer;
+  transition: all var(--tk-transition-fast);
+}
+
+.quickDurationBtn:hover {
+  background-color: var(--tk-bg-surface-hover);
+  color: var(--tk-text-primary);
+  border-color: var(--tk-border-focus);
+}
+
+.dateErrorText {
+  font-size: 12px;
+  color: var(--tk-danger);
+  margin-top: 2px;
 }
 
 .actions {
@@ -190,4 +254,3 @@
   gap: var(--tk-space-2);
   margin-top: var(--tk-space-2);
 }
-
