@@ -29,12 +29,12 @@
 
 .loggedInBtn {
   padding: 3px 10px 3px 4px;
-  border-color: rgba(57, 211, 83, 0.4);
-  background: rgba(57, 211, 83, 0.08);
+  border-color: var(--tk-accent);
+  background: var(--tk-accent-surface);
 }
 
 .loggedInBtn:hover {
-  background: rgba(57, 211, 83, 0.15);
+  background: var(--tk-accent-surface-hover);
   border-color: var(--tk-accent);
 }
 

@@ -75,7 +75,8 @@
 }
 
 .filterChipActive .filterBadge {
-  background-color: rgba(34, 197, 94, 0.2);
+  background-color: var(--tk-accent-surface);
+  color: var(--tk-accent);
 }
 
 .list {

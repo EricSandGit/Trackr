@@ -72,11 +72,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     supportedLanguages.find((l) => l.code === language) || supportedLanguages[0];
 
   const THEMES: Array<{ id: ThemeMode; label: string; icon: React.ReactNode }> = [
-    { id: 'dark', label: t('settings.themes.dark'), icon: <Moon size={16} /> },
     { id: 'zinc', label: t('settings.themes.zinc'), icon: <Layers size={16} /> },
-    { id: 'light', label: t('settings.themes.light'), icon: <Sun size={16} /> },
-    { id: 'slate', label: t('settings.themes.slate'), icon: <Sparkles size={16} /> },
+    { id: 'dark', label: t('settings.themes.dark'), icon: <Moon size={16} /> },
     { id: 'warm', label: t('settings.themes.warm'), icon: <Flame size={16} /> },
+    { id: 'slate', label: t('settings.themes.slate'), icon: <Sparkles size={16} /> },
+    { id: 'light', label: t('settings.themes.light'), icon: <Sun size={16} /> },
   ];
 
   const handleExportBackup = async () => {

@@ -116,7 +116,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <div className={styles.cardTitleGroup}>
-              <div className={styles.iconBadge} style={{ backgroundColor: 'rgba(57, 211, 83, 0.15)' }}>
+              <div className={styles.iconBadge} style={{ backgroundColor: 'var(--tk-accent-surface)' }}>
                 <CheckCircle2 size={15} color="var(--tk-accent)" />
               </div>
               <span className={styles.cardLabel}>{t('stats.week')}</span>
@@ -151,7 +151,7 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
         {/* Most Consistent Habit */}
         <div className={styles.highlightCard}>
           <div className={styles.highlightHeader}>
-            <span className={styles.highlightLabel} style={{ color: 'var(--tk-accent)' }}>
+            <span className={styles.highlightLabel} style={{ color: 'var(--tk-success)' }}>
               <Award size={15} />
               <span>{t('stats.mostConsistent')}</span>
             </span>
@@ -159,8 +159,8 @@ export const ConsistencyOverview: React.FC<ConsistencyOverviewProps> = ({ habits
               <span
                 className={styles.highlightPercentBadge}
                 style={{
-                  backgroundColor: 'rgba(57, 211, 83, 0.15)',
-                  color: 'var(--tk-accent)',
+                  backgroundColor: 'var(--tk-success-surface)',
+                  color: 'var(--tk-success)',
                 }}
               >
                 {stats.mostConsistentHabit.percentage}%

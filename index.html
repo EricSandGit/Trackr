@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
     <!-- PWA & Mobile Capabilities -->
-    <meta name="theme-color" content="#121317" />
+    <meta name="theme-color" content="#09090b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Trackr" />
@@ -164,17 +164,18 @@
     <script>
       // Immediate theme & background sync before render
       try {
-        var theme = localStorage.getItem('tk_theme_preference') || 'dark';
+        var theme = localStorage.getItem('tk_theme_mode') || localStorage.getItem('tk_theme_preference') || 'zinc';
         document.documentElement.setAttribute('data-theme', theme);
         var bgMap = {
-          dark: '#121317',
           zinc: '#09090b',
-          slate: '#0a0f1d',
-          light: '#f8f9fb',
-          warm: '#f5efe6'
+          dark: '#121317',
+          warm: '#f5efe6',
+          slate: '#f1f5f9',
+          light: '#f8f9fb'
         };
-        var color = bgMap[theme] || '#121317';
-        document.write('<style>#splash-screen{background-color:' + color + ';}</style>');
+        var color = bgMap[theme] || '#09090b';
+        var textColor = (theme === 'slate' || theme === 'light' || theme === 'warm') ? '#0f172a' : '#ededf0';
+        document.write('<style>#splash-screen{background-color:' + color + ';color:' + textColor + ';}</style>');
       } catch (e) {}
     </script>
   </head>
