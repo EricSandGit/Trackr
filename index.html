@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
     <!-- PWA & Mobile Capabilities -->
-    <meta name="theme-color" content="#18181b" />
+    <meta name="theme-color" content="#121317" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Trackr" />
@@ -21,8 +21,195 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
     
     <title>Trackr — Habit & Activity Tracker</title>
+
+    <style>
+      /* ── Instant Zero-Latency Splash Screen ── */
+      #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #121317;
+        color: #e9e9ee;
+        font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+        overflow: hidden;
+        transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      #splash-screen.splash-fade-out {
+        opacity: 0;
+        transform: scale(1.02);
+        pointer-events: none;
+      }
+
+      .splash-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        animation: splash-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .splash-icon-wrapper {
+        position: relative;
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .splash-icon-glow {
+        position: absolute;
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
+        background: radial-gradient(circle, rgba(57, 211, 83, 0.35) 0%, rgba(35, 134, 54, 0.15) 50%, transparent 70%);
+        filter: blur(12px);
+        animation: splash-pulse 2s infinite ease-in-out;
+      }
+
+      .splash-logo-svg {
+        width: 64px;
+        height: 64px;
+        z-index: 2;
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
+      }
+
+      .splash-title {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: #f8fafc;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .splash-title span {
+        color: #39d353;
+      }
+
+      .splash-tagline {
+        font-size: 13px;
+        font-weight: 500;
+        color: #8b8d97;
+        margin-top: -8px;
+        letter-spacing: 0.02em;
+      }
+
+      .splash-loader-bar {
+        width: 140px;
+        height: 3.5px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 12px;
+        position: relative;
+      }
+
+      .splash-loader-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 45%;
+        background: linear-gradient(90deg, #238636, #39d353);
+        border-radius: 999px;
+        animation: splash-shimmer 1.2s infinite ease-in-out;
+      }
+
+      @keyframes splash-pop {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes splash-pulse {
+        0%, 100% {
+          transform: scale(0.95);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+
+      @keyframes splash-shimmer {
+        0% {
+          left: -45%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+    </style>
+
+    <script>
+      // Immediate theme & background sync before render
+      try {
+        var theme = localStorage.getItem('tk_theme_preference') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        var bgMap = {
+          dark: '#121317',
+          zinc: '#09090b',
+          slate: '#0a0f1d',
+          light: '#f8f9fb',
+          warm: '#f5efe6'
+        };
+        var color = bgMap[theme] || '#121317';
+        document.write('<style>#splash-screen{background-color:' + color + ';}</style>');
+      } catch (e) {}
+    </script>
   </head>
   <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+      <div class="splash-content">
+        <div class="splash-icon-wrapper">
+          <div class="splash-icon-glow"></div>
+          <svg class="splash-logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="16" fill="#1c1e24" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <!-- 3x3 Heatmap Grid preview -->
+            <rect x="14" y="14" width="10" height="10" rx="2.5" fill="#0e4429"/>
+            <rect x="27" y="14" width="10" height="10" rx="2.5" fill="#006d32"/>
+            <rect x="40" y="14" width="10" height="10" rx="2.5" fill="#26a641"/>
+            
+            <rect x="14" y="27" width="10" height="10" rx="2.5" fill="#006d32"/>
+            <rect x="27" y="27" width="10" height="10" rx="2.5" fill="#26a641"/>
+            <rect x="40" y="27" width="10" height="10" rx="2.5" fill="#39d353"/>
+            
+            <rect x="14" y="40" width="10" height="10" rx="2.5" fill="#26a641"/>
+            <rect x="27" y="40" width="10" height="10" rx="2.5" fill="#39d353"/>
+            <rect x="40" y="40" width="10" height="10" rx="2.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.2"/>
+          </svg>
+        </div>
+        
+        <h1 class="splash-title">Trackr<span>.</span></h1>
+        <p class="splash-tagline">Constancia diaria</p>
+        
+        <div class="splash-loader-bar">
+          <div class="splash-loader-indicator"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
