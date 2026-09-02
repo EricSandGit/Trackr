@@ -1,48 +1,51 @@
 :root,
-[data-theme='dark'] {
+[data-theme='zinc'] {
   /* Fonts */
   --tk-font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --tk-font-mono: 'Space Mono', monospace;
 
-  /* ── 1. TEMA OSCURO: Grafito (Original Default) ─── */
-  --tk-bg-app: #121317;
-  --tk-bg-surface: #1c1e24;
-  --tk-bg-surface-elevated: #23252c;
-  --tk-bg-surface-hover: #2a2c33;
-  --tk-bg-input: #121317;
-  --tk-bg-overlay: rgba(8, 9, 12, 0.75);
+  /* ── 1. TEMA POR DEFECTO: Zinc Neutro (Oscuro Equilibrado) ── */
+  --tk-bg-app: #09090b;
+  --tk-bg-surface: #18181b;
+  --tk-bg-surface-elevated: #202024;
+  --tk-bg-surface-hover: #2c2c32;
+  --tk-bg-input: #09090b;
+  --tk-bg-overlay: rgba(0, 0, 0, 0.82);
 
-  --tk-border-default: #2a2c33;
-  --tk-border-muted: #23252c;
-  --tk-border-focus: #8b7cf6;
+  --tk-border-default: #2d2d34;
+  --tk-border-muted: #202024;
+  --tk-border-focus: #71717a;
 
-  --tk-text-primary: #e9e9ee;
-  --tk-text-secondary: #8b8d97;
-  --tk-text-muted: #6d6f78;
-  --tk-text-bold: #c8c9d2;
-  --tk-text-inverse: #121317;
+  --tk-text-primary: #ededf0;
+  --tk-text-secondary: #9a9aa3;
+  --tk-text-muted: #666670;
+  --tk-text-bold: #c4c4cc;
+  --tk-text-inverse: #09090b;
 
-  /* Global GitHub-style Heatmap Palette */
-  --tk-cell-empty: #1c1e24;
-  --tk-cell-border: rgba(240, 246, 252, 0.06);
+  --tk-cell-empty: #18181b;
+  --tk-cell-border: rgba(255, 255, 255, 0.06);
   --tk-cell-level-1: #0e4429;
   --tk-cell-level-2: #006d32;
   --tk-cell-level-3: #26a641;
   --tk-cell-level-4: #39d353;
 
-  /* Personal Record Highlight */
+  /* Suavizado de botones y acentos (no tan brillantes) */
+  --tk-accent: #15803d;
+  --tk-accent-hover: #166534;
+  --tk-accent-active: #14532d;
+  --tk-accent-surface: rgba(21, 128, 61, 0.15);
+  --tk-accent-surface-hover: rgba(21, 128, 61, 0.25);
+  --tk-accent-text: #ffffff;
+
+  --tk-success: #22c55e;
+  --tk-success-surface: rgba(34, 197, 94, 0.15);
+
   --tk-record-gold: #fbbf24;
   --tk-record-glow: 0 0 10px rgba(251, 191, 36, 0.5), inset 0 0 4px rgba(251, 191, 36, 0.4);
   --tk-record-border: #fbbf24;
 }
 
 :root {
-  /* Interactive & Accents */
-  --tk-accent: #238636;
-  --tk-accent-hover: #2ea043;
-  --tk-accent-active: #29903b;
-  --tk-accent-text: #ffffff;
-
   --tk-info: #58a6ff;
   --tk-warning: #d29922;
   --tk-danger: #f85149;
@@ -78,69 +81,129 @@
   --tk-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ── 2. TEMA OSCURO: Zinc Neutro (Equilibrado) ───── */
-[data-theme='zinc'] {
-  --tk-bg-app: #09090b;
-  --tk-bg-surface: #18181b;
-  --tk-bg-surface-elevated: #202024;
-  --tk-bg-surface-hover: #2c2c32;
-  --tk-bg-input: #09090b;
-  --tk-bg-overlay: rgba(0, 0, 0, 0.82);
+/* ── 2. TEMA OSCURO: Grafito (Clásico) ───────────── */
+[data-theme='dark'] {
+  --tk-bg-app: #121317;
+  --tk-bg-surface: #1c1e24;
+  --tk-bg-surface-elevated: #23252c;
+  --tk-bg-surface-hover: #2a2c33;
+  --tk-bg-input: #121317;
+  --tk-bg-overlay: rgba(8, 9, 12, 0.75);
 
-  --tk-border-default: #2d2d34;
-  --tk-border-muted: #202024;
-  --tk-border-focus: #71717a;
+  --tk-border-default: #2a2c33;
+  --tk-border-muted: #23252c;
+  --tk-border-focus: #8b7cf6;
 
-  --tk-text-primary: #ededf0;
-  --tk-text-secondary: #9a9aa3;
-  --tk-text-muted: #666670;
-  --tk-text-bold: #c4c4cc;
-  --tk-text-inverse: #09090b;
+  --tk-text-primary: #e9e9ee;
+  --tk-text-secondary: #8b8d97;
+  --tk-text-muted: #6d6f78;
+  --tk-text-bold: #c8c9d2;
+  --tk-text-inverse: #121317;
 
-  --tk-cell-empty: #18181b;
-  --tk-cell-border: rgba(255, 255, 255, 0.06);
+  --tk-cell-empty: #1c1e24;
+  --tk-cell-border: rgba(240, 246, 252, 0.06);
   --tk-cell-level-1: #0e4429;
   --tk-cell-level-2: #006d32;
   --tk-cell-level-3: #26a641;
   --tk-cell-level-4: #39d353;
 
-  --tk-accent: #22c55e;
-  --tk-accent-hover: #16a34a;
-  --tk-accent-active: #15803d;
+  --tk-accent: #238636;
+  --tk-accent-hover: #2ea043;
+  --tk-accent-active: #29903b;
+  --tk-accent-surface: rgba(35, 134, 54, 0.15);
+  --tk-accent-surface-hover: rgba(35, 134, 54, 0.25);
+  --tk-accent-text: #ffffff;
+
+  --tk-success: #39d353;
+  --tk-success-surface: rgba(57, 211, 83, 0.15);
 }
 
-/* ── 3. TEMA OSCURO AZULADO: Slate / Midnight Navy ── */
+/* ── 3. TEMA CÁLIDO: Sepia y Cuero ───────────────── */
+[data-theme='warm'] {
+  --tk-bg-app: #f5efe6;
+  --tk-bg-surface: #fbf7f0;
+  --tk-bg-surface-elevated: #fbf7f0;
+  --tk-bg-surface-hover: #efe6d8;
+  --tk-bg-input: #fbf7f0;
+  --tk-bg-overlay: rgba(61, 51, 42, 0.4);
+
+  --tk-border-default: #e4d9c6;
+  --tk-border-muted: #ece3d4;
+  --tk-border-focus: #92400e;
+
+  --tk-text-primary: #3d332a;
+  --tk-text-secondary: #7a6d5d;
+  --tk-text-muted: #a29581;
+  --tk-text-bold: #4a3e35;
+  --tk-text-inverse: #fbf7f0;
+
+  --tk-cell-empty: #e8ded0;
+  --tk-cell-border: rgba(61, 51, 42, 0.08);
+  --tk-cell-level-1: #9be9a8;
+  --tk-cell-level-2: #40c463;
+  --tk-cell-level-3: #30a14e;
+  --tk-cell-level-4: #216e39;
+
+  /* Acentos cálidos marrón / terracota con fondos marrones */
+  --tk-accent: #92400e;
+  --tk-accent-hover: #a14c1b;
+  --tk-accent-active: #78350f;
+  --tk-accent-surface: rgba(146, 64, 14, 0.14);
+  --tk-accent-surface-hover: rgba(146, 64, 14, 0.22);
+  --tk-accent-text: #fbf7f0;
+
+  /* Más Constante se destaca en verde */
+  --tk-success: #15803d;
+  --tk-success-surface: rgba(21, 128, 61, 0.15);
+
+  --tk-shadow-sm: 0 1px 3px rgba(61, 51, 42, 0.1);
+  --tk-shadow-md: 0 4px 12px rgba(61, 51, 42, 0.12);
+  --tk-shadow-lg: 0 12px 32px rgba(61, 51, 42, 0.18);
+}
+
+/* ── 4. TEMA SLATE: Claro Azulado / Celeste ──────── */
 [data-theme='slate'] {
-  --tk-bg-app: #0a0f1d;
-  --tk-bg-surface: #111a2e;
-  --tk-bg-surface-elevated: #1d2b45;
-  --tk-bg-surface-hover: #243556;
-  --tk-bg-input: #0a0f1d;
-  --tk-bg-overlay: rgba(6, 10, 20, 0.82);
+  --tk-bg-app: #f1f5f9;
+  --tk-bg-surface: #ffffff;
+  --tk-bg-surface-elevated: #ffffff;
+  --tk-bg-surface-hover: #e2e8f0;
+  --tk-bg-input: #ffffff;
+  --tk-bg-overlay: rgba(15, 23, 42, 0.45);
 
-  --tk-border-default: #273859;
-  --tk-border-muted: #19243b;
-  --tk-border-focus: #38bdf8;
+  --tk-border-default: #cbd5e1;
+  --tk-border-muted: #e2e8f0;
+  --tk-border-focus: #0284c7;
 
-  --tk-text-primary: #f8fafc;
-  --tk-text-secondary: #94a3b8;
+  --tk-text-primary: #0f172a;
+  --tk-text-secondary: #475569;
   --tk-text-muted: #64748b;
-  --tk-text-bold: #cbd5e1;
-  --tk-text-inverse: #0a0f1d;
+  --tk-text-bold: #0f172a;
+  --tk-text-inverse: #ffffff;
 
-  --tk-cell-empty: #111a2e;
-  --tk-cell-border: rgba(148, 163, 184, 0.08);
-  --tk-cell-level-1: #0e4429;
-  --tk-cell-level-2: #006d32;
-  --tk-cell-level-3: #26a641;
-  --tk-cell-level-4: #39d353;
+  --tk-cell-empty: #e2e8f0;
+  --tk-cell-border: rgba(15, 23, 42, 0.08);
+  --tk-cell-level-1: #9be9a8;
+  --tk-cell-level-2: #40c463;
+  --tk-cell-level-3: #30a14e;
+  --tk-cell-level-4: #216e39;
 
+  /* Acentos azul celeste / oceánico */
   --tk-accent: #0284c7;
-  --tk-accent-hover: #38bdf8;
-  --tk-accent-active: #0369a1;
+  --tk-accent-hover: #0369a1;
+  --tk-accent-active: #075985;
+  --tk-accent-surface: rgba(2, 132, 199, 0.12);
+  --tk-accent-surface-hover: rgba(2, 132, 199, 0.2);
+  --tk-accent-text: #ffffff;
+
+  --tk-success: #16a34a;
+  --tk-success-surface: rgba(22, 163, 74, 0.15);
+
+  --tk-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --tk-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+  --tk-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.15);
 }
 
-/* ── 4. TEMA CLARO: Original ─────────────────────── */
+/* ── 5. TEMA CLARO: Original ─────────────────────── */
 [data-theme='light'] {
   --tk-bg-app: #f8f9fb;
   --tk-bg-surface: #ffffff;
@@ -169,45 +232,16 @@
   --tk-accent: #1f883d;
   --tk-accent-hover: #1a7f37;
   --tk-accent-active: #157130;
+  --tk-accent-surface: rgba(31, 136, 61, 0.12);
+  --tk-accent-surface-hover: rgba(31, 136, 61, 0.2);
+  --tk-accent-text: #ffffff;
+
+  --tk-success: #1f883d;
+  --tk-success-surface: rgba(31, 136, 61, 0.15);
 
   --tk-shadow-sm: 0 1px 3px rgba(31, 35, 40, 0.1);
   --tk-shadow-md: 0 4px 12px rgba(31, 35, 40, 0.12);
   --tk-shadow-lg: 0 12px 32px rgba(31, 35, 40, 0.18);
-}
-
-/* ── 5. TEMA CÁLIDO: Sepia ───────────────────────── */
-[data-theme='warm'] {
-  --tk-bg-app: #f5efe6;
-  --tk-bg-surface: #fbf7f0;
-  --tk-bg-surface-elevated: #fbf7f0;
-  --tk-bg-surface-hover: #efe6d8;
-  --tk-bg-input: #fbf7f0;
-  --tk-bg-overlay: rgba(61, 51, 42, 0.4);
-
-  --tk-border-default: #e4d9c6;
-  --tk-border-muted: #ece3d4;
-  --tk-border-focus: #c2632f;
-
-  --tk-text-primary: #3d332a;
-  --tk-text-secondary: #7a6d5d;
-  --tk-text-muted: #a29581;
-  --tk-text-bold: #4a3e35;
-  --tk-text-inverse: #fbf7f0;
-
-  --tk-cell-empty: #e8ded0;
-  --tk-cell-border: rgba(61, 51, 42, 0.08);
-  --tk-cell-level-1: #9be9a8;
-  --tk-cell-level-2: #40c463;
-  --tk-cell-level-3: #30a14e;
-  --tk-cell-level-4: #216e39;
-
-  --tk-accent: #1f883d;
-  --tk-accent-hover: #1a7f37;
-  --tk-accent-active: #157130;
-
-  --tk-shadow-sm: 0 1px 3px rgba(61, 51, 42, 0.1);
-  --tk-shadow-md: 0 4px 12px rgba(61, 51, 42, 0.12);
-  --tk-shadow-lg: 0 12px 32px rgba(61, 51, 42, 0.18);
 }
 
 /* ── Borde de Récord Personalizado (Override Global de Máxima Especificidad) ── */

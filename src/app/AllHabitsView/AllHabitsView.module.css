@@ -251,7 +251,7 @@
 }
 
 .filterToggleBtnActive {
-  background-color: rgba(35, 134, 54, 0.15);
+  background-color: var(--tk-accent-surface);
   border-color: var(--tk-accent);
   color: var(--tk-text-primary);
 }

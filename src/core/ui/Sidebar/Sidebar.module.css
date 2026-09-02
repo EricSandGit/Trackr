@@ -168,13 +168,13 @@
 }
 
 .navItemActive {
-  background-color: rgba(57, 211, 83, 0.12);
+  background-color: var(--tk-accent-surface);
   color: var(--tk-accent);
   font-weight: 700;
 }
 
 .navItemActive:hover {
-  background-color: rgba(57, 211, 83, 0.18);
+  background-color: var(--tk-accent-surface-hover);
   color: var(--tk-accent);
 }
 

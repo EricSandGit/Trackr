@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ThemeMode = 'dark' | 'zinc' | 'light' | 'slate' | 'warm';
+export type ThemeMode = 'zinc' | 'dark' | 'warm' | 'slate' | 'light';
 
 interface ThemeState {
   theme: ThemeMode;
@@ -9,20 +9,21 @@ interface ThemeState {
 }
 
 const THEME_STORAGE_KEY = 'tk_theme_mode';
+const DEFAULT_THEME: ThemeMode = 'zinc';
 
 function getInitialTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'dark';
+  if (typeof window === 'undefined') return DEFAULT_THEME;
   const saved = localStorage.getItem(THEME_STORAGE_KEY);
   if (
-    saved === 'dark' ||
     saved === 'zinc' ||
-    saved === 'light' ||
+    saved === 'dark' ||
+    saved === 'warm' ||
     saved === 'slate' ||
-    saved === 'warm'
+    saved === 'light'
   ) {
-    return saved;
+    return saved as ThemeMode;
   }
-  return 'dark';
+  return DEFAULT_THEME;
 }
 
 function applyThemeToDom(theme: ThemeMode) {
@@ -31,13 +32,13 @@ function applyThemeToDom(theme: ThemeMode) {
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     const themeColorMap: Record<ThemeMode, string> = {
-      dark: '#121317',
       zinc: '#09090b',
-      slate: '#0a0f1d',
-      light: '#f8f9fb',
+      dark: '#121317',
       warm: '#f5efe6',
+      slate: '#f1f5f9',
+      light: '#f8f9fb',
     };
-    meta.setAttribute('content', themeColorMap[theme] || '#121317');
+    meta.setAttribute('content', themeColorMap[theme] || '#09090b');
   }
 
   // Ensure record color attribute is active
@@ -58,7 +59,7 @@ export const useThemeStore = create<ThemeState>((set) => {
     },
     toggleTheme: () => {
       set((state) => {
-        const order: ThemeMode[] = ['dark', 'zinc', 'light', 'slate', 'warm'];
+        const order: ThemeMode[] = ['zinc', 'dark', 'warm', 'slate', 'light'];
         const currentIndex = order.indexOf(state.theme);
         const next = order[(currentIndex + 1) % order.length];
 
