@@ -303,6 +303,7 @@ export interface TranslationSchema {
     backupDesc: string;
     downloadJson: string;
     restoreJson: string;
+    exportCsv: string;
     pwaSectionTitle: string;
     pwaDesc: string;
     dangerSectionTitle: string;
@@ -311,6 +312,8 @@ export interface TranslationSchema {
     resetConfirm: string;
     feedbackBackupDownloaded: string;
     feedbackBackupError: string;
+    feedbackCsvDownloaded: string;
+    feedbackCsvError: string;
     feedbackDataRestored: string;
     feedbackInvalidFile: string;
     feedbackDataReset: string;

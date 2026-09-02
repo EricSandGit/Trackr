@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import {
   Download,
   Upload,
+  FileSpreadsheet,
   Moon,
   Sun,
   Flame,
@@ -18,7 +19,7 @@ import { Modal } from '@/core/ui/Modal';
 import { Button } from '@/core/ui/Button';
 import { useThemeStore, ThemeMode } from '@/core/theme/useThemeStore';
 import { useI18nStore, LanguageCode } from '@/core/i18n';
-import { jsonBackupService, storageAdapter } from '@/services/storage';
+import { jsonBackupService, csvExportService, storageAdapter } from '@/services/storage';
 import { PrivacyPolicyModal, TermsOfServiceModal } from '@/features/legal';
 import styles from './SettingsModal.module.css';
 
@@ -85,6 +86,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       setTimeout(() => setFeedbackMsg(null), 3000);
     } catch {
       setFeedbackMsg(t('settings.feedbackBackupError'));
+    }
+  };
+
+  const handleExportCsv = async () => {
+    try {
+      await csvExportService.downloadCsvFile();
+      setFeedbackMsg(t('settings.feedbackCsvDownloaded'));
+      setTimeout(() => setFeedbackMsg(null), 3000);
+    } catch {
+      setFeedbackMsg(t('settings.feedbackCsvError'));
     }
   };
 
@@ -250,6 +261,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               leftIcon={<Upload size={14} />}
             >
               {t('settings.restoreJson')}
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleExportCsv}
+              leftIcon={<FileSpreadsheet size={14} />}
+            >
+              {t('settings.exportCsv')}
             </Button>
           </div>
 
