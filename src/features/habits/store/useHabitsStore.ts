@@ -6,6 +6,7 @@ import { generateId } from '@/core/utils/idGenerator';
 interface HabitsStoreState {
   habits: Habit[];
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 
   loadHabits: () => Promise<void>;
@@ -18,15 +19,16 @@ interface HabitsStoreState {
 export const useHabitsStore = create<HabitsStoreState>((set, get) => ({
   habits: [],
   isLoading: false,
+  isInitialized: false,
   error: null,
 
   loadHabits: async () => {
     set({ isLoading: true, error: null });
     try {
       const habits = await storageAdapter.getHabits();
-      set({ habits, isLoading: false });
+      set({ habits, isLoading: false, isInitialized: true });
     } catch (err) {
-      set({ error: (err as Error).message, isLoading: false });
+      set({ error: (err as Error).message, isLoading: false, isInitialized: true });
     }
   },
 
