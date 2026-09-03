@@ -41,6 +41,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return;
     }
 
+    // Wire up background SWR revalidation listeners for cloud sync
+    storageManager.getSupabaseAdapter().onHabitsUpdated = (freshHabits) => {
+      useHabitsStore.setState({ habits: freshHabits, isInitialized: true, isLoading: false });
+    };
+    storageManager.getSupabaseAdapter().onLogsUpdated = (freshLogs) => {
+      useLogsStore.setState({ logs: freshLogs, isInitialized: true, isLoading: false });
+    };
+
     set({ isLoading: true, authError: null });
 
     try {

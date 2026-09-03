@@ -66,6 +66,9 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    // Instant cache retrieval: load habits and logs in <5ms while auth checks in parallel
+    loadHabits();
+    loadLogs();
     initializeAuth();
 
     const checkLegalRoute = () => {
