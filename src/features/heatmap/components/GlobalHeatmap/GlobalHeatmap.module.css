@@ -15,6 +15,16 @@
   box-sizing: border-box;
 }
 
+/* Mobile Phones (<= 768px): Scale cells and spacing so all 18 weeks and day labels fit without scrolling */
+@media (max-width: 768px) {
+  .container {
+    --cell-size: 12px;
+    --cell-gap: 2.5px;
+    --col-step: 14.5px;
+    padding: var(--tk-space-3) var(--tk-space-2);
+  }
+}
+
 /* PC / Desktop: Larger, protagonist heatmap size occupying prominent space */
 @media (min-width: 901px) {
   .container {
@@ -266,6 +276,27 @@
 
 .scrollArea::-webkit-scrollbar {
   display: none;
+}
+
+@media (max-width: 768px) {
+  .scrollArea {
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  .matrixWrapper {
+    margin: 0 auto;
+  }
+
+  .monthLabelsRow {
+    margin-left: 19px;
+  }
+
+  .dayLabelsCol {
+    width: 17px;
+    padding-right: 2px;
+  }
 }
 
 @media (min-width: 901px) {

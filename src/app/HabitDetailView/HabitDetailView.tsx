@@ -132,10 +132,14 @@ export const HabitDetailView: React.FC<HabitDetailViewProps> = ({ habitId, onBac
     <div className={styles.container}>
       {/* Top Navigation */}
       <div className={styles.topNav}>
-        <button className={styles.backBtn} onClick={onBack}>
-          <ArrowLeft size={18} />
-          <span>{t('common.back')}</span>
-        </button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={onBack}
+          leftIcon={<ArrowLeft size={16} />}
+        >
+          {t('common.back')}
+        </Button>
 
         <div className={styles.topActions}>
           <Button

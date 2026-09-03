@@ -16,22 +16,6 @@
   justify-content: space-between;
 }
 
-.backBtn {
-  display: flex;
-  align-items: center;
-  gap: var(--tk-space-1);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--tk-text-secondary);
-  padding: var(--tk-space-1) var(--tk-space-2);
-  border-radius: var(--tk-radius-md);
-  transition: all var(--tk-transition-fast);
-}
-
-.backBtn:hover {
-  color: var(--tk-text-primary);
-  background-color: var(--tk-bg-surface-elevated);
-}
 
 .topActions {
   display: flex;

@@ -80,11 +80,33 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
     }
   };
 
+  // Screen size detection for responsive layout
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 768;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // On mobile screens (<= 768px), display 18 weeks so the entire matrix and day labels fit without horizontal scrolling
+  const effectiveWeeksCount = useMemo(() => {
+    if (isMobile) {
+      return Math.min(weeksCount, 18);
+    }
+    return weeksCount;
+  }, [isMobile, weeksCount]);
+
   // Generate week columns (Monday to Sunday)
   const weeks = useMemo(() => {
     const locale = language === 'en' ? 'en-US' : 'es-ES';
-    return generateHeatmapWeeks(weeksCount, new Date(), locale);
-  }, [weeksCount, language]);
+    return generateHeatmapWeeks(effectiveWeeksCount, new Date(), locale);
+  }, [effectiveWeeksCount, language]);
 
   // Precompute day summaries
   const daySummaries = useMemo(() => {
@@ -99,13 +121,6 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
     return map;
   }, [weeks, habits, logs]);
 
-  // Auto-scroll to current week on mobile mount
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
-    }
-  }, []);
-
   const dayNames = language === 'en' ? ['M', '', 'W', '', 'F', '', 'S'] : ['L', '', 'M', '', 'V', '', 'D'];
 
   return (
@@ -113,7 +128,7 @@ export const GlobalHeatmap: React.FC<GlobalHeatmapProps> = React.memo(({
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
           <h3 className={styles.title}>{t('stats.generalActivity')}</h3>
-          <span className={styles.subtitle}>{t('stats.lastWeeks', { weeks: weeksCount })}</span>
+          <span className={styles.subtitle}>{t('stats.lastWeeks', { weeks: effectiveWeeksCount })}</span>
         </div>
 
         {/* Small Color Selector Button on the Top-Right */}
