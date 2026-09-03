@@ -10,7 +10,7 @@
   gap: 14px;
   padding: 16px;
   border-radius: var(--tk-radius-lg);
-  background-color: var(--tk-bg-surface-elevated);
+  background-color: var(--tk-bg-surface);
   border: 1px solid var(--tk-border-default);
 }
 
@@ -77,8 +77,8 @@
 .migrationFeedback {
   padding: 10px 12px;
   border-radius: var(--tk-radius-md);
-  background-color: rgba(57, 211, 83, 0.1);
-  border: 1px solid rgba(57, 211, 83, 0.3);
+  background-color: var(--tk-accent-surface);
+  border: 1px solid var(--tk-accent);
   color: var(--tk-accent);
   font-size: 13px;
 }
