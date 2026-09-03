@@ -11,6 +11,7 @@ interface LogsStoreState {
   logs: DailyActivityLog[];
   selectedDate: string; // YYYY-MM-DD
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 
   setSelectedDate: (date: string) => void;
@@ -36,6 +37,7 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
   logs: [],
   selectedDate: formatDateToISO(new Date()),
   isLoading: false,
+  isInitialized: false,
   error: null,
 
   setSelectedDate: (date: string) => {
@@ -46,9 +48,9 @@ export const useLogsStore = create<LogsStoreState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const logs = await storageAdapter.getLogs();
-      set({ logs, isLoading: false });
+      set({ logs, isLoading: false, isInitialized: true });
     } catch (err) {
-      set({ error: (err as Error).message, isLoading: false });
+      set({ error: (err as Error).message, isLoading: false, isInitialized: true });
     }
   },
 

@@ -40,8 +40,8 @@ type ViewState =
   | { type: 'detail'; habitId: string; returnTo: 'home' | 'all-habits' | 'casual-history' };
 
 export const App: React.FC = () => {
-  const { initializeAuth } = useAuthStore();
-  const { habits, loadHabits, createHabit } = useHabitsStore();
+  const { initializeAuth, isInitialized: isAuthInitialized } = useAuthStore();
+  const { habits, loadHabits, createHabit, isInitialized: isHabitsInitialized } = useHabitsStore();
   const { logs, loadLogs } = useLogsStore();
 
   const [currentView, setCurrentView] = useState<ViewState>({ type: 'home' });
@@ -66,6 +66,9 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    // Instant cache retrieval: load habits and logs in <5ms while auth checks in parallel
+    loadHabits();
+    loadLogs();
     initializeAuth();
 
     const checkLegalRoute = () => {
@@ -90,22 +93,41 @@ export const App: React.FC = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Smoothly dismiss splash screen once mounted
-    const splash = document.getElementById('splash-screen');
-    if (splash) {
-      setTimeout(() => {
-        splash.classList.add('splash-fade-out');
-        setTimeout(() => {
-          splash.remove();
-        }, 450);
-      }, 350);
-    }
-
     return () => {
       window.removeEventListener('hashchange', checkLegalRoute);
       window.removeEventListener('resize', handleResize);
     };
   }, [initializeAuth]);
+
+  // Smoothly dismiss splash screen ONLY after habits and auth data have completely loaded
+  useEffect(() => {
+    if (!isAuthInitialized || !isHabitsInitialized) return;
+
+    const splash = document.getElementById('splash-screen');
+    if (splash && !splash.classList.contains('splash-fade-out')) {
+      const timer = setTimeout(() => {
+        splash.classList.add('splash-fade-out');
+        setTimeout(() => {
+          splash.remove();
+        }, 450);
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthInitialized, isHabitsInitialized]);
+
+  // Safety fallback: Never keep splash screen stuck for more than 4.5s in case of connection loss
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash && !splash.classList.contains('splash-fade-out')) {
+        splash.classList.add('splash-fade-out');
+        setTimeout(() => splash.remove(), 450);
+      }
+    }, 4500);
+
+    return () => clearTimeout(fallbackTimer);
+  }, []);
 
   const handleDataResetOrImported = async () => {
     await loadHabits();

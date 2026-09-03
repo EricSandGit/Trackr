@@ -32,9 +32,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   initializeAuth: async () => {
     if (!isSupabaseConfigured) {
+      storageManager.setMode('local');
       set({ isInitialized: true, isLoading: false });
+      await Promise.all([
+        useHabitsStore.getState().loadHabits(),
+        useLogsStore.getState().loadLogs(),
+      ]);
       return;
     }
+
+    // Wire up background SWR revalidation listeners for cloud sync
+    storageManager.getSupabaseAdapter().onHabitsUpdated = (freshHabits) => {
+      useHabitsStore.setState({ habits: freshHabits, isInitialized: true, isLoading: false });
+    };
+    storageManager.getSupabaseAdapter().onLogsUpdated = (freshLogs) => {
+      useLogsStore.setState({ logs: freshLogs, isInitialized: true, isLoading: false });
+    };
 
     set({ isLoading: true, authError: null });
 
@@ -47,11 +60,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         storageManager.setMode('supabase');
         set({ user: session.user, session, isLoading: false, isInitialized: true });
         // Refresh stores
-        await useHabitsStore.getState().loadHabits();
-        await useLogsStore.getState().loadLogs();
+        await Promise.all([
+          useHabitsStore.getState().loadHabits(),
+          useLogsStore.getState().loadLogs(),
+        ]);
       } else {
         storageManager.setMode('local');
         set({ user: null, session: null, isLoading: false, isInitialized: true });
+        await Promise.all([
+          useHabitsStore.getState().loadHabits(),
+          useLogsStore.getState().loadLogs(),
+        ]);
       }
 
       // 2. Listen to auth state changes
@@ -70,7 +89,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
     } catch (err) {
       console.error('Error initializing auth:', err);
+      storageManager.setMode('local');
       set({ authError: (err as Error).message, isLoading: false, isInitialized: true });
+      await Promise.all([
+        useHabitsStore.getState().loadHabits(),
+        useLogsStore.getState().loadLogs(),
+      ]);
     }
   },
 

@@ -75,6 +75,7 @@ export default defineConfig({
           'vendor-react': ['react', 'react-dom'],
           'vendor-icons': ['lucide-react'],
           'vendor-state': ['zustand'],
+          'vendor-supabase': ['@supabase/supabase-js'],
         },
       },
     },
